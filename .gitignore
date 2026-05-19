@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# builds
+web/dist/
+studio/dist/
+
+# env
+.env
+.env.local
+.env.*.local
+.env.production
+
+# editor/os
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.log
+
+# sanity
+.sanity/
+
+# misc
+*.tsbuildinfo
+.cache/

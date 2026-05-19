@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="POROS — majalah online dari Bandung. Labor · society · culture." />
+    <meta name="theme-color" content="#0d0d0d" />
+    <meta property="og:site_name" content="POROS" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="POROS — labor · society · culture" />
+    <meta property="og:description" content="POROS — majalah online dari Bandung. Labor · society · culture." />
+    <meta property="og:image" content="/og-default.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="POROS — labor · society · culture" />
+    <meta name="twitter:description" content="POROS — majalah online dari Bandung. Labor · society · culture." />
+    <meta name="twitter:image" content="/og-default.svg" />
+    <link rel="alternate" type="application/rss+xml" title="POROS RSS" href="/rss.xml" />
+    <title>POROS — labor · society · culture</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Inter:wght@300..800&family=Pirata+One&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("poros-theme");
+          if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+            document.documentElement.classList.add("dark");
+          }
+          var s = localStorage.getItem("poros-text-size");
+          if (s) document.documentElement.style.setProperty("--reading-size", s);
+          var f = localStorage.getItem("poros-text-family");
+          if (f === "sans") document.documentElement.classList.add("font-sans-reading");
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
