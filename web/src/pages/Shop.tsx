@@ -62,7 +62,7 @@ export function ShopPage() {
       await new Promise((r) => setTimeout(r, 600));
       setCheckoutStatus("ok");
       setCheckoutMsg(
-        "Pesanan diterima. Karena DOKU belum diaktifkan, redaksi akan mengirim link pembayaran manual ke emailmu.",
+        "Pesanan diterima. Redaksi akan mengirim link pembayaran manual ke emailmu dalam beberapa menit.",
       );
       return;
     }
@@ -89,12 +89,12 @@ export function ShopPage() {
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 pt-6 md:pt-14 pb-10">
-      <SEO title="Shop" description="Edisi cetak dan merchandise POROS, dikirim dari Bandung. Bayar via DOKU." />
+      <SEO title="Shop" description="Edisi cetak dan merchandise POROS, dikirim dari Bandung. Pembayaran aman: bank, e-wallet, QRIS, kartu kredit." />
       <header className="border-b rule-soft pb-6 mb-10 flex items-end justify-between gap-4">
         <div>
           <p className="kicker text-accent">SHOP</p>
           <h1 className="headline-display text-4xl md:text-5xl mt-2">Cetakan terbatas & merch.</h1>
-          <p className="text-muted mt-2 max-w-2xl">Dikirim dari Bandung. Pengiriman Jabar 1–3 hari, luar Jabar 3–7 hari. Pembayaran ditangani oleh <span className="font-medium text-ink dark:text-paper">DOKU</span> — transfer bank, e-wallet, QRIS, kartu kredit, atau cicilan 0%.</p>
+          <p className="text-muted mt-2 max-w-2xl">Dikirim dari Bandung. Pengiriman Jabar 1–3 hari, luar Jabar 3–7 hari. Pembayaran aman: transfer bank, e-wallet, QRIS, kartu kredit, atau cicilan 0%.</p>
         </div>
         {totalCount > 0 && (
           <button onClick={() => setCheckoutOpen(true)} className="bg-ink text-paper px-4 py-2 kicker shrink-0">
@@ -106,9 +106,9 @@ export function ShopPage() {
       {/* Payment methods banner */}
       <div className="border rule-soft mb-10 p-4 md:p-5 grid grid-cols-2 md:grid-cols-5 gap-4">
         <div className="col-span-2 md:col-span-1 flex flex-col justify-center md:border-r rule-soft md:pr-4">
-          <p className="kicker text-accent">PAYMENT BY</p>
-          <p className="font-logo text-3xl md:text-4xl tracking-wider mt-1" style={{ fontFamily: "Pirata One, serif" }}>DOKU</p>
-          <p className="stat mt-1 opacity-70">Indonesian payment gateway</p>
+          <p className="kicker text-accent">SECURE PAYMENT</p>
+          <p className="headline-display text-xl md:text-2xl mt-1 leading-tight">Bayar dengan cara apa saja.</p>
+          <p className="stat mt-1 opacity-70">Transaksi aman, terenkripsi.</p>
         </div>
         {PAYMENT_METHODS.map((m) => (
           <div key={m.label} className="min-w-0">
@@ -185,12 +185,10 @@ export function ShopPage() {
                 </section>
 
                 <section className="mb-8 border rule-soft p-4">
-                  <div className="flex items-center justify-between">
-                    <p className="kicker text-accent">METODE PEMBAYARAN</p>
-                    <p className="font-logo text-2xl tracking-wider" style={{ fontFamily: "Pirata One, serif" }}>DOKU</p>
-                  </div>
+                  <p className="kicker text-accent">METODE PEMBAYARAN</p>
+                  <p className="headline-display text-xl mt-1 leading-tight">Lanjut ke pembayaran aman.</p>
                   <p className="text-sm text-muted mt-2">
-                    Setelah klik <em>Bayar via DOKU</em>, kamu akan diarahkan ke halaman pembayaran DOKU. Pilih bank/e-wallet/QRIS/kartu — selesai dalam 1 menit, link konfirmasi pesanan dikirim ke email.
+                    Setelah klik <em>Lanjut bayar</em>, kamu akan diarahkan ke halaman pembayaran. Pilih bank / e-wallet / QRIS / kartu — selesai dalam 1 menit, link konfirmasi pesanan dikirim ke email.
                   </p>
                   <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mt-3 stat">
                     {PAYMENT_METHODS.map((m) => (
@@ -207,7 +205,7 @@ export function ShopPage() {
                   <textarea className="w-full border rule-soft bg-transparent px-3 py-2" rows={3} placeholder="Alamat lengkap" value={address} onChange={(e) => setAddress(e.target.value)} />
                   <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="Kota" value={city} onChange={(e) => setCity(e.target.value)} />
                   <button type="submit" disabled={checkoutStatus === "loading"} className="bg-ink text-paper px-4 py-3 w-full kicker disabled:opacity-50">
-                    {checkoutStatus === "loading" ? "MEMPROSES…" : `BAYAR ${formatIDR(subtotal)} VIA DOKU`}
+                    {checkoutStatus === "loading" ? "MEMPROSES…" : `LANJUT BAYAR ${formatIDR(subtotal)}`}
                   </button>
                   {checkoutStatus === "err" && <p className="text-xs text-accent">{checkoutMsg}</p>}
                 </form>
