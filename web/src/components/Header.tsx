@@ -140,7 +140,7 @@ export function Header() {
 
         </div>
         {/* Row 2 wrapper: full-bleed top + bottom rule */}
-        <nav className="border-y-2 rule">
+        <nav className="border-y-4 rule">
           <div className="max-w-[1280px] mx-auto px-8">
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-6 py-3">
               <div />
@@ -162,7 +162,7 @@ export function Header() {
       </header>
 
       {/* Mobile header — Consumed mobile pattern: wordmark on top, icon row, then hamburger row */}
-      <header className="md:hidden bg-paper sticky top-0 z-30 border-b-2 rule">
+      <header className="md:hidden bg-paper sticky top-0 z-30 border-b-4 rule">
         <div className="px-4 pt-3 pb-2 text-center">
           <Link to="/" className="inline-block leading-none">
             <span className="font-logo block leading-none" style={{ fontSize: "clamp(2.4rem, 11vw, 3rem)", letterSpacing: "0.04em" }}>POROS</span>
@@ -184,7 +184,7 @@ export function Header() {
             )}
           </Link>
         </div>
-        <div className="border-t-2 rule py-1.5 flex items-center justify-center">
+        <div className="border-t-4 rule py-1.5 flex items-center justify-center">
           <button onClick={() => setMenuOpen(true)} aria-label="Menu" className="border rule-soft px-5 py-1.5">
             <MenuIcon />
           </button>
