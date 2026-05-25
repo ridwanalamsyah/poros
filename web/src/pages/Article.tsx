@@ -10,6 +10,9 @@ import { ShareBar } from "../components/ShareBar";
 import { PortableBody } from "../components/PortableBody";
 import { ReadingControls } from "../components/ReadingControls";
 import { Comments } from "../components/Comments";
+import { ReactionsBar } from "../components/Reactions";
+import { TipJar } from "../components/TipJar";
+import { useSettings } from "../hooks/useSettings";
 import { blocksToPlainText, formatDate, readingMinutes } from "../utils/text";
 
 export function ArticlePage() {
@@ -17,6 +20,7 @@ export function ArticlePage() {
   const { data: article, loading } = useAsync(() => getArticle(slug), [slug]);
   const { data: allArticles } = useAsync(() => getArticles(), []);
   const bodyRef = useRef<HTMLDivElement | null>(null);
+  const settings = useSettings();
 
   if (loading) {
     return (
@@ -35,6 +39,17 @@ export function ArticlePage() {
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
         <p className="kicker text-muted">404</p>
         <h1 className="headline-display text-4xl mt-4">Artikel tidak ditemukan.</h1>
+        <Link to="/" className="kicker mt-6 inline-block hover-underline">← Kembali ke beranda</Link>
+      </div>
+    );
+  }
+
+  if (article.scheduledFor && new Date(article.scheduledFor).getTime() > Date.now()) {
+    return (
+      <div className="max-w-3xl mx-auto px-5 py-20 text-center">
+        <p className="kicker text-muted">SCHEDULED</p>
+        <h1 className="headline-display text-4xl mt-4">Artikel ini belum dirilis.</h1>
+        <p className="text-muted mt-2">Dijadwalkan {formatDate(article.scheduledFor)}.</p>
         <Link to="/" className="kicker mt-6 inline-block hover-underline">← Kembali ke beranda</Link>
       </div>
     );
@@ -112,6 +127,12 @@ export function ArticlePage() {
         <div className="mt-10">
           <ShareBar url={`/article/${article.slug}`} title={article.title} slug={article.slug} />
         </div>
+
+        {settings.reactionsEnabled !== false && (
+          <ReactionsBar articleId={article._id} />
+        )}
+
+        <TipJar />
 
         {article.author && (
           <div className="mt-12 pt-8 border-t rule-soft flex items-start gap-4">

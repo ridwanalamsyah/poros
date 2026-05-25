@@ -23,6 +23,9 @@ export function ShareBar({ url, title, slug }: { url: string; title: string; slu
   const x = `https://twitter.com/intent/tweet?url=${encodeURIComponent(fullUrl)}&text=${encodeURIComponent(title)}`;
   const tg = `https://t.me/share/url?url=${encodeURIComponent(fullUrl)}&text=${encodeURIComponent(title)}`;
   const fb = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(fullUrl)}`;
+  const threads = `https://www.threads.net/intent/post?text=${encodeURIComponent(`${title} ${fullUrl}`)}`;
+  const bluesky = `https://bsky.app/intent/compose?text=${encodeURIComponent(`${title} ${fullUrl}`)}`;
+  const linkedin = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(fullUrl)}`;
 
   async function copy() {
     try {
@@ -54,6 +57,18 @@ export function ShareBar({ url, title, slug }: { url: string; title: string; slu
       <a href={fb} target="_blank" rel="noreferrer" className={btn}>
         <Icon d="M15 3h-3a4 4 0 0 0-4 4v3H5v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h3V3z" />
         Facebook
+      </a>
+      <a href={threads} target="_blank" rel="noreferrer" className={btn}>
+        <Icon d="M12 4c4.5 0 7 2.7 7 6 0 2-1 3.6-2.7 4.4-1.4.6-3.3.6-4.3.6m0 0c-2.2 0-3.5-1.1-3.5-2.5 0-1.5 1.4-2.5 3.5-2.5 2 0 3.7.7 4.5 2.6.8 2-.4 4.4-3.6 4.4-3.2 0-5-2.4-5-5.5C7.9 7.4 9.5 4 12 4z" />
+        Threads
+      </a>
+      <a href={bluesky} target="_blank" rel="noreferrer" className={btn}>
+        <Icon d="M6 4c2.4 1.7 4.6 5 6 8 1.4-3 3.6-6.3 6-8 1.5-1 4-1 4 2 0 1-.2 3.6-.4 4.6-.3 1.5-1.5 2-3.4 2.2 2 .4 3.4 1.4 3.4 3.3 0 2-2 3.4-3.4 3.4-2.7 0-4.6-2.5-6.2-5-1.6 2.5-3.5 5-6.2 5-1.4 0-3.4-1.4-3.4-3.4 0-1.9 1.4-2.9 3.4-3.3-1.9-.2-3.1-.7-3.4-2.2C2.2 9.6 2 7 2 6c0-3 2.5-3 4-2z" fill />
+        Bluesky
+      </a>
+      <a href={linkedin} target="_blank" rel="noreferrer" className={btn}>
+        <Icon d="M4 4h4v16H4zM6 2.5a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2zM10 8h3.7v2.2c.5-1 1.9-2.4 4.3-2.4 4.6 0 5 2.9 5 6.7V20h-4v-5.1c0-1.2 0-2.8-1.7-2.8s-2 1.3-2 2.7V20h-4z" />
+        LinkedIn
       </a>
       <button onClick={copy} className={btn}>
         <Icon d="M9 9h11v11H9zM5 5h11v3M5 5v11h3" />
