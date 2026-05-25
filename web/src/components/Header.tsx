@@ -80,7 +80,9 @@ export function Header() {
   const navigate = useNavigate();
   const { results } = useArticleSearch(query);
   const { data: settings } = useAsync(() => getSettings(), []);
-  const wordmark = settings?.brandWordmark?.trim() || settings?.siteTitle?.trim() || "Velvet Collapse";
+  const rawWordmark = settings?.brandWordmark?.trim() || settings?.siteTitle?.trim() || "Velvet Collapse";
+  // Strip a trailing "Magazine" so we render it as the small kicker below — avoids "Velvet Collapse Magazine" + "MAGAZINE" duplication.
+  const wordmark = rawWordmark.replace(/\s*magazine\s*$/i, "").trim() || rawWordmark;
 
   useEffect(() => {
     setMenuOpen(false);
@@ -135,6 +137,12 @@ export function Header() {
               >
                 {wordmark}
               </span>
+              <span
+                className="block mt-1 tracking-[0.5em] text-[0.5rem] font-medium"
+                style={{ opacity: scrolled ? 0 : 1, transition: "opacity 0.2s" }}
+              >
+                MAGAZINE
+              </span>
             </Link>
             <div className="flex items-center justify-end gap-3">
               <a href="https://instagram.com/velcolmagazine" target="_blank" rel="noopener noreferrer" className="kicker tracking-[0.18em] opacity-80 hover:opacity-100">FOLLOW</a>
@@ -181,6 +189,7 @@ export function Header() {
         <div className="px-5 pt-3 pb-2 text-center">
           <Link to="/" className="inline-block leading-none">
             <span className="font-logo block leading-none" style={{ fontSize: "clamp(1.25rem, 5.5vw, 1.75rem)", letterSpacing: "0.03em" }}>{wordmark}</span>
+            <span className="block mt-1 tracking-[0.45em] text-[0.45rem] font-medium">MAGAZINE</span>
           </Link>
         </div>
         <div className="px-3 pb-2 flex items-center justify-center gap-2 flex-wrap">
@@ -214,6 +223,7 @@ export function Header() {
             </div>
             <Link to="/" className="text-center leading-none whitespace-nowrap">
               <span className="font-logo block leading-none" style={{ fontSize: "clamp(2rem, 5vw, 2.6rem)", letterSpacing: "0.03em" }}>{wordmark}</span>
+              <span className="block mt-1 tracking-[0.5em] text-[0.55rem] font-medium">MAGAZINE</span>
             </Link>
             <div />
           </div>
