@@ -17,6 +17,9 @@
     <meta name="twitter:description" content="Majalah dari Bandung. Built from the mess." />
     <meta name="twitter:image" content="/og-default.png" />
     <link rel="alternate" type="application/rss+xml" title="Velvet Collapse RSS" href="/rss.xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Velvet Collapse" />
     <title>Velvet Collapse Magazine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -39,5 +42,12 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ("serviceWorker" in navigator && location.protocol !== "file:") {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("/sw.js").catch(function () { /* ignore */ });
+        });
+      }
+    </script>
   </body>
 </html>
