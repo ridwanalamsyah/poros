@@ -4,6 +4,7 @@ import { useCategories } from "../hooks/useCategories";
 import { useTheme } from "../hooks/useTheme";
 import { useCart } from "../hooks/useCart";
 import { useArticleSearch } from "../hooks/useSearch";
+import { useSettings } from "../hooks/useSettings";
 
 function MenuIcon() {
   return (
@@ -70,6 +71,7 @@ export function Header() {
   const { data: categories } = useCategories();
   const { theme, toggle: toggleTheme } = useTheme();
   const { totalCount } = useCart();
+  const settings = useSettings();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -107,6 +109,14 @@ export function Header() {
 
   return (
     <>
+      {/* Editor's note marquee — admin-editable strip di paling atas */}
+      {settings.editorsNote && (
+        <div className="bg-ink text-paper">
+          <div className="max-w-[1280px] mx-auto px-5 md:px-8 py-1.5 text-center kicker tracking-[0.18em] truncate">
+            {settings.editorsNote}
+          </div>
+        </div>
+      )}
       {/* Desktop header — Consumed layout, height-locked to avoid scroll jump */}
       <header className={`hidden md:block bg-paper sticky top-0 z-30 transition-shadow ${scrolled ? "shadow-sm" : ""}`}>
         <div className="max-w-[1280px] mx-auto px-8">

@@ -1,5 +1,16 @@
 import { sanity, sanityEnabled } from "../sanity";
-import type { Article, Author, Category, Edition, Note, Product, Settings } from "../types";
+import type {
+  Article,
+  Author,
+  Category,
+  Colophon,
+  Edition,
+  Newsletter,
+  Note,
+  Product,
+  Reactions,
+  Settings,
+} from "../types";
 import { mockArticles, mockAuthors, mockCategories, mockEditions, mockNotes, mockProducts, mockSettings } from "./mock";
 
 const articleFields = `
@@ -146,10 +157,118 @@ export function getProducts(): Promise<Product[]> {
 
 export function getSettings(): Promise<Settings> {
   return fetchOr<Settings>(
-    `*[_type == "settings"][0]{siteTitle, siteDescription, tipJarSaweria, tipJarTrakteer, tipJarPatreon, cusdisAppId, newsletterEndpoint}`,
+    `*[_type == "settings"][0]{
+      siteTitle,
+      siteDescription,
+      tipJarSaweria,
+      tipJarTrakteer,
+      tipJarPatreon,
+      cusdisAppId,
+      newsletterEndpoint,
+      editorsNote,
+      reactionsEnabled,
+      socialLinks,
+      homepageLayout{
+        sections,
+        "heroArticle": heroArticle->{_id, "slug": slug.current, title}
+      }
+    }`,
     undefined,
     mockSettings,
   );
+}
+
+export function getColophon(): Promise<Colophon | null> {
+  return fetchOr<Colophon | null>(
+    `*[_type == "colophon"][0]{title, intro, members, contactEmail, pitchEmail, lettersEmail, address}`,
+    undefined,
+    null,
+  );
+}
+
+export function getNewsletters(): Promise<Newsletter[]> {
+  return fetchOr<Newsletter[]>(
+    `*[_type == "newsletter"]|order(sentAt desc){_id, title, "slug": slug.current, sentAt, summary, externalUrl}`,
+    undefined,
+    [],
+  );
+}
+
+export function getProduct(slug: string): Promise<Product | null> {
+  return fetchOr<Product | null>(
+    `*[_type == "product" && slug.current == $slug][0]{_id, title, "slug": slug.current, description, price, image{..., asset->{..., metadata{lqip}}}, inStock}`,
+    { slug },
+    mockProducts.find((p) => p.slug === slug) ?? null,
+  );
+}
+
+export async function getReactions(articleId: string): Promise<Reactions> {
+  const fallback: Reactions = { heart: 0, fire: 0, skull: 0 };
+  return fetchOr<Reactions>(
+    `*[_type == "reaction" && article._ref == $id][0]{heart, fire, skull}`,
+    { id: articleId },
+    fallback,
+  ).then((r) => ({ heart: r?.heart ?? 0, fire: r?.fire ?? 0, skull: r?.skull ?? 0 }));
+}
+
+export async function incrementReaction(articleId: string, kind: "heart" | "fire" | "skull"): Promise<Reactions> {
+  if (!sanityEnabled || !sanity) return { heart: 0, fire: 0, skull: 0, [kind]: 1 } as Reactions;
+  try {
+    const id = `reaction-${articleId}`;
+    const existing = await sanity.fetch<Reactions & { _id?: string } | null>(
+      `*[_type == "reaction" && article._ref == $id][0]{_id, heart, fire, skull}`,
+      { id: articleId },
+    );
+    if (!existing) {
+      const created = await sanity.create({
+        _type: "reaction",
+        _id: id,
+        article: { _ref: articleId, _type: "reference" },
+        heart: kind === "heart" ? 1 : 0,
+        fire: kind === "fire" ? 1 : 0,
+        skull: kind === "skull" ? 1 : 0,
+      });
+      return { heart: created.heart, fire: created.fire, skull: created.skull };
+    }
+    const updated = await sanity
+      .patch(existing._id!)
+      .inc({ [kind]: 1 })
+      .commit<Reactions>();
+    return { heart: updated.heart ?? 0, fire: updated.fire ?? 0, skull: updated.skull ?? 0 };
+  } catch (e) {
+    console.warn("[sanity] incrementReaction failed:", e);
+    return { heart: 0, fire: 0, skull: 0 };
+  }
+}
+
+export async function createOrder(payload: {
+  orderNumber: string;
+  customer: { name: string; email: string; phone?: string; address?: string };
+  items: { productRef: string; qty: number; unitPrice: number }[];
+  total: number;
+  notes?: string;
+}): Promise<{ ok: boolean; orderId?: string }> {
+  if (!sanityEnabled || !sanity) return { ok: false };
+  try {
+    const doc = await sanity.create({
+      _type: "order",
+      orderNumber: payload.orderNumber,
+      status: "pending",
+      customer: payload.customer,
+      items: payload.items.map((it) => ({
+        _type: "lineItem",
+        product: { _ref: it.productRef, _type: "reference" },
+        qty: it.qty,
+        unitPrice: it.unitPrice,
+      })),
+      total: payload.total,
+      notes: payload.notes,
+    });
+    return { ok: true, orderId: doc._id };
+  } catch (e) {
+    console.warn("[sanity] createOrder failed:", e);
+    return { ok: false };
+  }
 }
 
 export function getAllTags(): Promise<{ tag: string; count: number }[]> {

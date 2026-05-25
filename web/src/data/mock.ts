@@ -686,9 +686,20 @@ export const mockProducts: Product[] = [
 export const mockSettings: Settings = {
   siteTitle: "Velvet Collapse Magazine",
   siteDescription: "Velvet Collapse Magazine — built from the mess. Majalah online dari Bandung.",
-  tipJarSaweria: "https://saweria.co/porosmagazine",
-  tipJarTrakteer: "https://trakteer.id/porosmagazine",
+  tipJarSaweria: "https://saweria.co/velvetcollapse",
+  tipJarTrakteer: "https://trakteer.id/velvetcollapse",
   tipJarPatreon: "",
   cusdisAppId: "",
   newsletterEndpoint: "",
+  editorsNote: "Edisi baru tiap dua bulan. Notes mingguan. Newsletter sekali seminggu.",
+  reactionsEnabled: true,
+  socialLinks: {
+    instagram: "https://instagram.com/velcolmagazine",
+    twitter: "",
+    threads: "",
+    bluesky: "",
+    linkedin: "",
+    facebook: "",
+    youtube: "",
+  },
 };

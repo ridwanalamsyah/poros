@@ -65,6 +65,18 @@ export default defineType({
       name: "body",
       title: "Body",
       type: "array",
+      validation: (r) =>
+        r.custom((blocks) => {
+          if (!blocks || !Array.isArray(blocks)) return true;
+          const text = blocks
+            .filter((b: { _type?: string }) => b?._type === "block")
+            .flatMap((b: { children?: { text?: string }[] }) => b.children ?? [])
+            .map((c) => c?.text ?? "")
+            .join(" ");
+          const words = text.split(/\s+/).filter(Boolean).length;
+          if (words < 80) return `Body terlalu pendek (${words} kata). Minimal 80 kata.`;
+          return true;
+        }),
       of: [
         {
           type: "block",
@@ -97,6 +109,12 @@ export default defineType({
       ],
     }),
     defineField({ name: "publishedAt", title: "Published at", type: "datetime", initialValue: () => new Date().toISOString() }),
+    defineField({
+      name: "scheduledFor",
+      title: "Scheduled for (optional)",
+      description: "Kalau diisi & belum lewat, frontend gak tampilin artikel ini sampai waktu yang ditentukan.",
+      type: "datetime",
+    }),
     defineField({ name: "editorsPick", title: "Editor's pick", type: "boolean", initialValue: false }),
     defineField({ name: "views", title: "Views (manual)", type: "number" }),
   ],

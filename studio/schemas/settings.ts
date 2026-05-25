@@ -13,6 +13,33 @@ export default defineType({
     defineField({ name: "cusdisAppId", title: "Cusdis App ID (for comments)", type: "string" }),
     defineField({ name: "newsletterEndpoint", title: "Newsletter endpoint (optional override)", type: "url" }),
     defineField({
+      name: "editorsNote",
+      title: "Editor's note marquee",
+      description: "Strip teks di paling atas header (kosongkan kalau mau hilang).",
+      type: "string",
+    }),
+    defineField({
+      name: "reactionsEnabled",
+      title: "Reactions on articles?",
+      description: "Munculin tombol heart / fire / skull di bawah artikel.",
+      type: "boolean",
+      initialValue: true,
+    }),
+    defineField({
+      name: "socialLinks",
+      title: "Social links",
+      type: "object",
+      fields: [
+        defineField({ name: "instagram", type: "url" }),
+        defineField({ name: "twitter", type: "url" }),
+        defineField({ name: "threads", type: "url" }),
+        defineField({ name: "bluesky", type: "url" }),
+        defineField({ name: "linkedin", type: "url" }),
+        defineField({ name: "facebook", type: "url" }),
+        defineField({ name: "youtube", type: "url" }),
+      ],
+    }),
+    defineField({
       name: "homepageLayout",
       title: "Homepage Layout (admin control)",
       type: "object",

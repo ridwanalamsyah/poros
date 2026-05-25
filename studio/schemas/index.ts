@@ -7,6 +7,10 @@ import product from "./product";
 import settings from "./settings";
 import submission from "./submission";
 import letter from "./letter";
+import reaction from "./reaction";
+import colophon from "./colophon";
+import newsletter from "./newsletter";
+import order from "./order";
 
 import pullQuote from "./blocks/pullQuote";
 import imageWithCaption from "./blocks/imageWithCaption";
@@ -24,6 +28,10 @@ export const schemaTypes = [
   settings,
   submission,
   letter,
+  reaction,
+  colophon,
+  newsletter,
+  order,
   pullQuote,
   imageWithCaption,
   embed,

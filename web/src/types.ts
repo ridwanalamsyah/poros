@@ -63,9 +63,58 @@ export type Article = {
   edition?: Edition;
   tags?: string[];
   publishedAt?: string;
+  scheduledFor?: string;
   editorsPick?: boolean;
   views?: number;
   readingMinutes?: number;
+};
+
+export type ColophonMember = { name: string; role: string; email?: string; link?: string };
+export type Colophon = {
+  title?: string;
+  intro?: string;
+  members?: ColophonMember[];
+  contactEmail?: string;
+  pitchEmail?: string;
+  lettersEmail?: string;
+  address?: string;
+};
+
+export type SocialLinks = {
+  instagram?: string;
+  twitter?: string;
+  threads?: string;
+  bluesky?: string;
+  linkedin?: string;
+  facebook?: string;
+  youtube?: string;
+};
+
+export type HomepageSectionKind = "hero" | "editors" | "edition" | "notes" | "popular" | "feed" | "shop";
+export type HomepageSection = { kind: HomepageSectionKind; enabled?: boolean; title?: string };
+export type HomepageLayout = { sections?: HomepageSection[]; heroArticle?: { _ref?: string; slug?: string } };
+
+export type Reactions = { heart: number; fire: number; skull: number };
+
+export type Newsletter = {
+  _id: string;
+  title: string;
+  slug: string;
+  sentAt: string;
+  summary?: string;
+  externalUrl?: string;
+};
+
+export type Order = {
+  _id?: string;
+  orderNumber: string;
+  status?: "pending" | "paid" | "shipped" | "delivered" | "cancelled";
+  customer: { name: string; email: string; phone?: string; address?: string };
+  items: { product: { _ref?: string; slug?: string; title?: string }; qty: number; unitPrice?: number }[];
+  total?: number;
+  paymentRef?: string;
+  notes?: string;
+  createdAt?: string;
 };
 
 export type Note = {
@@ -93,4 +142,8 @@ export type Settings = {
   tipJarPatreon?: string;
   cusdisAppId?: string;
   newsletterEndpoint?: string;
+  editorsNote?: string;
+  reactionsEnabled?: boolean;
+  socialLinks?: SocialLinks;
+  homepageLayout?: HomepageLayout;
 };
