@@ -4,6 +4,8 @@ import { useCategories } from "../hooks/useCategories";
 import { useTheme } from "../hooks/useTheme";
 import { useCart } from "../hooks/useCart";
 import { useArticleSearch } from "../hooks/useSearch";
+import { useAsync } from "../hooks/useAsync";
+import { getSettings } from "../data/api";
 
 function MenuIcon() {
   return (
@@ -77,6 +79,8 @@ export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { results } = useArticleSearch(query);
+  const { data: settings } = useAsync(() => getSettings(), []);
+  const wordmark = settings?.brandWordmark?.trim() || settings?.siteTitle?.trim() || "Velvet Collapse";
 
   useEffect(() => {
     setMenuOpen(false);
@@ -91,14 +95,14 @@ export function Header() {
   }, [menuOpen, searchOpen]);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 140);
+    const onScroll = () => setScrolled(window.scrollY > 60);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   // Lock header to a single visual height; we shrink wordmark via transform (no layout shift / no jump)
-  const wordmarkScale = scrolled ? 0.5 : 1;
+  const wordmarkScale = scrolled ? 0.62 : 1;
 
   const navLinkCls = ({ isActive }: { isActive: boolean }) =>
     `kicker tracking-[0.18em] py-1 transition-opacity ${isActive ? "opacity-100" : "opacity-80 hover:opacity-100"}`;
@@ -118,7 +122,7 @@ export function Header() {
                 className="font-logo block leading-none"
                 style={{ fontSize: "clamp(1.5rem, 2.6vw, 2.3rem)", letterSpacing: "0.03em" }}
               >
-                Velvet Collapse
+                {wordmark}
               </span>
               <span className="block mt-1 tracking-[0.5em] text-[0.5rem] font-medium" style={{ opacity: scrolled ? 0 : 1, transition: "opacity 0.2s" }}>MAGAZINE</span>
             </Link>
@@ -166,7 +170,7 @@ export function Header() {
       <header className="md:hidden bg-paper sticky top-0 z-30 border-b rule">
         <div className="px-5 pt-3 pb-2 text-center">
           <Link to="/" className="inline-block leading-none">
-            <span className="font-logo block leading-none" style={{ fontSize: "clamp(1.25rem, 5.5vw, 1.75rem)", letterSpacing: "0.03em" }}>Velvet Collapse</span>
+            <span className="font-logo block leading-none" style={{ fontSize: "clamp(1.25rem, 5.5vw, 1.75rem)", letterSpacing: "0.03em" }}>{wordmark}</span>
             <span className="block mt-1 tracking-[0.45em] text-[0.45rem] font-medium">MAGAZINE</span>
           </Link>
         </div>
@@ -227,7 +231,7 @@ export function Header() {
               <NavLink to="/submit" onClick={() => setMenuOpen(false)} className="hover-underline">Submit pitch</NavLink>
               <NavLink to="/letters" onClick={() => setMenuOpen(false)} className="hover-underline">Letters</NavLink>
               <button onClick={toggleTheme} className="text-left hover-underline">{theme === "dark" ? "Light mode" : "Dark mode"}</button>
-              <span className="text-muted">POROS · Bandung</span>
+              <span className="text-muted">Velvet Collapse Magazine · Bandung</span>
             </div>
           </div>
         </div>

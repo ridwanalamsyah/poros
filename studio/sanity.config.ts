@@ -9,7 +9,7 @@ const dataset = process.env.SANITY_STUDIO_DATASET || "production";
 
 export default defineConfig({
   name: "poros",
-  title: "POROS — Studio",
+  title: "Velvet Collapse Magazine — Studio",
   projectId,
   dataset,
   plugins: [structureTool({ structure }), visionTool()],

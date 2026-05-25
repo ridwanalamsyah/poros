@@ -2,7 +2,7 @@ import type { StructureBuilder } from "sanity/structure";
 
 export const structure = (S: StructureBuilder) =>
   S.list()
-    .title("POROS")
+    .title("Velvet Collapse Magazine")
     .items([
       S.listItem()
         .title("Articles")
@@ -107,7 +107,66 @@ export const structure = (S: StructureBuilder) =>
       S.documentTypeListItem("author").title("Authors"),
       S.documentTypeListItem("edition").title("Editions"),
       S.documentTypeListItem("note").title("Notes"),
-      S.documentTypeListItem("product").title("Shop products"),
+      S.listItem()
+        .title("Shop")
+        .child(
+          S.list()
+            .title("Shop")
+            .items([
+              S.documentTypeListItem("product").title("Products"),
+              S.listItem()
+                .title("Orders")
+                .child(
+                  S.list()
+                    .title("Orders")
+                    .items([
+                      S.listItem()
+                        .title("All orders")
+                        .child(
+                          S.documentTypeList("order")
+                            .title("All orders")
+                            .defaultOrdering([{ field: "placedAt", direction: "desc" }]),
+                        ),
+                      S.listItem()
+                        .title("Pending payment")
+                        .child(
+                          S.documentList()
+                            .title("Pending payment")
+                            .filter('_type == "order" && status == "pending"')
+                            .defaultOrdering([{ field: "placedAt", direction: "desc" }])
+                            .params({}),
+                        ),
+                      S.listItem()
+                        .title("Paid · awaiting shipment")
+                        .child(
+                          S.documentList()
+                            .title("Paid · awaiting shipment")
+                            .filter('_type == "order" && status == "paid"')
+                            .defaultOrdering([{ field: "paidAt", direction: "desc" }])
+                            .params({}),
+                        ),
+                      S.listItem()
+                        .title("Shipped")
+                        .child(
+                          S.documentList()
+                            .title("Shipped")
+                            .filter('_type == "order" && status == "shipped"')
+                            .defaultOrdering([{ field: "shippedAt", direction: "desc" }])
+                            .params({}),
+                        ),
+                      S.listItem()
+                        .title("Cancelled / refunded")
+                        .child(
+                          S.documentList()
+                            .title("Cancelled / refunded")
+                            .filter('_type == "order" && status in ["cancelled", "refunded"]')
+                            .defaultOrdering([{ field: "placedAt", direction: "desc" }])
+                            .params({}),
+                        ),
+                    ]),
+                ),
+            ]),
+        ),
       S.divider(),
       S.listItem()
         .title("Inbox")

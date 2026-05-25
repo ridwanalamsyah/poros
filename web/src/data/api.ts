@@ -1,5 +1,5 @@
 import { sanity, sanityEnabled } from "../sanity";
-import type { Article, Author, Category, Edition, Note, Product, Settings } from "../types";
+import type { Article, Author, Category, Edition, Note, Order, Product, Settings } from "../types";
 import { mockArticles, mockAuthors, mockCategories, mockEditions, mockNotes, mockProducts, mockSettings } from "./mock";
 
 const articleFields = `
@@ -136,12 +136,71 @@ export function getNotes(): Promise<Note[]> {
   );
 }
 
+const productFields = `
+  _id,
+  title,
+  "slug": slug.current,
+  tagline,
+  description,
+  body,
+  price,
+  image{..., asset->{..., metadata{lqip}}},
+  gallery[]{..., asset->{..., metadata{lqip}}},
+  specs[]{_key, label, value},
+  shippingNote,
+  inStock,
+  featured
+`;
+
 export function getProducts(): Promise<Product[]> {
   return fetchOr<Product[]>(
-    `*[_type == "product"]|order(_createdAt asc){_id, title, "slug": slug.current, description, price, image{..., asset->{..., metadata{lqip}}}, inStock}`,
+    `*[_type == "product"]|order(featured desc, _createdAt asc){${productFields}}`,
     undefined,
     mockProducts,
   );
+}
+
+export function getProduct(slug: string): Promise<Product | null> {
+  return fetchOr<Product | null>(
+    `*[_type == "product" && slug.current == $slug][0]{${productFields}}`,
+    { slug },
+    mockProducts.find((p) => p.slug === slug) ?? null,
+  );
+}
+
+export async function createOrder(order: Order): Promise<{ id: string; orderNumber: string } | null> {
+  if (!sanityEnabled || !sanity) return null;
+  const token = import.meta.env.VITE_SANITY_WRITE_TOKEN as string | undefined;
+  if (!token) return null;
+  const placedAt = order.placedAt ?? new Date().toISOString();
+  try {
+    const client = sanity.withConfig({ token });
+    const doc = await client.create({
+      _type: "order",
+      ...order,
+      placedAt,
+    });
+    const orderNumber = doc._id.slice(-8).toUpperCase();
+    await client.patch(doc._id).set({ orderNumber }).commit().catch(() => undefined);
+    return { id: doc._id, orderNumber };
+  } catch (e) {
+    console.warn("[sanity] createOrder failed:", e);
+    return null;
+  }
+}
+
+export async function updateOrderPayment(
+  orderId: string,
+  patch: { paymentRef?: string; paymentUrl?: string; status?: Order["status"] },
+): Promise<void> {
+  if (!sanityEnabled || !sanity) return;
+  const token = import.meta.env.VITE_SANITY_WRITE_TOKEN as string | undefined;
+  if (!token) return;
+  try {
+    await sanity.withConfig({ token }).patch(orderId).set(patch).commit();
+  } catch (e) {
+    console.warn("[sanity] updateOrderPayment failed:", e);
+  }
 }
 
 export function getSettings(): Promise<Settings> {
@@ -149,6 +208,12 @@ export function getSettings(): Promise<Settings> {
     `*[_type == "settings"][0]{
       siteTitle,
       siteDescription,
+      brandWordmark,
+      footerTagline,
+      copyrightLine,
+      tipJarHeading,
+      tipJarBlurb,
+      tipJarPlacement,
       tipJarSaweria,
       tipJarTrakteer,
       tipJarPatreon,
