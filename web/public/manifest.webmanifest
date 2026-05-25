@@ -1,0 +1,27 @@
+{
+  "name": "Velvet Collapse Magazine",
+  "short_name": "Velvet Collapse",
+  "description": "Majalah longform dari Bandung — built from the mess.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d0d0d",
+  "orientation": "portrait",
+  "lang": "id",
+  "categories": ["news", "magazines", "lifestyle"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/og-default.svg",
+      "sizes": "1200x630",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

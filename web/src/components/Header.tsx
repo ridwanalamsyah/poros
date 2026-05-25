@@ -111,16 +111,16 @@ export function Header() {
       <header className={`hidden md:block bg-paper sticky top-0 z-30 transition-shadow ${scrolled ? "shadow-sm" : ""}`}>
         <div className="max-w-[1280px] mx-auto px-8">
           {/* Row 1: wordmark center + utility icons right — fixed height, scaled wordmark on scroll */}
-          <div className="relative grid grid-cols-3 items-center h-[88px]">
+          <div className="relative grid grid-cols-3 items-center h-[72px]">
             <div /> {/* left spacer */}
             <Link to="/" className="text-center select-none whitespace-nowrap leading-none" style={{ transform: `scale(${wordmarkScale})`, transformOrigin: "center", transition: "transform 0.25s ease-out" }}>
               <span
                 className="font-logo block leading-none"
-                style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", letterSpacing: "0.03em" }}
+                style={{ fontSize: "clamp(1.5rem, 2.6vw, 2.3rem)", letterSpacing: "0.03em" }}
               >
                 Velvet Collapse
               </span>
-              <span className="block mt-1 tracking-[0.5em] text-[0.55rem] font-medium" style={{ opacity: scrolled ? 0 : 1, transition: "opacity 0.2s" }}>MAGAZINE</span>
+              <span className="block mt-1 tracking-[0.5em] text-[0.5rem] font-medium" style={{ opacity: scrolled ? 0 : 1, transition: "opacity 0.2s" }}>MAGAZINE</span>
             </Link>
             <div className="flex items-center justify-end gap-3">
               <Link to="/submit" className="kicker tracking-[0.18em] opacity-80 hover:opacity-100">FOLLOW</Link>
@@ -141,7 +141,7 @@ export function Header() {
 
         </div>
         {/* Row 2 wrapper: full-bleed top + bottom rule */}
-        <nav className="border-y-[2px] rule">
+        <nav className="border-y rule">
           <div className="max-w-[1280px] mx-auto px-8">
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-6 py-3">
               <div />
@@ -163,11 +163,11 @@ export function Header() {
       </header>
 
       {/* Mobile header — Consumed mobile pattern: wordmark on top, icon row, then hamburger row */}
-      <header className="md:hidden bg-paper sticky top-0 z-30 border-b-[2px] rule">
+      <header className="md:hidden bg-paper sticky top-0 z-30 border-b rule">
         <div className="px-5 pt-3 pb-2 text-center">
           <Link to="/" className="inline-block leading-none">
-            <span className="font-logo block leading-none" style={{ fontSize: "clamp(1.5rem, 7vw, 2.1rem)", letterSpacing: "0.03em" }}>Velvet Collapse</span>
-            <span className="block mt-1 tracking-[0.45em] text-[0.5rem] font-medium">MAGAZINE</span>
+            <span className="font-logo block leading-none" style={{ fontSize: "clamp(1.25rem, 5.5vw, 1.75rem)", letterSpacing: "0.03em" }}>Velvet Collapse</span>
+            <span className="block mt-1 tracking-[0.45em] text-[0.45rem] font-medium">MAGAZINE</span>
           </Link>
         </div>
         <div className="px-3 pb-2 flex items-center justify-center gap-2 flex-wrap">
@@ -185,7 +185,7 @@ export function Header() {
             )}
           </Link>
         </div>
-        <div className="border-t-[2px] rule py-1.5 flex items-center justify-center">
+        <div className="border-t rule py-1.5 flex items-center justify-center">
           <button onClick={() => setMenuOpen(true)} aria-label="Menu" className="border rule-soft px-5 py-1.5">
             <MenuIcon />
           </button>
