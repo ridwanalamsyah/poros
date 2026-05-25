@@ -146,7 +146,21 @@ export function getProducts(): Promise<Product[]> {
 
 export function getSettings(): Promise<Settings> {
   return fetchOr<Settings>(
-    `*[_type == "settings"][0]{siteTitle, siteDescription, tipJarSaweria, tipJarTrakteer, tipJarPatreon, cusdisAppId, newsletterEndpoint}`,
+    `*[_type == "settings"][0]{
+      siteTitle,
+      siteDescription,
+      tipJarSaweria,
+      tipJarTrakteer,
+      tipJarPatreon,
+      cusdisAppId,
+      newsletterEndpoint,
+      reactionLabels,
+      colophon,
+      "homepageLayout": {
+        "sections": homepageLayout.sections[]{_key, kind, enabled, title},
+        "heroArticleSlug": homepageLayout.heroArticle->slug.current
+      }
+    }`,
     undefined,
     mockSettings,
   );

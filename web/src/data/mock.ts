@@ -691,4 +691,15 @@ export const mockSettings: Settings = {
   tipJarPatreon: "",
   cusdisAppId: "",
   newsletterEndpoint: "",
+  reactionLabels: ["Suka", "Penting", "Kena banget"],
+  homepageLayout: {
+    sections: [
+      { kind: "hero", enabled: true },
+      { kind: "editors", enabled: true },
+      { kind: "edition", enabled: true },
+      { kind: "feed", enabled: true },
+      { kind: "notes", enabled: false },
+      { kind: "shop", enabled: false },
+    ],
+  },
 };

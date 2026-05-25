@@ -12,6 +12,7 @@ import { CartPage } from "./pages/Cart";
 import { ShareCardPage } from "./pages/ShareCard";
 import { SavedPage } from "./pages/Saved";
 import { AboutPage } from "./pages/About";
+import { ColophonPage } from "./pages/Colophon";
 import { SubmitPage } from "./pages/Submit";
 import { NotFoundPage } from "./pages/NotFound";
 
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/share/:slug" element={<ShareCardPage />} />
         <Route path="/saved" element={<SavedPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/colophon" element={<ColophonPage />} />
         <Route path="/submit" element={<SubmitPage mode="pitch" />} />
         <Route path="/letters" element={<SubmitPage mode="letter" />} />
         <Route path="*" element={<NotFoundPage />} />

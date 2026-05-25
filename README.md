@@ -84,7 +84,33 @@ Article · Category · Author · Edition · Note · Product · Settings · Submi
 
 Custom rich-text blocks: pullQuote · imageWithCaption · embed (YouTube/Spotify autodetect) · callout (info/warn/accent) · divider
 
-Custom desk: Articles (All / Editor's picks / Drafts) · Categories · Authors · Editions · Notes · Products · Inbox (Pitches + Letters) · Settings singleton
+Custom desk: Articles (All / Editor's picks / Recently published / Scheduled / Drafts / Needs cover image / By category / By edition / By author) · Categories · Authors · Editions · Notes · Products · Inbox (Pitches + Letters) · Settings singleton.
+
+Settings singleton drives:
+
+- `homepageLayout.sections[]` — admin reorders / disables homepage sections (hero, editors, edition, notes, popular, feed, shop). Empty layout falls back to the default ordering.
+- `homepageLayout.heroArticle` — optionally pin a specific article into the hero slot.
+- `reactionLabels[]` — text labels for the reader-reaction component on each article (default: Suka, Penting, Kena banget). Symbols are intentionally avoided.
+- `colophon` — Portable Text block rendered at `/colophon`. Empty colophon falls back to baked-in credits.
+- `tipJarSaweria` / `tipJarTrakteer` / `tipJarPatreon` — URLs surfaced in the footer tip-jar block. Empty URLs are hidden.
+
+## Seeding Sanity
+
+A one-shot seed script lives at `scripts/seed-sanity.mjs`. It upserts a baseline editorial setup (4 categories, 2 editors, Edition 001, 4 shop products priced in IDR, and a Settings singleton with the default homepage layout):
+
+```bash
+# dry run — prints docs without writing, no deps needed
+node scripts/seed-sanity.mjs --dry-run
+
+# actual write — needs an Editor-scoped write token; run from web/ so @sanity/client resolves
+cd web
+SANITY_PROJECT_ID=lyo17dt8 \
+SANITY_DATASET=production \
+SANITY_WRITE_TOKEN=sk-... \
+node ../scripts/seed-sanity.mjs
+```
+
+Documents use deterministic `_id` values (`seed-*`), so re-running the script is idempotent.
 
 ## DOKU backend
 

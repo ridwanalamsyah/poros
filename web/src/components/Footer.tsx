@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCategories } from "../hooks/useCategories";
+import { TipJar } from "./TipJar";
 
 function FacebookIcon() {
   return (
@@ -79,8 +80,13 @@ export function Footer() {
           <a href="/rss.xml" aria-label="RSS feed" className="hover:opacity-70 transition-opacity"><RssIcon /></a>
         </div>
 
+        <TipJar />
+
         <p className="stat text-paper/55 mt-8 tracking-[0.18em]">
-          VELVET COLLAPSE · {new Date().getFullYear()} · BANDUNG
+          VELVET COLLAPSE · {new Date().getFullYear()} · BANDUNG ·{" "}
+          <Link to="/colophon" className="hover:opacity-80">
+            COLOPHON
+          </Link>
         </p>
       </div>
     </footer>
