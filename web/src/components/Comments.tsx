@@ -18,11 +18,7 @@ export function Comments({ pageId, pageUrl, pageTitle }: { pageId: string; pageU
   }, [appId]);
 
   if (!appId) {
-    return (
-      <div className="mt-12 pt-8 border-t rule-soft text-muted text-sm">
-        Komentar belum diaktifkan. Editor bisa mengatur Cusdis App ID di Sanity Studio → Settings.
-      </div>
-    );
+    return null;
   }
 
   return (

@@ -8,7 +8,7 @@ import { formatDate } from "../utils/text";
 export function NotesPage() {
   const { data: notes } = useAsync(() => getNotes(), []);
   return (
-    <div className="max-w-3xl mx-auto px-4 md:px-0 pt-6 md:pt-14 pb-10">
+    <div className="max-w-3xl mx-auto px-5 md:px-0 pt-6 md:pt-14 pb-10">
       <SEO title="Notes" description="Catatan singkat dari redaksi POROS — link, quote, observasi." />
       <header className="border-b rule-soft pb-6 mb-8">
         <p className="kicker text-accent">NOTES</p>

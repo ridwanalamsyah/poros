@@ -8,6 +8,8 @@ import { TagPage } from "./pages/Tag";
 import { EditionPage, EditionsPage } from "./pages/Editions";
 import { NotesPage } from "./pages/Notes";
 import { ShopPage } from "./pages/Shop";
+import { CartPage } from "./pages/Cart";
+import { ShareCardPage } from "./pages/ShareCard";
 import { SavedPage } from "./pages/Saved";
 import { AboutPage } from "./pages/About";
 import { SubmitPage } from "./pages/Submit";
@@ -26,6 +28,8 @@ export default function App() {
         <Route path="/edition/:slug" element={<EditionPage />} />
         <Route path="/notes" element={<NotesPage />} />
         <Route path="/shop" element={<ShopPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/share/:slug" element={<ShareCardPage />} />
         <Route path="/saved" element={<SavedPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/submit" element={<SubmitPage mode="pitch" />} />

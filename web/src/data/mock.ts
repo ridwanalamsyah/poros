@@ -16,8 +16,8 @@ export const mockCategories: Category[] = [
 ];
 
 export const mockAuthors: Author[] = [
-  { _id: "auth-tirta", name: "Tirta Anggara", slug: "tirta-anggara", bio: "Jurnalis lepas berbasis Bandung. Menulis soal serikat pekerja dan ekonomi platform.", twitter: "tirtaanggara", image: img("https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400", "Tirta Anggara") },
-  { _id: "auth-rara", name: "Rara Sugiarti", slug: "rara-sugiarti", bio: "Editor POROS. Sebelumnya menulis untuk Magdalene dan Project Multatuli.", twitter: "rarasugiarti", image: img("https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400", "Rara Sugiarti") },
+  { _id: "auth-raditya", name: "Raditya Fitra", slug: "raditya-fitra", bio: "Editor Velvet Collapse Magazine. Menulis tentang dunia kerja dan ekonomi platform dari Bandung.", twitter: "radityafitra", image: img("https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400", "Raditya Fitra") },
+  { _id: "auth-ridwan", name: "Ridwan Alamsyah", slug: "ridwan-alamsyah", bio: "Editor Velvet Collapse Magazine. Sebelumnya menulis kolom budaya dan musik bawah tanah.", twitter: "ridwanalamsyah", image: img("https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400", "Ridwan Alamsyah") },
   { _id: "auth-bagas", name: "Bagas Prasetyo", slug: "bagas-prasetyo", bio: "Fotografer dan penulis. Tinggal di Antapani, Bandung Timur.", twitter: "bagasprasetyo", image: img("https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400", "Bagas Prasetyo") },
   { _id: "auth-mira", name: "Mira Wulansari", slug: "mira-wulansari", bio: "Mahasiswa antropologi Unpad yang menulis soal pasar dan ruang kota.", twitter: "", image: img("https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400", "Mira Wulansari") },
   { _id: "auth-dirga", name: "Dirga Saputra", slug: "dirga-saputra", bio: "Penulis musik dan kontributor di kanal Bandung Underground Archive.", twitter: "dirgasaputra", image: img("https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400", "Dirga Saputra") },
@@ -25,7 +25,7 @@ export const mockAuthors: Author[] = [
 ];
 
 export const mockEditions: Edition[] = [
-  { _id: "ed-001", title: "Edisi 001 — Kota yang Berhenti Sopan", slug: "001-kota-yang-berhenti-sopan", issueNumber: "001", description: "Edisi perdana POROS. Tentang Bandung yang sedang berdamai dengan dirinya sendiri.", publishedAt: "2026-03-01" },
+  { _id: "ed-001", title: "Edisi 001 — Kota yang Berhenti Sopan", slug: "001-kota-yang-berhenti-sopan", issueNumber: "001", description: "Edisi perdana Velvet Collapse Magazine. Tentang Bandung yang sedang berdamai dengan dirinya sendiri.", publishedAt: "2026-03-01" },
   { _id: "ed-002", title: "Edisi 002 — Para Pekerja Tanpa Kantor", slug: "002-pekerja-tanpa-kantor", issueNumber: "002", description: "Pekerja gig, freelancer, kurir di seputar Bandung Raya — siapa yang melindungi mereka.", publishedAt: "2026-04-15" },
 ];
 
@@ -677,15 +677,15 @@ export const mockNotes: Note[] = [
 ];
 
 export const mockProducts: Product[] = [
-  { _id: "p1", title: "POROS — Edisi 001", slug: "edisi-001", description: "Cetakan terbatas. 96 halaman, kertas matte 100gsm.", price: 85000, inStock: true, image: img("/covers/4a9cb24ad4-partying-in-nature-ketika-bersenang-sena.jpeg", "POROS Edisi 001") },
-  { _id: "p2", title: "POROS — Edisi 002", slug: "edisi-002", description: "Edisi tema pekerja platform. 104 halaman.", price: 85000, inStock: true, image: img("/covers/16fe1cae2d-remuk-siap-ledakan-ep-program-unit-hardc.jpeg", "POROS Edisi 002") },
-  { _id: "p3", title: "Tote Bag POROS", slug: "tote-bag", description: "Kanvas 12 oz, sablon manual di Bandung.", price: 95000, inStock: true, image: img("https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800", "POROS tote bag") },
-  { _id: "p4", title: "Bundle Edisi 001 + 002", slug: "bundle-001-002", description: "Hemat Rp 25.000. Termasuk ongkir Bandung Raya.", price: 145000, inStock: true, image: img("/covers/c002238c40-the-only-way-to-end-q1-2026-check-out-so.jpg", "POROS bundle") },
+  { _id: "p1", title: "Velvet Collapse — Edisi 001", slug: "edisi-001", description: "Cetakan terbatas. 96 halaman, kertas matte 100gsm.", price: 85000, inStock: true, image: img("/covers/4a9cb24ad4-partying-in-nature-ketika-bersenang-sena.jpeg", "Velvet Collapse Edisi 001") },
+  { _id: "p2", title: "Velvet Collapse — Edisi 002", slug: "edisi-002", description: "Edisi tema pekerja platform. 104 halaman.", price: 85000, inStock: true, image: img("/covers/16fe1cae2d-remuk-siap-ledakan-ep-program-unit-hardc.jpeg", "Velvet Collapse Edisi 002") },
+  { _id: "p3", title: "Tote Bag Velvet Collapse", slug: "tote-bag", description: "Kanvas 12 oz, sablon manual di Bandung.", price: 95000, inStock: true, image: img("https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800", "Velvet Collapse tote bag") },
+  { _id: "p4", title: "Bundle Edisi 001 + 002", slug: "bundle-001-002", description: "Hemat Rp 25.000. Termasuk ongkir Bandung Raya.", price: 145000, inStock: true, image: img("/covers/c002238c40-the-only-way-to-end-q1-2026-check-out-so.jpg", "Velvet Collapse bundle") },
 ];
 
 export const mockSettings: Settings = {
-  siteTitle: "POROS",
-  siteDescription: "POROS — majalah online dari Bandung. Labor · society · culture.",
+  siteTitle: "Velvet Collapse Magazine",
+  siteDescription: "Velvet Collapse Magazine — built from the mess. Majalah online dari Bandung.",
   tipJarSaweria: "https://saweria.co/porosmagazine",
   tipJarTrakteer: "https://trakteer.id/porosmagazine",
   tipJarPatreon: "",

@@ -20,7 +20,7 @@ export function ArticlePage() {
 
   if (loading) {
     return (
-      <div className="max-w-3xl mx-auto px-4 md:px-0 py-10 space-y-4">
+      <div className="max-w-3xl mx-auto px-5 md:px-0 py-10 space-y-4">
         <div className="skeleton h-3 w-24" />
         <div className="skeleton h-10 w-3/4" />
         <div className="skeleton aspect-[16/9]" />
@@ -60,7 +60,7 @@ export function ArticlePage() {
       />
       <ReadingProgress />
 
-      <article className="max-w-3xl mx-auto px-4 md:px-0 pt-6 md:pt-14 pb-12">
+      <article className="max-w-3xl mx-auto px-5 md:px-0 pt-6 md:pt-14 pb-12">
         <header className="mb-6 md:mb-8">
           <div className="flex items-center gap-3 mb-4 flex-wrap">
             {article.category && <Link to={`/category/${article.category.slug}`} className="kicker text-accent hover-underline">{article.category.title}</Link>}
@@ -110,7 +110,7 @@ export function ArticlePage() {
         )}
 
         <div className="mt-10">
-          <ShareBar url={`/article/${article.slug}`} title={article.title} />
+          <ShareBar url={`/article/${article.slug}`} title={article.title} slug={article.slug} />
         </div>
 
         {article.author && (
