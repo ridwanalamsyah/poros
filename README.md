@@ -1,5 +1,8 @@
 # POROS Magazine
 
+- **Web**: https://poros-magazine.vercel.app
+- **Studio**: https://poros-magazine.sanity.studio
+
 Indonesian longform magazine — labor, society, culture. Based in Bandung.
 
 Stack: React + Vite (frontend) + Sanity v3 (CMS) + DOKU (payments).

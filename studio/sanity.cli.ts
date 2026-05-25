@@ -5,4 +5,5 @@ const dataset = (typeof process !== "undefined" && process.env.SANITY_STUDIO_DAT
 
 export default defineCliConfig({
   api: { projectId, dataset },
+  studioHost: "poros-magazine",
 });
