@@ -92,7 +92,7 @@ export function ShopPage() {
       )}
 
       <p className="mt-12 text-xs text-muted">
-        Untuk pertanyaan pesanan: <a className="underline" href="mailto:shop@porosmagazine.id">shop@porosmagazine.id</a>
+        Untuk pertanyaan pesanan: <a className="underline" href="mailto:shop@velvetcollapse.id">shop@velvetcollapse.id</a>
       </p>
     </div>
   );

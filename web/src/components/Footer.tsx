@@ -42,6 +42,7 @@ export function Footer() {
   const { data: settings } = useAsync(() => getSettings(), []);
 
   const wordmark = settings?.brandWordmark?.trim() || settings?.siteTitle?.trim() || "Velvet Collapse";
+  const wordmarkHasMagazine = /\bmagazine\b/i.test(wordmark);
   const tagline = settings?.footerTagline?.trim() || "Built from the mess.";
   const year = new Date().getFullYear();
   const copyright =
@@ -60,7 +61,7 @@ export function Footer() {
       >
         {wordmark}
       </Link>
-      <p className="kicker text-paper/75 mt-1 tracking-[0.4em]">MAGAZINE — DEPARTMENT</p>
+      <p className="kicker text-paper/75 mt-1 tracking-[0.4em]">{wordmarkHasMagazine ? "DEPARTMENT" : "MAGAZINE — DEPARTMENT"}</p>
       <p className="text-paper/55 italic mt-2 text-sm">{tagline}</p>
 
       <nav className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 kicker text-paper">

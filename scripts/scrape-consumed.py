@@ -15,7 +15,7 @@ HEADERS = {
     "Accept-Language": "en-US,en;q=0.9",
     "Referer": "https://consumedmagazine.com/",
 }
-PUBLIC = "/home/ubuntu/poros/web/public/covers"
+PUBLIC = "/home/ubuntu/velvet-collapse-magazine/web/public/covers"
 os.makedirs(PUBLIC, exist_ok=True)
 
 def fetch(url):
@@ -100,7 +100,7 @@ def main():
             "category": (cats[0] if cats else "Society"),
         })
 
-    out = "/home/ubuntu/poros/scripts/consumed-articles.json"
+    out = "/home/ubuntu/velvet-collapse-magazine/scripts/consumed-articles.json"
     with open(out, "w") as f:
         json.dump(articles, f, indent=2, ensure_ascii=False)
     print(f"\nWrote {out} ({len(articles)} articles)", file=sys.stderr)

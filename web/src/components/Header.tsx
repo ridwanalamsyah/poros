@@ -81,6 +81,7 @@ export function Header() {
   const { results } = useArticleSearch(query);
   const { data: settings } = useAsync(() => getSettings(), []);
   const wordmark = settings?.brandWordmark?.trim() || settings?.siteTitle?.trim() || "Velvet Collapse";
+  const wordmarkHasMagazine = /\bmagazine\b/i.test(wordmark);
 
   useEffect(() => {
     setMenuOpen(false);
@@ -124,7 +125,9 @@ export function Header() {
               >
                 {wordmark}
               </span>
-              <span className="block mt-1 tracking-[0.5em] text-[0.5rem] font-medium" style={{ opacity: scrolled ? 0 : 1, transition: "opacity 0.2s" }}>MAGAZINE</span>
+              {!wordmarkHasMagazine && (
+                <span className="block mt-1 tracking-[0.5em] text-[0.5rem] font-medium" style={{ opacity: scrolled ? 0 : 1, transition: "opacity 0.2s" }}>MAGAZINE</span>
+              )}
             </Link>
             <div className="flex items-center justify-end gap-3">
               <Link to="/submit" className="kicker tracking-[0.18em] opacity-80 hover:opacity-100">FOLLOW</Link>
@@ -171,7 +174,9 @@ export function Header() {
         <div className="px-5 pt-3 pb-2 text-center">
           <Link to="/" className="inline-block leading-none">
             <span className="font-logo block leading-none" style={{ fontSize: "clamp(1.25rem, 5.5vw, 1.75rem)", letterSpacing: "0.03em" }}>{wordmark}</span>
-            <span className="block mt-1 tracking-[0.45em] text-[0.45rem] font-medium">MAGAZINE</span>
+            {!wordmarkHasMagazine && (
+              <span className="block mt-1 tracking-[0.45em] text-[0.45rem] font-medium">MAGAZINE</span>
+            )}
           </Link>
         </div>
         <div className="px-3 pb-2 flex items-center justify-center gap-2 flex-wrap">

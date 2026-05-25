@@ -43,7 +43,7 @@ export function SubmitPage({ mode = "pitch" }: { mode?: Mode }) {
       setName(""); setEmail(""); setTitle(""); setBody("");
     } catch {
       setStatus("err");
-      setMsg("Gagal mengirim. Coba kirim ke email submissions@porosmagazine.id");
+      setMsg("Gagal mengirim. Coba kirim ke email submissions@velvetcollapse.id");
     }
   }
 

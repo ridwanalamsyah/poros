@@ -2,19 +2,17 @@
 
 Indonesian longform magazine — labor, society, culture. Based in Bandung.
 
-Repo code-name: `poros`. Customer-facing brand: **Velvet Collapse Magazine**.
-
 Stack: React + Vite (frontend) + Sanity v3 (CMS) + DOKU (payments).
 
 ## Live
 
-- Web: https://poros-magazine.vercel.app
-- Studio: https://poros-magazine.sanity.studio
+- Web: https://velvet-collapse-magazine.vercel.app
+- Studio: https://velvet-collapse-magazine.sanity.studio
 
 ## Repo layout
 
 ```
-poros/
+velvet-collapse-magazine/
 ├── web/        React + Vite frontend
 └── studio/     Sanity v3 Studio
 ```
@@ -49,7 +47,7 @@ npx sanity build          # outputs studio/dist
 VITE_SANITY_PROJECT_ID=lyo17dt8
 VITE_SANITY_DATASET=production
 VITE_SANITY_WRITE_TOKEN=...           # enables submit-pitch / letters / orders to save into Studio
-VITE_SITE_URL=https://porosmagazine.id
+VITE_SITE_URL=https://velvetcollapse.id
 
 # Newsletter — pick one
 VITE_BUTTONDOWN_USERNAME=...          # public Buttondown embed (no API key, simplest)
@@ -59,7 +57,7 @@ VITE_NEWSLETTER_ENDPOINT=...          # custom server endpoint (e.g. a Cloudflar
 VITE_DOKU_CHECKOUT_ENDPOINT=...       # POST { customer, items, subtotal, orderId, orderNumber } and expects { paymentUrl, paymentRef }
 
 # Analytics
-VITE_PLAUSIBLE_DOMAIN=porosmagazine.id   # turn on Plausible script
+VITE_PLAUSIBLE_DOMAIN=velvetcollapse.id   # turn on Plausible script
 VITE_PLAUSIBLE_HOST=https://plausible.io # optional override for self-hosted Plausible
 VITE_VERCEL_ANALYTICS=1                  # alternative: turn on Vercel Web Analytics
 
@@ -152,7 +150,7 @@ Never put a Buttondown API key into a `VITE_*` variable — it would be inlined 
 
 ## Analytics & errors
 
-- **Plausible**: set `VITE_PLAUSIBLE_DOMAIN=porosmagazine.id`. Loads `script.js` from `plausible.io` (override with `VITE_PLAUSIBLE_HOST` for self-hosted). Custom events fire on `add_to_cart`, `checkout_started`, `newsletter_subscribed`.
+- **Plausible**: set `VITE_PLAUSIBLE_DOMAIN=velvetcollapse.id`. Loads `script.js` from `plausible.io` (override with `VITE_PLAUSIBLE_HOST` for self-hosted). Custom events fire on `add_to_cart`, `checkout_started`, `newsletter_subscribed`.
 - **Vercel Web Analytics**: set `VITE_VERCEL_ANALYTICS=1` (only meaningful when hosted on Vercel — it serves `/_vercel/insights/script.js` automatically).
 - **Sentry**: set `VITE_SENTRY_DSN`. `@sentry/react` is dynamically imported, so the bundle stays small when Sentry is disabled. `VITE_SENTRY_TRACES_SAMPLE_RATE` (default `0.1`) controls perf tracing.
 

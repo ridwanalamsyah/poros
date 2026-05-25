@@ -8,7 +8,7 @@ const projectId = process.env.SANITY_STUDIO_PROJECT_ID || "lyo17dt8";
 const dataset = process.env.SANITY_STUDIO_DATASET || "production";
 
 export default defineConfig({
-  name: "poros",
+  name: "velvet-collapse",
   title: "Velvet Collapse Magazine — Studio",
   projectId,
   dataset,

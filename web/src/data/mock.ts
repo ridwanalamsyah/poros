@@ -686,8 +686,8 @@ export const mockProducts: Product[] = [
 export const mockSettings: Settings = {
   siteTitle: "Velvet Collapse Magazine",
   siteDescription: "Velvet Collapse Magazine — built from the mess. Majalah online dari Bandung.",
-  tipJarSaweria: "https://saweria.co/porosmagazine",
-  tipJarTrakteer: "https://trakteer.id/porosmagazine",
+  tipJarSaweria: "https://saweria.co/velvetcollapse",
+  tipJarTrakteer: "https://trakteer.id/velvetcollapse",
   tipJarPatreon: "",
   cusdisAppId: "",
   newsletterEndpoint: "",
