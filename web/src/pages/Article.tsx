@@ -11,6 +11,8 @@ import { PortableBody } from "../components/PortableBody";
 import { ReadingControls } from "../components/ReadingControls";
 import { Comments } from "../components/Comments";
 import { Reactions } from "../components/Reactions";
+import { AuthorPopover } from "../components/AuthorPopover";
+import { RelatedArticles } from "../components/RelatedArticles";
 import { blocksToPlainText, formatDate, readingMinutes } from "../utils/text";
 
 export function ArticlePage() {
@@ -71,11 +73,7 @@ export function ArticlePage() {
           <h1 className="headline-display text-4xl md:text-6xl leading-[0.96]">{article.title}</h1>
           {article.excerpt && <p className="mt-4 text-muted text-lg md:text-xl">{article.excerpt}</p>}
           <div className="mt-5 byline flex items-center gap-2 flex-wrap">
-            {article.author && (
-              <Link to={`/author/${article.author.slug}`} className="hover-underline">
-                {article.author.name}
-              </Link>
-            )}
+            {article.author && <AuthorPopover author={article.author} />}
             <span>·</span>
             <span>{formatDate(article.publishedAt)}</span>
             <span>·</span>
@@ -128,6 +126,8 @@ export function ArticlePage() {
             </div>
           </div>
         )}
+
+        <RelatedArticles current={article} pool={list} />
 
         <Comments pageId={article._id} pageUrl={typeof window !== "undefined" ? window.location.href : ""} pageTitle={article.title} />
 

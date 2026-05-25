@@ -197,6 +197,71 @@ html.font-sans-reading .article-body {
   width: 4em;
 }
 
+.article-body sup.footnote-ref {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.65em;
+  vertical-align: super;
+  margin-left: 0.1em;
+  color: var(--accent);
+}
+.article-body sup.footnote-ref a {
+  text-decoration: none;
+}
+.article-body sup.footnote-ref a:hover {
+  text-decoration: underline;
+}
+
+.article-body .footnotes {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.85rem;
+  color: rgb(var(--ink-rgb) / 0.78);
+}
+.article-body .footnotes ol {
+  list-style: decimal;
+  padding-left: 1.5em;
+}
+.article-body .footnotes li {
+  margin-bottom: 0.6em;
+  line-height: 1.55;
+}
+.article-body .footnotes a {
+  text-decoration: none;
+  margin-left: 0.3em;
+  color: var(--accent);
+}
+.article-body .footnotes a:hover {
+  text-decoration: underline;
+}
+
+.article-body .margin-note-wrap {
+  position: relative;
+}
+.article-body .margin-note-anchor {
+  background: rgb(var(--accent-rgb, 200 80 60) / 0.12);
+  border-bottom: 1px dashed var(--accent);
+  cursor: help;
+}
+.article-body .margin-note {
+  display: block;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: rgb(var(--ink-rgb) / 0.72);
+  margin: 0.4em 0;
+  padding-left: 0.8em;
+  border-left: 2px solid var(--accent);
+}
+@media (min-width: 1024px) {
+  .article-body .margin-note {
+    position: absolute;
+    right: -16rem;
+    top: 0;
+    width: 14rem;
+    margin: 0;
+    padding-left: 0.8em;
+  }
+}
+
 .reading-progress {
   position: fixed;
   top: 0;
