@@ -197,6 +197,19 @@ html.font-sans-reading .article-body {
   width: 4em;
 }
 
+.footnote-mark {
+  position: relative;
+  cursor: help;
+  text-decoration: underline dotted;
+  text-decoration-color: rgb(var(--ink-rgb) / 0.4);
+  text-underline-offset: 3px;
+}
+.footnote-sup {
+  color: var(--accent);
+  font-size: 0.7em;
+  margin-left: 0.05em;
+}
+
 .reading-progress {
   position: fixed;
   top: 0;

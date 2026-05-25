@@ -12,6 +12,8 @@ import { ReadingControls } from "../components/ReadingControls";
 import { Comments } from "../components/Comments";
 import { ReactionsBar } from "../components/Reactions";
 import { TipJar } from "../components/TipJar";
+import { AuthorPopover } from "../components/AuthorPopover";
+import { RelatedArticles } from "../components/RelatedArticles";
 import { useSettings } from "../hooks/useSettings";
 import { blocksToPlainText, formatDate, readingMinutes } from "../utils/text";
 
@@ -85,11 +87,7 @@ export function ArticlePage() {
           <h1 className="headline-display text-4xl md:text-6xl leading-[0.96]">{article.title}</h1>
           {article.excerpt && <p className="mt-4 text-muted text-lg md:text-xl">{article.excerpt}</p>}
           <div className="mt-5 byline flex items-center gap-2 flex-wrap">
-            {article.author && (
-              <Link to={`/author/${article.author.slug}`} className="hover-underline">
-                {article.author.name}
-              </Link>
-            )}
+            {article.author && <AuthorPopover author={article.author} />}
             <span>·</span>
             <span>{formatDate(article.publishedAt)}</span>
             <span>·</span>
@@ -114,7 +112,7 @@ export function ArticlePage() {
           ) : null}
         </div>
 
-        <HighlightShare containerRef={bodyRef as React.RefObject<HTMLElement>} title={article.title} />
+        <HighlightShare containerRef={bodyRef as React.RefObject<HTMLElement>} title={article.title} slug={article.slug} />
 
         {article.tags && article.tags.length > 0 && (
           <div className="mt-10 pt-6 border-t rule-soft flex flex-wrap gap-2">
@@ -146,6 +144,8 @@ export function ArticlePage() {
             </div>
           </div>
         )}
+
+        <RelatedArticles article={article} />
 
         <Comments pageId={article._id} pageUrl={typeof window !== "undefined" ? window.location.href : ""} pageTitle={article.title} />
 
