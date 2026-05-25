@@ -1,11 +1,20 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useAsync } from "../hooks/useAsync";
-import { getProducts } from "../data/api";
+import { createOrder, getProducts } from "../data/api";
 import { SmartImage } from "../components/SmartImage";
 import { useCart } from "../hooks/useCart";
 import { SEO } from "../components/SEO";
 import { formatIDR } from "../utils/text";
+
+function generateOrderNumber(): string {
+  const d = new Date();
+  const y = d.getFullYear().toString().slice(-2);
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `VC${y}${m}${day}-${rand}`;
+}
 
 const PAYMENT_METHODS: { label: string; sub: string }[] = [
   { label: "Transfer Bank", sub: "BCA · Mandiri · BRI · BNI · CIMB" },
@@ -44,8 +53,11 @@ export function CartPage() {
     }
     setStatus("loading");
     const endpoint = import.meta.env.VITE_DOKU_CHECKOUT_ENDPOINT as string | undefined;
+    const orderNumber = generateOrderNumber();
+    const fullAddress = city ? `${address}\n${city}` : address;
     const payload = {
-      customer: { name, email, phone, address, city },
+      orderNumber,
+      customer: { name, email, phone, address: fullAddress },
       items: cartItems.map(({ line, product }) => ({
         sku: product.slug,
         name: product.title,
@@ -54,16 +66,29 @@ export function CartPage() {
       })),
       subtotal,
     };
+    // Try writing order to Sanity (non-blocking — if it fails, still continue)
+    await createOrder({
+      orderNumber,
+      customer: { name, email, phone, address: fullAddress },
+      items: cartItems.map(({ line, product }) => ({
+        productRef: product._id,
+        qty: line.qty,
+        unitPrice: product.price,
+      })),
+      total: subtotal,
+    }).catch(() => null);
     if (!endpoint) {
       try {
         const log = JSON.parse(localStorage.getItem("vc-orders") ?? "[]");
         log.push({ ...payload, ts: Date.now() });
         localStorage.setItem("vc-orders", JSON.stringify(log));
-      } catch {}
+      } catch {
+        // ignore localStorage failures
+      }
       await new Promise((r) => setTimeout(r, 600));
       setStatus("idle");
       setStage("done");
-      setMsg("Pesanan diterima. Redaksi akan mengirim link pembayaran ke emailmu dalam beberapa menit.");
+      setMsg(`Pesanan ${orderNumber} diterima. Redaksi akan mengirim link pembayaran ke emailmu dalam beberapa menit.`);
       clear();
       return;
     }

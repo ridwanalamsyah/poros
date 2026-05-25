@@ -124,10 +124,12 @@ export function ShopPage() {
             const inCart = lines.find((l) => l.slug === p.slug);
             return (
               <div key={p._id} className="flex flex-col">
-                <div className="aspect-square bg-ink/[0.05] mb-3 overflow-hidden">
-                  <SmartImage image={p.image} className="w-full h-full" width={600} />
-                </div>
-                <h3 className="headline text-lg">{p.title}</h3>
+                <Link to={`/shop/${p.slug}`} className="block">
+                  <div className="aspect-square bg-ink/[0.05] mb-3 overflow-hidden">
+                    <SmartImage image={p.image} className="w-full h-full hover:opacity-90 transition-opacity" width={600} />
+                  </div>
+                  <h3 className="headline text-lg hover-underline">{p.title}</h3>
+                </Link>
                 {p.description && <p className="text-sm text-muted mt-1 flex-1">{p.description}</p>}
                 <p className="mt-3 byline">{formatIDR(p.price)}</p>
                 {inCart ? (
