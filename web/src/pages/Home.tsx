@@ -237,7 +237,7 @@ function PopularSection({ section, allArticles }: SectionProps) {
   );
 }
 
-function FeedSection({ section, articles, loading }: SectionProps) {
+function FeedSection({ section, articles, allArticles, loading }: SectionProps) {
   const [tab, setTab] = useState<Tab>("latest");
   const [shown, setShown] = useState(PAGE_SIZE);
 
@@ -249,6 +249,11 @@ function FeedSection({ section, articles, loading }: SectionProps) {
       (a, b) => +new Date(b.publishedAt ?? 0) - +new Date(a.publishedAt ?? 0),
     );
   }, [articles, tab]);
+
+  const popular = useMemo<Article[]>(
+    () => [...allArticles].sort((a, b) => (b.views ?? 0) - (a.views ?? 0)).slice(0, 5),
+    [allArticles],
+  );
 
   const feed = sorted.slice(0, shown);
   const canLoadMore = sorted.length > shown;
@@ -264,35 +269,76 @@ function FeedSection({ section, articles, loading }: SectionProps) {
 
   return (
     <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 pt-12 md:pt-16">
-      <div className="border-b rule pb-3 flex items-end gap-6">
-        {(["latest", "commented"] as Tab[]).map((t) => (
-          <button
-            key={t}
-            onClick={() => {
-              setTab(t);
-              setShown(PAGE_SIZE);
-            }}
-            className={`kicker tracking-[0.18em] pb-1 transition-opacity ${tab === t ? "opacity-100 border-b-2 border-ink -mb-[13px]" : "opacity-50 hover:opacity-80"}`}
-          >
-            {t === "latest" ? section.title?.trim() || "LATEST" : "COMMENTED"}
-          </button>
-        ))}
-      </div>
-
-      <div className="pt-3">
-        {feed.map((a) => (
-          <ArticleCard key={a._id} article={a} variant="row" />
-        ))}
-        {canLoadMore && (
-          <div className="flex justify-center pt-8">
-            <button
-              onClick={() => setShown((n) => n + PAGE_SIZE)}
-              className="kicker tracking-[0.2em] border border-ink/80 dark:border-paper/60 px-7 py-3 hover:bg-ink hover:text-paper transition-colors"
-            >
-              LOAD MORE
-            </button>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="md:col-span-2">
+          <div className="border-b rule pb-3 flex items-end gap-6">
+            {(["latest", "commented"] as Tab[]).map((t) => (
+              <button
+                key={t}
+                onClick={() => {
+                  setTab(t);
+                  setShown(PAGE_SIZE);
+                }}
+                className={`kicker tracking-[0.18em] pb-1 transition-opacity ${tab === t ? "opacity-100 border-b-2 border-ink -mb-[13px]" : "opacity-50 hover:opacity-80"}`}
+              >
+                {t === "latest" ? section.title?.trim() || "LATEST" : "COMMENTED"}
+              </button>
+            ))}
           </div>
-        )}
+
+          <div className="pt-3">
+            {feed.map((a) => (
+              <ArticleCard key={a._id} article={a} variant="row" />
+            ))}
+            {canLoadMore && (
+              <div className="flex justify-center pt-8">
+                <button
+                  onClick={() => setShown((n) => n + PAGE_SIZE)}
+                  className="kicker tracking-[0.2em] border border-ink/80 dark:border-paper/60 px-7 py-3 hover:bg-ink hover:text-paper transition-colors"
+                >
+                  LOAD MORE
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <aside className="md:col-span-1 md:border-l rule-soft md:pl-10">
+          <h3 className="kicker text-accent border-b rule-soft pb-2 mb-5">MOST POPULAR</h3>
+          <ol className="space-y-5">
+            {popular.map((a, i) => (
+              <li key={a._id} className="flex items-start gap-3">
+                <span
+                  className="font-logo text-accent text-2xl leading-none shrink-0"
+                  style={{ fontFamily: "Pirata One, serif" }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <Link
+                    to={`/article/${a.slug}`}
+                    className="headline-display text-base leading-snug hover-underline block"
+                  >
+                    {a.title}
+                  </Link>
+                  <p className="text-[0.7rem] text-muted mt-1">
+                    {(a.views ?? 0).toLocaleString()} Views
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          <div className="mt-10 pt-6 border-t rule-soft">
+            <h3 className="kicker text-accent mb-3">FROM THE NOTEBOOK</h3>
+            <p className="text-sm text-muted italic">
+              Catatan-catatan pendek dari redaksi Velvet Collapse — antara dua edisi.
+            </p>
+            <Link to="/notes" className="kicker mt-3 inline-block hover-underline">
+              READ NOTES →
+            </Link>
+          </div>
+        </aside>
       </div>
     </section>
   );

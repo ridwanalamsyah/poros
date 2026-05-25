@@ -695,6 +695,7 @@ export const mockSettings: Settings = {
   homepageLayout: {
     sections: [
       { kind: "hero", enabled: true },
+      { kind: "editors", enabled: true },
       { kind: "edition", enabled: true },
       { kind: "feed", enabled: true },
       { kind: "notes", enabled: false },
