@@ -85,6 +85,27 @@ export type Product = {
   inStock?: boolean;
 };
 
+export type HomepageSectionKind =
+  | "hero"
+  | "editors"
+  | "edition"
+  | "notes"
+  | "popular"
+  | "feed"
+  | "shop";
+
+export type HomepageSection = {
+  _key?: string;
+  kind: HomepageSectionKind;
+  enabled?: boolean;
+  title?: string;
+};
+
+export type HomepageLayout = {
+  sections?: HomepageSection[];
+  heroArticleSlug?: string;
+};
+
 export type Settings = {
   siteTitle?: string;
   siteDescription?: string;
@@ -93,4 +114,7 @@ export type Settings = {
   tipJarPatreon?: string;
   cusdisAppId?: string;
   newsletterEndpoint?: string;
+  homepageLayout?: HomepageLayout;
+  reactionLabels?: string[];
+  colophon?: PortableTextBlock[];
 };

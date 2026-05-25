@@ -58,6 +58,45 @@ export default defineType({
         defineField({ name: "heroArticle", title: "Pinned hero article (optional)", type: "reference", to: [{ type: "article" }] }),
       ],
     }),
+    defineField({
+      name: "reactionLabels",
+      title: "Reaction labels",
+      description: "Label tombol reaksi pembaca di akhir artikel. Pakai teks pendek, bukan simbol. Default: Suka, Penting, Kena banget.",
+      type: "array",
+      of: [{ type: "string" }],
+      options: { layout: "tags" },
+      validation: (r) => r.max(6),
+    }),
+    defineField({
+      name: "colophon",
+      title: "Colophon",
+      description: "Halaman kredit produksi: siapa mengerjakan apa, tech stack, ucapan terima kasih. Ditampilkan di /colophon.",
+      type: "array",
+      of: [
+        {
+          type: "block",
+          styles: [
+            { title: "Normal", value: "normal" },
+            { title: "Heading 2", value: "h2" },
+            { title: "Heading 3", value: "h3" },
+          ],
+          marks: {
+            decorators: [
+              { title: "Strong", value: "strong" },
+              { title: "Emphasis", value: "em" },
+            ],
+            annotations: [
+              {
+                name: "link",
+                type: "object",
+                title: "Link",
+                fields: [{ name: "href", type: "url", title: "URL" }],
+              },
+            ],
+          },
+        },
+      ],
+    }),
   ],
   preview: { select: { title: "siteTitle" } },
 });

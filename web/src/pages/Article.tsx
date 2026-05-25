@@ -10,6 +10,7 @@ import { ShareBar } from "../components/ShareBar";
 import { PortableBody } from "../components/PortableBody";
 import { ReadingControls } from "../components/ReadingControls";
 import { Comments } from "../components/Comments";
+import { Reactions } from "../components/Reactions";
 import { blocksToPlainText, formatDate, readingMinutes } from "../utils/text";
 
 export function ArticlePage() {
@@ -112,6 +113,8 @@ export function ArticlePage() {
         <div className="mt-10">
           <ShareBar url={`/article/${article.slug}`} title={article.title} slug={article.slug} />
         </div>
+
+        <Reactions articleId={article._id} />
 
         {article.author && (
           <div className="mt-12 pt-8 border-t rule-soft flex items-start gap-4">
