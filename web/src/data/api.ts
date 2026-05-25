@@ -208,6 +208,12 @@ export function getSettings(): Promise<Settings> {
     `*[_type == "settings"][0]{
       siteTitle,
       siteDescription,
+      brandWordmark,
+      footerTagline,
+      copyrightLine,
+      tipJarHeading,
+      tipJarBlurb,
+      tipJarPlacement,
       tipJarSaweria,
       tipJarTrakteer,
       tipJarPatreon,

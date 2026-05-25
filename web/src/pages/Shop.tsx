@@ -20,7 +20,7 @@ export function ShopPage() {
 
   return (
     <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 pt-6 md:pt-14 pb-10">
-      <SEO title="Shop" description="Edisi cetak dan merchandise POROS, dikirim dari Bandung. Pembayaran aman: bank, e-wallet, QRIS, kartu kredit." />
+      <SEO title="Shop" description="Edisi cetak dan merchandise Velvet Collapse Magazine, dikirim dari Bandung. Pembayaran aman: bank, e-wallet, QRIS, kartu kredit." />
       <header className="border-b rule-soft pb-6 mb-10 flex items-end justify-between gap-4">
         <div>
           <p className="kicker text-accent">SHOP</p>

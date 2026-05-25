@@ -149,9 +149,17 @@ export type HomepageLayout = {
   heroArticleSlug?: string;
 };
 
+export type TipJarPlacement = "footer-center" | "footer-right" | "button" | "hidden";
+
 export type Settings = {
   siteTitle?: string;
   siteDescription?: string;
+  brandWordmark?: string;
+  footerTagline?: string;
+  copyrightLine?: string;
+  tipJarHeading?: string;
+  tipJarBlurb?: string;
+  tipJarPlacement?: TipJarPlacement;
   tipJarSaweria?: string;
   tipJarTrakteer?: string;
   tipJarPatreon?: string;

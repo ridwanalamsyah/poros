@@ -1,16 +1,15 @@
-# POROS Magazine
-
-- **Web**: https://poros-magazine.vercel.app
-- **Studio**: https://poros-magazine.sanity.studio
+# Velvet Collapse Magazine
 
 Indonesian longform magazine — labor, society, culture. Based in Bandung.
+
+Repo code-name: `poros`. Customer-facing brand: **Velvet Collapse Magazine**.
 
 Stack: React + Vite (frontend) + Sanity v3 (CMS) + DOKU (payments).
 
 ## Live
 
-- Site: https://longform-magazine-app-sl0fz2g3.devinapps.com
-- Studio: https://magazine-features-app-xuyjb9e4.devinapps.com
+- Web: https://poros-magazine.vercel.app
+- Studio: https://poros-magazine.sanity.studio
 
 ## Repo layout
 
@@ -81,7 +80,7 @@ SANITY_STUDIO_DATASET=production
 
 ## Features
 
-- Mobile-first Consumed-style layout (hamburger / centered POROS / search+cart)
+- Mobile-first Consumed-style layout (hamburger / centered wordmark / search+cart)
 - Hero + sidebar features + Latest/Commented tabs + Load More
 - ArticleCard variants: hero / row / feature / compact / default
 - Per-category Unsplash fallback covers so articles never render blank
@@ -169,4 +168,4 @@ Frontend posts `{ customer, items, subtotal, orderId, orderNumber }` to `VITE_DO
 
 ---
 
-POROS · 2026 · Bandung
+Velvet Collapse Magazine · 2026 · Bandung

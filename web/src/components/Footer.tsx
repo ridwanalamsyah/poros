@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useCategories } from "../hooks/useCategories";
+import { useAsync } from "../hooks/useAsync";
+import { getSettings } from "../data/api";
 import { TipJar } from "./TipJar";
 
 function FacebookIcon() {
@@ -37,6 +39,49 @@ function RssIcon() {
 
 export function Footer() {
   const { data: categories } = useCategories();
+  const { data: settings } = useAsync(() => getSettings(), []);
+
+  const wordmark = settings?.brandWordmark?.trim() || settings?.siteTitle?.trim() || "Velvet Collapse";
+  const tagline = settings?.footerTagline?.trim() || "Built from the mess.";
+  const year = new Date().getFullYear();
+  const copyright =
+    settings?.copyrightLine?.trim() ||
+    `${wordmark.toUpperCase()} · ${year} · BANDUNG`;
+
+  const placement = settings?.tipJarPlacement ?? "button";
+  const useGrid = placement === "footer-right" && (settings?.tipJarSaweria || settings?.tipJarTrakteer || settings?.tipJarPatreon);
+
+  const mainBlock = (
+    <>
+      <Link
+        to="/"
+        className="font-logo leading-none tracking-wide text-paper inline-block"
+        style={{ fontSize: "clamp(2.4rem, 5vw, 3.6rem)" }}
+      >
+        {wordmark}
+      </Link>
+      <p className="kicker text-paper/75 mt-1 tracking-[0.4em]">MAGAZINE — DEPARTMENT</p>
+      <p className="text-paper/55 italic mt-2 text-sm">{tagline}</p>
+
+      <nav className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 kicker text-paper">
+        <Link to="/" className="hover:opacity-70 transition-opacity">HOME</Link>
+        {categories?.map((c) => (
+          <Link key={c._id} to={`/category/${c.slug}`} className="hover:opacity-70 transition-opacity">{c.title}</Link>
+        ))}
+        <Link to="/editions" className="hover:opacity-70 transition-opacity">EDITIONS</Link>
+        <Link to="/notes" className="hover:opacity-70 transition-opacity">NOTES</Link>
+        <Link to="/shop" className="hover:opacity-70 transition-opacity">SHOP</Link>
+        <Link to="/about" className="hover:opacity-70 transition-opacity">ABOUT</Link>
+      </nav>
+
+      <div className="mt-5 flex items-center justify-center gap-5 text-paper">
+        <a href="https://instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram" className="hover:opacity-70 transition-opacity"><InstagramIcon /></a>
+        <a href="https://x.com/" target="_blank" rel="noreferrer" aria-label="X / Twitter" className="hover:opacity-70 transition-opacity"><XIcon /></a>
+        <a href="https://facebook.com/" target="_blank" rel="noreferrer" aria-label="Facebook" className="hover:opacity-70 transition-opacity"><FacebookIcon /></a>
+        <a href="/rss.xml" aria-label="RSS feed" className="hover:opacity-70 transition-opacity"><RssIcon /></a>
+      </div>
+    </>
+  );
 
   return (
     <footer className="relative bg-ink text-paper overflow-hidden mt-16 md:mt-24">
@@ -51,39 +96,25 @@ export function Footer() {
         }}
       />
       <div aria-hidden className="absolute inset-0 pointer-events-none bg-ink/40" />
-      <div className="relative mx-auto max-w-5xl px-5 sm:px-8 py-10 md:py-14 text-center">
-        <Link
-          to="/"
-          className="font-logo leading-none tracking-wide text-paper inline-block"
-          style={{ fontSize: "clamp(2.4rem, 5vw, 3.6rem)" }}
-        >
-          Velvet Collapse
-        </Link>
-        <p className="kicker text-paper/75 mt-1 tracking-[0.4em]">MAGAZINE — DEPARTMENT</p>
-        <p className="text-paper/55 italic mt-2 text-sm">Built from the mess.</p>
+      <div className="relative mx-auto max-w-5xl px-5 sm:px-8 py-10 md:py-14">
+        {useGrid ? (
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-10 md:gap-14 items-start">
+            <div className="text-center md:text-left">
+              {mainBlock}
+            </div>
+            <aside className="md:max-w-[260px] md:pl-8 md:border-l md:border-paper/15">
+              <TipJar placementOverride="force-stacked" />
+            </aside>
+          </div>
+        ) : (
+          <div className="text-center">
+            {mainBlock}
+            <TipJar />
+          </div>
+        )}
 
-        <nav className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 kicker text-paper">
-          <Link to="/" className="hover:opacity-70 transition-opacity">HOME</Link>
-          {categories?.map((c) => (
-            <Link key={c._id} to={`/category/${c.slug}`} className="hover:opacity-70 transition-opacity">{c.title}</Link>
-          ))}
-          <Link to="/editions" className="hover:opacity-70 transition-opacity">EDITIONS</Link>
-          <Link to="/notes" className="hover:opacity-70 transition-opacity">NOTES</Link>
-          <Link to="/shop" className="hover:opacity-70 transition-opacity">SHOP</Link>
-          <Link to="/about" className="hover:opacity-70 transition-opacity">ABOUT</Link>
-        </nav>
-
-        <div className="mt-5 flex items-center justify-center gap-5 text-paper">
-          <a href="https://instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram" className="hover:opacity-70 transition-opacity"><InstagramIcon /></a>
-          <a href="https://x.com/" target="_blank" rel="noreferrer" aria-label="X / Twitter" className="hover:opacity-70 transition-opacity"><XIcon /></a>
-          <a href="https://facebook.com/" target="_blank" rel="noreferrer" aria-label="Facebook" className="hover:opacity-70 transition-opacity"><FacebookIcon /></a>
-          <a href="/rss.xml" aria-label="RSS feed" className="hover:opacity-70 transition-opacity"><RssIcon /></a>
-        </div>
-
-        <TipJar />
-
-        <p className="stat text-paper/55 mt-8 tracking-[0.18em]">
-          VELVET COLLAPSE · {new Date().getFullYear()} · BANDUNG ·{" "}
+        <p className={`stat text-paper/55 mt-8 tracking-[0.18em] ${useGrid ? "text-center md:text-left" : "text-center"}`}>
+          {copyright} ·{" "}
           <Link to="/colophon" className="hover:opacity-80">
             COLOPHON
           </Link>

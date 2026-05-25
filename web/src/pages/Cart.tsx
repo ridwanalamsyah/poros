@@ -144,7 +144,7 @@ export function CartPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-5 md:px-0 pt-6 md:pt-14 pb-10">
-      <SEO title="Cart" description="Review pesanan POROS sebelum checkout." />
+      <SEO title="Cart" description="Review pesanan Velvet Collapse Magazine sebelum checkout." />
       <header className="border-b rule-soft pb-6 mb-8">
         <p className="kicker text-accent">CART</p>
         <h1 className="headline-display text-4xl md:text-5xl mt-2">Keranjang.</h1>

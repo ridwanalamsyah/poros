@@ -55,7 +55,7 @@ export function ProductPage() {
     <article className="max-w-[1200px] mx-auto px-4 md:px-8 lg:px-12 pt-6 md:pt-14 pb-10">
       <SEO
         title={product.title}
-        description={product.description ?? product.tagline ?? `${product.title} — POROS shop.`}
+        description={product.description ?? product.tagline ?? `${product.title} — Velvet Collapse Magazine shop.`}
         image={product.image}
         breadcrumbs={[
           { name: "Shop", url: "/shop" },

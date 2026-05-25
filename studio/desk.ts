@@ -2,7 +2,7 @@ import type { StructureBuilder } from "sanity/structure";
 
 export const structure = (S: StructureBuilder) =>
   S.list()
-    .title("POROS")
+    .title("Velvet Collapse Magazine")
     .items([
       S.listItem()
         .title("Articles")

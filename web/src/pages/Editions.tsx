@@ -10,7 +10,7 @@ export function EditionsPage() {
   const { data: editions } = useAsync(() => getEditions(), []);
   return (
     <div className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 pt-6 md:pt-14 pb-10">
-      <SEO title="Editions" description="Arsip semua edisi POROS." />
+      <SEO title="Editions" description="Arsip semua edisi Velvet Collapse Magazine." />
       <header className="border-b rule-soft pb-6 mb-10">
         <p className="kicker text-accent">EDITIONS</p>
         <h1 className="headline-display text-4xl md:text-6xl mt-2">Arsip Edisi</h1>
