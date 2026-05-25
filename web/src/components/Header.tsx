@@ -103,6 +103,8 @@ export function Header() {
 
   // Lock header to a single visual height; we shrink wordmark via transform (no layout shift / no jump)
   const wordmarkScale = scrolled ? 0.62 : 1;
+  const wordmarkOpacity = scrolled ? 0.78 : 1;
+  const wordmarkSpacing = scrolled ? "0.06em" : "0.03em";
 
   const navLinkCls = ({ isActive }: { isActive: boolean }) =>
     `kicker tracking-[0.18em] py-1 transition-opacity ${isActive ? "opacity-100" : "opacity-80 hover:opacity-100"}`;
@@ -117,17 +119,25 @@ export function Header() {
           {/* Row 1: wordmark center + utility icons right — fixed height, scaled wordmark on scroll */}
           <div className="relative grid grid-cols-3 items-center h-[72px]">
             <div /> {/* left spacer */}
-            <Link to="/" className="text-center select-none whitespace-nowrap leading-none" style={{ transform: `scale(${wordmarkScale})`, transformOrigin: "center", transition: "transform 0.25s ease-out" }}>
+            <Link
+              to="/"
+              className="text-center select-none whitespace-nowrap leading-none"
+              style={{
+                transform: `scale(${wordmarkScale})`,
+                transformOrigin: "center",
+                opacity: wordmarkOpacity,
+                transition: "transform 0.32s ease-out, opacity 0.32s ease-out, letter-spacing 0.32s ease-out",
+              }}
+            >
               <span
                 className="font-logo block leading-none"
-                style={{ fontSize: "clamp(1.5rem, 2.6vw, 2.3rem)", letterSpacing: "0.03em" }}
+                style={{ fontSize: "clamp(1.5rem, 2.6vw, 2.3rem)", letterSpacing: wordmarkSpacing }}
               >
                 {wordmark}
               </span>
-              <span className="block mt-1 tracking-[0.5em] text-[0.5rem] font-medium" style={{ opacity: scrolled ? 0 : 1, transition: "opacity 0.2s" }}>MAGAZINE</span>
             </Link>
             <div className="flex items-center justify-end gap-3">
-              <Link to="/submit" className="kicker tracking-[0.18em] opacity-80 hover:opacity-100">FOLLOW</Link>
+              <a href="https://instagram.com/velcolmagazine" target="_blank" rel="noopener noreferrer" className="kicker tracking-[0.18em] opacity-80 hover:opacity-100">FOLLOW</a>
               <button onClick={toggleTheme} aria-label="Toggle theme" className={utilityIcon}>
                 {theme === "dark" ? <SunIcon /> : <MoonIcon />}
               </button>
@@ -171,11 +181,10 @@ export function Header() {
         <div className="px-5 pt-3 pb-2 text-center">
           <Link to="/" className="inline-block leading-none">
             <span className="font-logo block leading-none" style={{ fontSize: "clamp(1.25rem, 5.5vw, 1.75rem)", letterSpacing: "0.03em" }}>{wordmark}</span>
-            <span className="block mt-1 tracking-[0.45em] text-[0.45rem] font-medium">MAGAZINE</span>
           </Link>
         </div>
         <div className="px-3 pb-2 flex items-center justify-center gap-2 flex-wrap">
-          <Link to="/submit" className="kicker tracking-[0.18em] opacity-80 px-1.5">FOLLOW</Link>
+          <a href="https://instagram.com/velcolmagazine" target="_blank" rel="noopener noreferrer" className="kicker tracking-[0.18em] opacity-80 px-1.5">FOLLOW</a>
           <button onClick={toggleTheme} aria-label="Toggle theme" className={utilityIcon}>
             {theme === "dark" ? <SunIcon size={18} /> : <MoonIcon size={18} />}
           </button>
@@ -204,8 +213,7 @@ export function Header() {
               <button aria-label="Close menu" onClick={() => setMenuOpen(false)} className="p-2 -ml-2"><CloseIcon /></button>
             </div>
             <Link to="/" className="text-center leading-none whitespace-nowrap">
-              <span className="font-logo block leading-none" style={{ fontSize: "clamp(2rem, 5vw, 2.6rem)", letterSpacing: "0.03em" }}>Velvet Collapse</span>
-              <span className="block mt-1 tracking-[0.5em] text-[0.55rem] font-medium">MAGAZINE</span>
+              <span className="font-logo block leading-none" style={{ fontSize: "clamp(2rem, 5vw, 2.6rem)", letterSpacing: "0.03em" }}>{wordmark}</span>
             </Link>
             <div />
           </div>
@@ -231,7 +239,7 @@ export function Header() {
               <NavLink to="/submit" onClick={() => setMenuOpen(false)} className="hover-underline">Submit pitch</NavLink>
               <NavLink to="/letters" onClick={() => setMenuOpen(false)} className="hover-underline">Letters</NavLink>
               <button onClick={toggleTheme} className="text-left hover-underline">{theme === "dark" ? "Light mode" : "Dark mode"}</button>
-              <span className="text-muted">Velvet Collapse Magazine · Bandung</span>
+              <span className="text-muted">Velvet Collapse · Bandung</span>
             </div>
           </div>
         </div>
@@ -246,15 +254,15 @@ export function Header() {
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Cari artikel, tag, atau penulis…"
+              placeholder="Search articles, tags, or authors…"
               className="flex-1 bg-transparent outline-none headline-display text-2xl md:text-3xl"
               onKeyDown={(e) => { if (e.key === "Escape") setSearchOpen(false); }}
             />
             <button aria-label="Close search" onClick={() => setSearchOpen(false)} className="p-2 -mr-2"><CloseIcon /></button>
           </div>
           <div className="max-w-3xl mx-auto px-4 md:px-8 py-6">
-            {query.length === 0 && <p className="text-muted text-sm">Ketik untuk mulai mencari.</p>}
-            {query.length > 0 && results.length === 0 && <p className="text-muted text-sm">Tidak ada hasil untuk &ldquo;{query}&rdquo;.</p>}
+            {query.length === 0 && <p className="text-muted text-sm">Type to start searching.</p>}
+            {query.length > 0 && results.length === 0 && <p className="text-muted text-sm">No results for &ldquo;{query}&rdquo;.</p>}
             <ul className="divide-y rule-soft">
               {results.map((a) => (
                 <li key={a._id}>

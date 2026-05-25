@@ -23,7 +23,7 @@ export function Comments({ pageId, pageUrl, pageTitle }: { pageId: string; pageU
 
   return (
     <div className="mt-12 pt-8 border-t rule-soft">
-      <h3 className="kicker mb-4">DISKUSI</h3>
+      <h3 className="kicker mb-4">DISCUSSION</h3>
       <div
         id="cusdis_thread"
         data-host="https://cusdis.com"

@@ -26,7 +26,7 @@ export function CategoryPage() {
             {articles?.map((a) => <ArticleCard key={a._id} article={a} variant="default" />)}
           </div>
           {articles && articles.length === 0 && (
-            <p className="text-muted">Belum ada artikel di kategori ini.</p>
+            <p className="text-muted">No articles in this category yet.</p>
           )}
         </>
       )}

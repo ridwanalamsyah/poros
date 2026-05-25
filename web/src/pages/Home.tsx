@@ -332,7 +332,7 @@ function FeedSection({ section, articles, allArticles, loading }: SectionProps) 
           <div className="mt-10 pt-6 border-t rule-soft">
             <h3 className="kicker text-accent mb-3">FROM THE NOTEBOOK</h3>
             <p className="text-sm text-muted italic">
-              Catatan-catatan pendek dari redaksi Velvet Collapse — antara dua edisi.
+              Short notes from the Velvet Collapse editorial team — between editions.
             </p>
             <Link to="/notes" className="kicker mt-3 inline-block hover-underline">
               READ NOTES →

@@ -42,7 +42,7 @@ export function Lightbox({ image, caption, onClose }: Props) {
         className="absolute top-4 right-4 kicker text-white/80 hover:text-white border border-white/40 px-3 py-1.5"
         aria-label="Close image viewer"
       >
-        TUTUP
+        CLOSE
       </button>
       <figure
         className="max-w-[95vw] max-h-[85vh] flex flex-col items-center"

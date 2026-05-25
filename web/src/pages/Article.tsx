@@ -37,8 +37,8 @@ export function ArticlePage() {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
         <p className="kicker text-muted">404</p>
-        <h1 className="headline-display text-4xl mt-4">Artikel tidak ditemukan.</h1>
-        <Link to="/" className="kicker mt-6 inline-block hover-underline">← Kembali ke beranda</Link>
+        <h1 className="headline-display text-4xl mt-4">Article not found.</h1>
+        <Link to="/" className="kicker mt-6 inline-block hover-underline">← Back to home</Link>
       </div>
     );
   }
@@ -105,7 +105,7 @@ export function ArticlePage() {
           ) : null}
         </div>
 
-        <HighlightShare containerRef={bodyRef as React.RefObject<HTMLElement>} title={article.title} />
+        <HighlightShare containerRef={bodyRef as React.RefObject<HTMLElement>} title={article.title} slug={article.slug} />
 
         {article.tags && article.tags.length > 0 && (
           <div className="mt-10 pt-6 border-t rule-soft flex flex-wrap gap-2">
@@ -127,7 +127,7 @@ export function ArticlePage() {
               <SmartImage image={article.author.image} className="w-full h-full" width={200} />
             </div>
             <div>
-              <p className="kicker text-muted">PENULIS</p>
+              <p className="kicker text-muted">AUTHOR</p>
               <Link to={`/author/${article.author.slug}`} className="headline-display text-2xl mt-1 inline-block hover-underline">{article.author.name}</Link>
               {article.author.bio && <p className="text-sm text-muted mt-2 max-w-prose">{article.author.bio}</p>}
             </div>

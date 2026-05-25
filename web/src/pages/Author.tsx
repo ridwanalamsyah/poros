@@ -13,8 +13,8 @@ export function AuthorPage() {
   if (!author && !loading) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <h1 className="headline-display text-4xl">Penulis tidak ditemukan.</h1>
-        <Link to="/" className="kicker mt-6 inline-block hover-underline">← Kembali ke beranda</Link>
+        <h1 className="headline-display text-4xl">Author not found.</h1>
+        <Link to="/" className="kicker mt-6 inline-block hover-underline">← Back to home</Link>
       </div>
     );
   }
@@ -28,7 +28,7 @@ export function AuthorPage() {
             <SmartImage image={author.image} className="w-full h-full" width={400} />
           </div>
           <div className="flex-1">
-            <p className="kicker text-accent">PENULIS</p>
+            <p className="kicker text-accent">AUTHOR</p>
             <h1 className="headline-display text-4xl md:text-5xl mt-2">{author.name}</h1>
             {author.bio && <p className="text-muted mt-4 max-w-2xl">{author.bio}</p>}
             <div className="mt-4 flex gap-4 text-sm">

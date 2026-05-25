@@ -16,7 +16,7 @@ export function SubmitPage({ mode = "pitch" }: { mode?: Mode }) {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name || !email || !body) { setStatus("err"); setMsg("Semua field wajib diisi."); return; }
+    if (!name || !email || !body) { setStatus("err"); setMsg("All required fields must be filled in."); return; }
     setStatus("loading");
     const payload = {
       _type: isPitch ? "submission" : "letter",
@@ -39,11 +39,11 @@ export function SubmitPage({ mode = "pitch" }: { mode?: Mode }) {
         }
       }
       setStatus("ok");
-      setMsg(isPitch ? "Pitch terkirim. Redaksi akan menghubungi dalam 1-2 minggu jika cocok." : "Terima kasih. Surat akan ditinjau redaksi.");
+      setMsg(isPitch ? "Pitch sent. The editorial team will reach out within 1–2 weeks if it's a fit." : "Thanks. Your letter will be reviewed by the editorial team.");
       setName(""); setEmail(""); setTitle(""); setBody("");
     } catch {
       setStatus("err");
-      setMsg("Gagal mengirim. Coba kirim ke email submissions@porosmagazine.id");
+      setMsg("Failed to send. Try emailing submissions@velcolmagazine.com instead.");
     }
   }
 
@@ -53,27 +53,27 @@ export function SubmitPage({ mode = "pitch" }: { mode?: Mode }) {
       <header className="border-b rule-soft pb-6 mb-8">
         <p className="kicker text-accent">{isPitch ? "SUBMIT PITCH" : "LETTERS TO EDITOR"}</p>
         <h1 className="headline-display text-4xl md:text-5xl mt-2">
-          {isPitch ? "Punya cerita yang menurutmu harus kami tulis?" : "Tanggapan, koreksi, atau pemikiran."}
+          {isPitch ? "Got a story you think we should run?" : "Feedback, corrections, or thoughts."}
         </h1>
         <p className="text-muted mt-3">
           {isPitch
-            ? "Tulis pitch singkat. Tidak perlu draft penuh — cukup 2-4 paragraf tentang siapa, apa, kenapa sekarang. Redaksi membaca setiap pengiriman."
-            : "Ditujukan ke editor. Surat-surat yang terpilih akan dimuat di edisi mendatang."}
+            ? "Send a short pitch. No need for a full draft — 2–4 paragraphs on who, what, and why now is enough. The editorial team reads every submission."
+            : "Addressed to the editors. Selected letters will be published in an upcoming edition."}
         </p>
       </header>
       {status === "ok" ? (
         <div className="border rule-soft p-6">
-          <p className="kicker text-accent">TERKIRIM</p>
+          <p className="kicker text-accent">SENT</p>
           <p className="mt-3">{msg}</p>
         </div>
       ) : (
         <form onSubmit={submit} className="space-y-3">
-          <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="Nama" value={name} onChange={(e) => setName(e.target.value)} />
+          <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
           <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          {isPitch && <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="Judul pitch (sementara)" value={title} onChange={(e) => setTitle(e.target.value)} />}
-          <textarea className="w-full border rule-soft bg-transparent px-3 py-2" rows={10} placeholder={isPitch ? "Pitch — siapa subjek, apa konflik, kenapa sekarang, dan bukti apa yang sudah kamu kumpulkan." : "Tulis suratmu di sini."} value={body} onChange={(e) => setBody(e.target.value)} />
+          {isPitch && <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="Pitch title (working)" value={title} onChange={(e) => setTitle(e.target.value)} />}
+          <textarea className="w-full border rule-soft bg-transparent px-3 py-2" rows={10} placeholder={isPitch ? "Pitch — who is the subject, what is the conflict, why now, and what evidence have you collected." : "Write your letter here."} value={body} onChange={(e) => setBody(e.target.value)} />
           <button type="submit" disabled={status === "loading"} className="bg-ink text-paper px-4 py-3 kicker disabled:opacity-50">
-            {status === "loading" ? "MENGIRIM…" : isPitch ? "KIRIM PITCH" : "KIRIM SURAT"}
+            {status === "loading" ? "SENDING…" : isPitch ? "SEND PITCH" : "SEND LETTER"}
           </button>
           {status === "err" && <p className="text-xs text-accent">{msg}</p>}
         </form>
