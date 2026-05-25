@@ -26,7 +26,7 @@ export function ProductPage() {
   if (!product) {
     return (
       <div className="max-w-[1200px] mx-auto px-4 md:px-8 lg:px-12 pt-6 md:pt-14 pb-10">
-        <p className="text-muted">Memuat…</p>
+        <p className="text-muted">Loading…</p>
       </div>
     );
   }
@@ -55,7 +55,7 @@ export function ProductPage() {
     <article className="max-w-[1200px] mx-auto px-4 md:px-8 lg:px-12 pt-6 md:pt-14 pb-10">
       <SEO
         title={product.title}
-        description={product.description ?? product.tagline ?? `${product.title} — Velvet Collapse Magazine shop.`}
+        description={product.description ?? product.tagline ?? `${product.title} — Velvet Collapse shop.`}
         image={product.image}
         breadcrumbs={[
           { name: "Shop", url: "/shop" },
@@ -86,7 +86,7 @@ export function ProductPage() {
                   key={i}
                   onClick={() => setActiveImageIdx(i)}
                   className={`aspect-square overflow-hidden border ${i === activeImageIdx ? "rule" : "rule-soft opacity-70 hover:opacity-100"}`}
-                  aria-label={`Lihat foto ${i + 1}`}
+                  aria-label={`View photo ${i + 1}`}
                   aria-current={i === activeImageIdx}
                 >
                   <SmartImage image={img} className="w-full h-full" width={200} />
@@ -127,7 +127,7 @@ export function ProductPage() {
             <button
               onClick={() => setLocalQty(Math.max(1, qty - 1))}
               className="w-10 h-10 border rule-soft hover:bg-ink/[0.05]"
-              aria-label="Kurangi jumlah"
+              aria-label="Decrease quantity"
               disabled={soldOut}
             >
               −
@@ -136,7 +136,7 @@ export function ProductPage() {
             <button
               onClick={() => setLocalQty(qty + 1)}
               className="w-10 h-10 border rule-soft hover:bg-ink/[0.05]"
-              aria-label="Tambah jumlah"
+              aria-label="Increase quantity"
               disabled={soldOut}
             >
               +
@@ -149,29 +149,26 @@ export function ProductPage() {
               disabled={soldOut}
               className="border rule px-5 py-3 kicker hover:bg-ink hover:text-paper disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {soldOut ? "SOLD OUT" : inCart ? `DI KERANJANG (${inCart.qty}) · TAMBAH` : "+ TAMBAH KE KERANJANG"}
+              {soldOut ? "SOLD OUT" : inCart ? `IN CART (${inCart.qty}) · ADD MORE` : "+ ADD TO CART"}
             </button>
             <button
               onClick={handleBuyNow}
               disabled={soldOut}
               className="bg-ink text-paper px-5 py-3 kicker disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              BELI SEKARANG · {formatIDR(subtotal)}
+              BUY NOW · {formatIDR(subtotal)}
             </button>
           </div>
 
           {inCart && (
             <p className="kicker text-muted mt-3">
-              Sudah {inCart.qty} di keranjang —{" "}
-              <button onClick={() => setQty(product.slug, 0)} className="underline">hapus</button>
+              Already {inCart.qty} in cart —{" "}
+              <button onClick={() => setQty(product.slug, 0)} className="underline">remove</button>
             </p>
           )}
 
           <p className="text-xs text-muted mt-6">
-            {product.shippingNote ?? "Dikirim dari Bandung. Jabar 1–3 hari, luar Jabar 3–7 hari."}
-          </p>
-          <p className="text-xs text-muted mt-1">
-            Pembayaran: transfer bank · e-wallet · QRIS · kartu kredit. Aman & terenkripsi.
+            {product.shippingNote ?? "Shipped from Bandung. West Java 1–3 days, elsewhere in Indonesia 3–7 days."}
           </p>
         </div>
       </div>
@@ -189,7 +186,7 @@ export function ProductPage() {
       {/* Related */}
       {otherProducts.length > 0 && (
         <section className="mt-16 md:mt-24 border-t rule-soft pt-10">
-          <p className="kicker text-accent">JUGA DI SHOP</p>
+          <p className="kicker text-accent">ALSO IN THE SHOP</p>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 mt-4">
             {otherProducts.map((p) => (
               <Link key={p._id} to={`/shop/${p.slug}`} className="block group">

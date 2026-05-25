@@ -1,22 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useAsync } from "../hooks/useAsync";
 import { getArticle } from "../data/api";
 import { SEO } from "../components/SEO";
 import { imageUrl } from "../sanity";
 
-type Template = "cover" | "quote" | "lockup";
+type Template = "title" | "cover" | "quote";
 type Size = { id: "story" | "square"; w: number; h: number; label: string };
 
 const SIZES: Size[] = [
-  { id: "story", w: 1080, h: 1920, label: "Instagram Story (9:16)" },
-  { id: "square", w: 1080, h: 1080, label: "Square (1:1)" },
+  { id: "story", w: 1080, h: 1920, label: "Story · 9:16" },
+  { id: "square", w: 1080, h: 1080, label: "Square · 1:1" },
 ];
 
-const TEMPLATES: { id: Template; label: string; desc: string }[] = [
-  { id: "cover", label: "Cover", desc: "Foto besar + judul" },
-  { id: "quote", label: "Pull Quote", desc: "Kutipan + kredit" },
-  { id: "lockup", label: "Logo Lockup", desc: "Wordmark + judul" },
+const TEMPLATES: { id: Template; label: string }[] = [
+  { id: "title", label: "Title" },
+  { id: "cover", label: "Cover" },
+  { id: "quote", label: "Quote" },
 ];
 
 function escapeXml(s: string) {
@@ -24,21 +24,22 @@ function escapeXml(s: string) {
 }
 
 function wrapText(text: string, maxCharsPerLine: number, maxLines: number): string[] {
-  const words = text.split(/\s+/);
+  const words = text.split(/\s+/).filter(Boolean);
   const lines: string[] = [];
   let line = "";
   for (const w of words) {
-    if ((line + " " + w).trim().length <= maxCharsPerLine) {
-      line = (line + " " + w).trim();
+    if ((line ? line + " " + w : w).length <= maxCharsPerLine) {
+      line = line ? line + " " + w : w;
     } else {
       if (line) lines.push(line);
       line = w;
-      if (lines.length >= maxLines - 1) break;
+      if (lines.length >= maxLines) break;
     }
   }
   if (line && lines.length < maxLines) lines.push(line);
-  if (lines.length >= maxLines && words.length > lines.join(" ").split(/\s+/).length) {
-    lines[lines.length - 1] = lines[lines.length - 1].replace(/\s+\S+$/, "…");
+  if (lines.length >= maxLines) {
+    const last = lines[lines.length - 1];
+    lines[lines.length - 1] = last.replace(/\s+\S+$/, "…");
   }
   return lines;
 }
@@ -51,6 +52,7 @@ function buildSvg({
   category,
   quote,
   imgDataUrl,
+  wordmark,
 }: {
   template: Template;
   size: Size;
@@ -59,73 +61,83 @@ function buildSvg({
   category: string;
   quote: string;
   imgDataUrl: string | null;
+  wordmark: string;
 }): string {
   const { w, h } = size;
-  const ink = "#0d0d0d";
-  const paper = "#f1ece3";
-  const accent = "#c1272d";
+  const ink = "#111111";
+  const paper = "#fafaf7";
+  const muted = "#6b6b66";
+  const rule = "#e3e1da";
+
+  const pad = Math.round(w * 0.075);
+  const fontSerif = "Fraunces, 'Times New Roman', Georgia, serif";
+  const fontSans = "Inter, -apple-system, 'Helvetica Neue', Arial, sans-serif";
+  const fontLogo = "UnifrakturMaguntia, 'Pirata One', Fraunces, serif";
+
+  function footer(yBase: number, fillInk = ink, fillMuted = muted, ruleColor = rule) {
+    return `
+      <line x1="${pad}" x2="${w - pad}" y1="${yBase - 70}" y2="${yBase - 70}" stroke="${ruleColor}" stroke-width="2"/>
+      <g transform="translate(${pad}, ${yBase})">
+        <text font-family="${fontLogo}" font-size="${Math.round(w * 0.06)}" fill="${fillInk}">${escapeXml(wordmark)}</text>
+        <text y="${Math.round(w * 0.035)}" font-family="${fontSans}" font-size="${Math.round(w * 0.018)}" letter-spacing="4" fill="${fillMuted}">VELCOLMAGAZINE</text>
+      </g>`;
+  }
 
   let body = "";
 
-  if (template === "cover") {
-    const titleLines = wrapText(title.toUpperCase(), size.id === "story" ? 14 : 18, 5);
-    const titleSize = size.id === "story" ? 84 : 76;
-    const lh = titleSize * 1.05;
-    const imgH = size.id === "story" ? h * 0.55 : h * 0.6;
+  if (template === "cover" && imgDataUrl) {
+    const imgH = Math.round(h * 0.5);
+    const titleLines = wrapText(title, size.id === "story" ? 22 : 28, 5);
+    const titleSize = size.id === "story" ? 76 : 62;
+    const lh = titleSize * 1.08;
+    const textY = imgH + Math.round(h * 0.06);
     body = `
       <rect width="${w}" height="${h}" fill="${paper}"/>
-      ${imgDataUrl
-        ? `<image href="${imgDataUrl}" x="0" y="0" width="${w}" height="${imgH}" preserveAspectRatio="xMidYMid slice"/>`
-        : `<rect x="0" y="0" width="${w}" height="${imgH}" fill="${ink}"/>`}
-      <rect x="0" y="${imgH}" width="${w}" height="6" fill="${ink}"/>
-      <g transform="translate(60, ${imgH + 70})">
-        <text font-family="JetBrains Mono, monospace" font-size="28" letter-spacing="6" fill="${accent}" font-weight="600">${escapeXml((category || "DEPARTMENT").toUpperCase())}</text>
-        ${titleLines.map((ln, i) => `<text y="${60 + i * lh}" font-family="Fraunces, Georgia, serif" font-size="${titleSize}" font-weight="800" fill="${ink}" letter-spacing="-2">${escapeXml(ln)}</text>`).join("")}
-        <text y="${60 + titleLines.length * lh + 40}" font-family="JetBrains Mono, monospace" font-size="26" fill="${ink}" opacity="0.7">${escapeXml(`By ${author}`.toUpperCase())}</text>
+      <image href="${imgDataUrl}" x="0" y="0" width="${w}" height="${imgH}" preserveAspectRatio="xMidYMid slice"/>
+      <g transform="translate(${pad}, ${textY})">
+        ${category ? `<text font-family="${fontSans}" font-size="${Math.round(w * 0.022)}" letter-spacing="6" fill="${muted}">${escapeXml(category.toUpperCase())}</text>` : ""}
+        ${titleLines.map((ln, i) => `<text y="${(category ? 60 : 0) + i * lh + lh * 0.7}" font-family="${fontSerif}" font-size="${titleSize}" font-weight="600" fill="${ink}" letter-spacing="-1">${escapeXml(ln)}</text>`).join("")}
+        ${author ? `<text y="${(category ? 60 : 0) + titleLines.length * lh + 50}" font-family="${fontSans}" font-style="italic" font-size="${Math.round(w * 0.026)}" fill="${muted}">${escapeXml(`By ${author}`)}</text>` : ""}
       </g>
-      <g transform="translate(60, ${h - 70})">
-        <text font-family="UnifrakturMaguntia, Pirata One, serif" font-size="64" fill="${ink}">Velvet Collapse</text>
-        <text y="34" font-family="JetBrains Mono, monospace" font-size="20" letter-spacing="8" fill="${ink}" opacity="0.6">MAGAZINE — DEPARTMENT</text>
-      </g>`;
+      ${footer(h - pad)}`;
   } else if (template === "quote") {
-    const quoteText = (quote || title).replace(/^"|"$/g, "");
-    const lines = wrapText(quoteText, size.id === "story" ? 22 : 26, 8);
-    const qSize = size.id === "story" ? 72 : 60;
-    const lh = qSize * 1.18;
-    body = `
-      <rect width="${w}" height="${h}" fill="${ink}"/>
-      <text x="60" y="180" font-family="UnifrakturMaguntia, Pirata One, serif" font-size="200" fill="${accent}" opacity="0.55">"</text>
-      <g transform="translate(80, ${h / 2 - (lines.length * lh) / 2})">
-        ${lines.map((ln, i) => `<text y="${i * lh}" font-family="Fraunces, Georgia, serif" font-style="italic" font-size="${qSize}" fill="${paper}" font-weight="500" letter-spacing="-1">${escapeXml(ln)}</text>`).join("")}
-      </g>
-      <g transform="translate(80, ${h - 180})">
-        <rect width="80" height="3" fill="${accent}"/>
-        <text y="44" font-family="JetBrains Mono, monospace" font-size="24" letter-spacing="4" fill="${paper}">${escapeXml(`— ${author}`.toUpperCase())}</text>
-        <text y="80" font-family="JetBrains Mono, monospace" font-size="20" letter-spacing="6" fill="${paper}" opacity="0.55">${escapeXml((category || "VELVET COLLAPSE").toUpperCase())}</text>
-      </g>
-      <g transform="translate(${w - 60}, ${h - 60})" text-anchor="end">
-        <text font-family="UnifrakturMaguntia, Pirata One, serif" font-size="40" fill="${paper}" opacity="0.7">Velvet Collapse</text>
-      </g>`;
-  } else {
-    // lockup: large wordmark with title beneath, broadsheet style
-    const titleLines = wrapText(title, size.id === "story" ? 18 : 22, 6);
-    const titleSize = size.id === "story" ? 64 : 56;
-    const lh = titleSize * 1.1;
-    const wordmarkSize = size.id === "story" ? 220 : 180;
+    const quoteText = (quote || title).replace(/^["“”]|["“”]$/g, "").trim();
+    const lines = wrapText(quoteText, size.id === "story" ? 24 : 28, 9);
+    const qSize = size.id === "story" ? 64 : 54;
+    const lh = qSize * 1.22;
+    const totalH = lines.length * lh;
+    const startY = Math.round((h - totalH) / 2) - 80;
     body = `
       <rect width="${w}" height="${h}" fill="${paper}"/>
-      <rect x="0" y="0" width="${w}" height="14" fill="${ink}"/>
-      <rect x="0" y="${h - 14}" width="${w}" height="14" fill="${ink}"/>
-      <g transform="translate(${w / 2}, ${h * 0.32})" text-anchor="middle">
-        <text font-family="UnifrakturMaguntia, Pirata One, serif" font-size="${wordmarkSize}" fill="${ink}">Velvet Collapse</text>
-        <text y="56" font-family="JetBrains Mono, monospace" font-size="28" letter-spacing="14" fill="${ink}" opacity="0.7">MAGAZINE — DEPARTMENT</text>
-        <line x1="-180" x2="180" y1="100" y2="100" stroke="${accent}" stroke-width="4"/>
+      <text x="${pad}" y="${startY - 80}" font-family="${fontSerif}" font-size="${Math.round(w * 0.16)}" fill="${ink}" opacity="0.12">"</text>
+      <g transform="translate(${pad}, ${startY})">
+        ${lines.map((ln, i) => `<text y="${i * lh}" font-family="${fontSerif}" font-style="italic" font-size="${qSize}" font-weight="500" fill="${ink}" letter-spacing="-0.5">${escapeXml(ln)}</text>`).join("")}
       </g>
-      <g transform="translate(60, ${h * 0.55})">
-        <text font-family="JetBrains Mono, monospace" font-size="26" letter-spacing="6" fill="${accent}" font-weight="600">${escapeXml((category || "FEATURE").toUpperCase())}</text>
-        ${titleLines.map((ln, i) => `<text y="${60 + i * lh}" font-family="Fraunces, Georgia, serif" font-size="${titleSize}" font-weight="700" fill="${ink}" letter-spacing="-1">${escapeXml(ln)}</text>`).join("")}
-        <text y="${60 + titleLines.length * lh + 40}" font-family="JetBrains Mono, monospace" font-size="22" fill="${ink}" opacity="0.6">${escapeXml(`By ${author}`.toUpperCase())} · BUILT FROM THE MESS</text>
-      </g>`;
+      <g transform="translate(${pad}, ${startY + totalH + 60})">
+        <line x1="0" x2="60" y1="0" y2="0" stroke="${ink}" stroke-width="2"/>
+        <text y="36" font-family="${fontSans}" font-size="${Math.round(w * 0.024)}" fill="${ink}">${escapeXml(author || "Editor")}</text>
+        ${category ? `<text y="${Math.round(w * 0.054)}" font-family="${fontSans}" font-size="${Math.round(w * 0.018)}" letter-spacing="4" fill="${muted}">${escapeXml(category.toUpperCase())}</text>` : ""}
+      </g>
+      ${footer(h - pad)}`;
+  } else {
+    // title (default, Substack-style)
+    const titleLines = wrapText(title, size.id === "story" ? 20 : 24, 7);
+    const titleSize = size.id === "story" ? 86 : 72;
+    const lh = titleSize * 1.07;
+    const totalH = titleLines.length * lh;
+    const startY = Math.round((h - totalH) / 2) - 60;
+    body = `
+      <rect width="${w}" height="${h}" fill="${paper}"/>
+      <g transform="translate(${pad}, ${pad + Math.round(w * 0.02)})">
+        ${category ? `<text font-family="${fontSans}" font-size="${Math.round(w * 0.022)}" letter-spacing="6" fill="${muted}">${escapeXml(category.toUpperCase())}</text>` : ""}
+      </g>
+      <g transform="translate(${pad}, ${startY})">
+        ${titleLines.map((ln, i) => `<text y="${i * lh}" font-family="${fontSerif}" font-size="${titleSize}" font-weight="600" fill="${ink}" letter-spacing="-1.5">${escapeXml(ln)}</text>`).join("")}
+      </g>
+      <g transform="translate(${pad}, ${startY + totalH + 60})">
+        ${author ? `<text font-family="${fontSans}" font-style="italic" font-size="${Math.round(w * 0.028)}" fill="${muted}">${escapeXml(`By ${author}`)}</text>` : ""}
+      </g>
+      ${footer(h - pad)}`;
   }
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${body}</svg>`;
@@ -171,19 +183,21 @@ async function svgToPng(svg: string, w: number, h: number): Promise<Blob | null>
 
 export function ShareCardPage() {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const initialQuote = searchParams.get("q") ?? "";
   const { data: article, loading } = useAsync(() => (slug ? getArticle(slug) : Promise.resolve(null)), [slug]);
-  const [template, setTemplate] = useState<Template>("cover");
+  const [template, setTemplate] = useState<Template>(initialQuote ? "quote" : "title");
   const [sizeIdx, setSizeIdx] = useState(0);
-  const [quote, setQuote] = useState("");
+  const [quote, setQuote] = useState(initialQuote);
   const [editedTitle, setEditedTitle] = useState<string | null>(null);
   const [imgDataUrl, setImgDataUrl] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const previewRef = useRef<HTMLDivElement>(null);
 
   const size = SIZES[sizeIdx];
-  const title = editedTitle ?? article?.title ?? "Velvet Collapse Magazine";
-  const author = article?.author?.name ?? "Editor";
-  const category = (article?.category?.title ?? "DEPARTMENT").toString();
+  const title = editedTitle ?? article?.title ?? "Velvet Collapse";
+  const author = article?.author?.name ?? "";
+  const category = (article?.category?.title ?? "").toString();
+  const wordmark = "Velvet Collapse";
 
   useEffect(() => {
     if (!article?.coverImage) return;
@@ -193,8 +207,8 @@ export function ShareCardPage() {
   }, [article]);
 
   const svg = useMemo(
-    () => buildSvg({ template, size, title, author, category, quote, imgDataUrl }),
-    [template, size, title, author, category, quote, imgDataUrl],
+    () => buildSvg({ template, size, title, author, category, quote, imgDataUrl, wordmark }),
+    [template, size, title, author, category, quote, imgDataUrl, wordmark],
   );
 
   async function download() {
@@ -212,11 +226,6 @@ export function ShareCardPage() {
     }
   }
 
-  async function shareWA() {
-    const url = typeof window !== "undefined" ? `${window.location.origin}/article/${article?.slug ?? ""}` : "";
-    window.open(`https://wa.me/?text=${encodeURIComponent(`${title} — ${url}`)}`, "_blank");
-  }
-
   async function shareIGStory() {
     setBusy(true);
     try {
@@ -228,124 +237,128 @@ export function ShareCardPage() {
         await nav.share({ files: [file], title, text: title });
       } else {
         await download();
-        alert("Gambar terdownload — buka Instagram → Story → upload, atau IG akan otomatis nawarin share kalau kamu open dari mobile.");
+        alert("Image downloaded. Open Instagram → Story → upload, or on mobile your share sheet will offer Instagram directly.");
       }
     } finally {
       setBusy(false);
     }
   }
 
+  const previewRef = useRef<HTMLDivElement>(null);
+
   if (loading) {
-    return <div className="max-w-3xl mx-auto px-5 pt-10 text-muted">Memuat artikel…</div>;
+    return <div className="max-w-3xl mx-auto px-5 pt-10 text-muted">Loading article…</div>;
   }
   if (!article) {
-    return <div className="max-w-3xl mx-auto px-5 pt-10 text-muted">Artikel tidak ditemukan.</div>;
+    return <div className="max-w-3xl mx-auto px-5 pt-10 text-muted">Article not found.</div>;
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-5 md:px-8 pt-6 md:pt-12 pb-16">
-      <SEO title={`Share — ${article.title}`} description="Bikin kartu share artikel untuk WhatsApp / Instagram Story." />
-      <header className="border-b rule-soft pb-4 mb-8">
-        <Link to={`/article/${article.slug}`} className="kicker text-muted hover-underline">← KEMBALI KE ARTIKEL</Link>
-        <p className="kicker text-accent mt-3">SHARE CARD</p>
-        <h1 className="headline-display text-3xl md:text-5xl mt-2 leading-[1.05]">Bikin kartu share.</h1>
-        <p className="text-muted mt-2 max-w-2xl">Pilih template, atur ukuran, download PNG — siap upload ke IG Story / WhatsApp / Twitter / wherever.</p>
+    <div className="max-w-5xl mx-auto px-5 md:px-8 pt-6 md:pt-12 pb-16">
+      <SEO title={`Share — ${article.title}`} description="Make a share card for Instagram Story or WhatsApp." />
+
+      <header className="mb-10">
+        <Link to={`/article/${article.slug}`} className="kicker text-muted hover-underline">← BACK TO ARTICLE</Link>
+        <h1 className="headline-display text-3xl md:text-4xl mt-4 leading-[1.1]">Share card</h1>
+        <p className="text-muted mt-2 text-sm max-w-xl">A quiet, typographic card for Instagram Story or anywhere else. Pick a layout, tweak the text, download.</p>
       </header>
 
-      <div className="grid lg:grid-cols-[1fr_360px] gap-8">
+      <div className="grid lg:grid-cols-[1fr_320px] gap-10 lg:gap-14">
         {/* Preview */}
-        <div className="bg-ink/[0.04] border rule-soft p-4 md:p-6 flex items-center justify-center">
+        <div className="flex items-start justify-center">
           <div
             ref={previewRef}
-            className="w-full max-w-md mx-auto shadow-lg overflow-hidden"
+            className="w-full max-w-sm mx-auto border rule-soft overflow-hidden"
             style={{ aspectRatio: `${size.w} / ${size.h}` }}
             dangerouslySetInnerHTML={{ __html: svg }}
           />
         </div>
 
         {/* Controls */}
-        <aside className="space-y-6">
+        <aside className="space-y-8">
           <section>
-            <p className="kicker mb-2">TEMPLATE</p>
-            <div className="grid grid-cols-3 gap-2">
+            <p className="kicker text-muted mb-3">LAYOUT</p>
+            <div className="flex flex-wrap gap-2">
               {TEMPLATES.map((t) => (
                 <button
                   key={t.id}
                   onClick={() => setTemplate(t.id)}
-                  className={`border p-3 text-left transition-colors ${template === t.id ? "border-accent bg-accent/5" : "rule-soft hover:bg-ink/[0.04]"}`}
+                  disabled={t.id === "cover" && !imgDataUrl}
+                  className={`text-sm px-3 py-1.5 border transition-colors ${
+                    template === t.id
+                      ? "border-ink bg-ink text-paper"
+                      : "rule-soft hover:border-ink disabled:opacity-40 disabled:cursor-not-allowed"
+                  }`}
                 >
-                  <p className="kicker text-xs">{t.label}</p>
-                  <p className="text-[0.65rem] text-muted mt-1">{t.desc}</p>
+                  {t.label}
                 </button>
               ))}
             </div>
+            {!imgDataUrl && (
+              <p className="text-xs text-muted mt-2">Cover layout becomes available once the article image loads.</p>
+            )}
           </section>
 
           <section>
-            <p className="kicker mb-2">UKURAN</p>
-            <div className="grid grid-cols-2 gap-2">
+            <p className="kicker text-muted mb-3">SIZE</p>
+            <div className="flex flex-wrap gap-2">
               {SIZES.map((s, i) => (
                 <button
                   key={s.id}
                   onClick={() => setSizeIdx(i)}
-                  className={`border p-3 text-left transition-colors ${sizeIdx === i ? "border-accent bg-accent/5" : "rule-soft hover:bg-ink/[0.04]"}`}
+                  className={`text-sm px-3 py-1.5 border transition-colors ${
+                    sizeIdx === i ? "border-ink bg-ink text-paper" : "rule-soft hover:border-ink"
+                  }`}
                 >
-                  <p className="kicker text-xs">{s.label}</p>
-                  <p className="text-[0.65rem] text-muted mt-1">{s.w}×{s.h}</p>
+                  {s.label}
                 </button>
               ))}
             </div>
           </section>
 
-          <section>
-            <p className="kicker mb-2">EDIT TEKS</p>
-            <label className="block text-xs text-muted mb-1">Judul</label>
-            <textarea
-              className="w-full border rule-soft bg-transparent px-3 py-2 text-sm"
-              rows={3}
-              value={title}
-              onChange={(e) => setEditedTitle(e.target.value)}
-            />
+          <section className="space-y-3">
+            <div>
+              <label className="kicker text-muted mb-2 block">TITLE</label>
+              <textarea
+                className="w-full border-b rule-soft bg-transparent py-2 text-sm focus:outline-none focus:border-ink"
+                rows={3}
+                value={title}
+                onChange={(e) => setEditedTitle(e.target.value)}
+              />
+            </div>
             {template === "quote" && (
-              <>
-                <label className="block text-xs text-muted mb-1 mt-3">Kutipan</label>
+              <div>
+                <label className="kicker text-muted mb-2 block">QUOTE</label>
                 <textarea
-                  className="w-full border rule-soft bg-transparent px-3 py-2 text-sm"
+                  className="w-full border-b rule-soft bg-transparent py-2 text-sm focus:outline-none focus:border-ink"
                   rows={4}
                   value={quote}
-                  placeholder="Sorot satu kalimat dari artikel buat dijadikan kutipan."
+                  placeholder="Paste a sentence from the article."
                   onChange={(e) => setQuote(e.target.value)}
                 />
-              </>
+              </div>
             )}
           </section>
 
-          <section className="space-y-2">
-            <button
-              onClick={download}
-              disabled={busy}
-              className="w-full bg-ink text-paper px-4 py-3 kicker disabled:opacity-50"
-            >
-              {busy ? "MEMBUAT…" : "DOWNLOAD PNG"}
-            </button>
+          <section className="space-y-2 pt-2 border-t rule-soft">
             <button
               onClick={shareIGStory}
               disabled={busy}
-              className="w-full border-2 border-accent text-accent px-4 py-3 kicker hover:bg-accent hover:text-paper disabled:opacity-50"
+              className="w-full bg-ink text-paper px-4 py-3 kicker disabled:opacity-50"
             >
-              SHARE KE INSTAGRAM STORY
+              {busy ? "PREPARING…" : "SHARE TO INSTAGRAM"}
             </button>
             <button
-              onClick={shareWA}
-              className="w-full border rule-soft px-4 py-3 kicker hover:bg-ink hover:text-paper"
+              onClick={download}
+              disabled={busy}
+              className="w-full border rule-soft px-4 py-3 kicker hover:border-ink"
             >
-              SHARE KE WHATSAPP
+              DOWNLOAD PNG
             </button>
+            <p className="text-xs text-muted pt-1">
+              On mobile, "Share to Instagram" opens the native share sheet (Story / Feed / DM). On desktop, download the PNG and upload manually.
+            </p>
           </section>
-
-          <p className="text-xs text-muted">
-            Tip: IG Story sharing langsung jalan di mobile (Chrome / Safari). Di desktop, download PNG dulu lalu upload manual.
-          </p>
         </aside>
       </div>
     </div>

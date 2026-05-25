@@ -19,7 +19,7 @@ type Props = {
 };
 
 const SITE = "Velvet Collapse Magazine";
-const DEFAULT_DESC = "Velvet Collapse Magazine — built from the mess. Majalah online dari Bandung.";
+const DEFAULT_DESC = "Velvet Collapse — built from the mess. An independent online magazine from Bandung.";
 const SITE_URL = typeof window !== "undefined" ? window.location.origin : "";
 
 function absUrl(path?: string): string | undefined {
@@ -52,7 +52,7 @@ export function SEO({
     name: SITE,
     url: SITE_URL || undefined,
     logo: absUrl("/og-default.png"),
-    sameAs: ["https://instagram.com/", "https://x.com/", "https://facebook.com/"],
+    sameAs: ["https://instagram.com/velcolmagazine"],
   };
 
   const articleLd =

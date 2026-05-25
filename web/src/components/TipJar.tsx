@@ -15,10 +15,10 @@ type TipJarProps = {
 
 function useLinks() {
   const { data: settings } = useAsync(() => getSettings(), []);
-  const heading = settings?.tipJarHeading?.trim() || "DUKUNG REDAKSI";
+  const heading = settings?.tipJarHeading?.trim() || "SUPPORT THE EDITORIAL";
   const blurb =
     settings?.tipJarBlurb?.trim() ||
-    "Kami mandiri. Sumbangan pembaca bikin Velvet Collapse Magazine bisa terus bayar penulis, fotografer, dan editor.";
+    "We are independent. Reader contributions keep Velvet Collapse paying writers, photographers, and editors.";
   const placement: TipJarPlacement = settings?.tipJarPlacement ?? "button";
 
   const links: TipLink[] = [
@@ -59,7 +59,7 @@ export function TipJar({ variant = "footer", placementOverride }: TipJarProps) {
       <div className="border rule-soft p-5">
         <p className="kicker text-accent">{heading}</p>
         <p className="text-muted mt-2 text-sm">
-          Kalau tulisan ini berarti buatmu, pertimbangkan untuk menyumbang. Tidak wajib, tidak menjadi paywall.
+          If this piece meant something to you, consider chipping in. Not required, never a paywall.
         </p>
         <ul className="mt-4 flex flex-wrap gap-3">
           {links.map((l) => (

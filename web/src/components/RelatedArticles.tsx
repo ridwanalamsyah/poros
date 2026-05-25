@@ -26,7 +26,7 @@ export function RelatedArticles({ current, pool, limit = 3 }: Props) {
 
   return (
     <section className="mt-14 pt-8 border-t rule">
-      <h3 className="kicker text-accent mb-6">BACAAN LANJUTAN</h3>
+      <h3 className="kicker text-accent mb-6">KEEP READING</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {items.map((a) => (
           <Link key={a._id} to={`/article/${a.slug}`} className="group block">

@@ -75,7 +75,7 @@ export function PortableBody({ blocks }: { blocks: PortableTextBlock[] }) {
               type="button"
               onClick={() => setLightbox({ image: value, caption: value.caption })}
               className="block w-full cursor-zoom-in group"
-              aria-label="Lihat gambar penuh"
+              aria-label="View full image"
             >
               <SmartImage
                 image={value}
@@ -129,7 +129,7 @@ export function PortableBody({ blocks }: { blocks: PortableTextBlock[] }) {
             <>
               {children}
               <sup id={`fnref-${idx}`} className="footnote-ref">
-                <a href={`#fn-${idx}`} aria-label={`Lihat catatan kaki ${idx}`}>
+                <a href={`#fn-${idx}`} aria-label={`See footnote ${idx}`}>
                   [{idx}]
                 </a>
               </sup>
@@ -163,12 +163,12 @@ export function PortableBody({ blocks }: { blocks: PortableTextBlock[] }) {
         <PortableText value={blocks} components={components} />
         {footnotes.length > 0 && (
           <section className="footnotes mt-12 pt-6 border-t rule-soft">
-            <h3 className="kicker text-accent mb-4">CATATAN KAKI</h3>
+            <h3 className="kicker text-accent mb-4">FOOTNOTES</h3>
             <ol>
               {footnotes.map((f) => (
                 <li key={f.id} id={`fn-${f.index}`}>
                   <span>{f.text}</span>{" "}
-                  <a href={`#fnref-${f.index}`} aria-label="Kembali ke teks" className="footnote-back">
+                  <a href={`#fnref-${f.index}`} aria-label="Back to text" className="footnote-back">
                     ↩
                   </a>
                 </li>

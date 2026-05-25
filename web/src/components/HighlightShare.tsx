@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type Pos = { top: number; left: number } | null;
 
-export function HighlightShare({ containerRef, title }: { containerRef: React.RefObject<HTMLElement>; title: string }) {
+export function HighlightShare({ containerRef, title, slug }: { containerRef: React.RefObject<HTMLElement>; title: string; slug?: string }) {
+  const navigate = useNavigate();
   const [pos, setPos] = useState<Pos>(null);
   const [text, setText] = useState("");
   const popRef = useRef<HTMLDivElement | null>(null);
@@ -33,8 +35,10 @@ export function HighlightShare({ containerRef, title }: { containerRef: React.Re
   return (
     <div ref={popRef} className="hl-popover" style={{ top: pos.top, left: pos.left }} role="toolbar">
       <button onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(quote)}`, "_blank")}>WhatsApp</button>
-      <button onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(quote)}`, "_blank")}>X</button>
       <button onClick={() => window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(quote)}`, "_blank")}>Telegram</button>
+      {slug && (
+        <button onClick={() => navigate(`/share/${slug}?q=${encodeURIComponent(text)}`)}>Instagram</button>
+      )}
       <button onClick={() => navigator.clipboard.writeText(quote)}>Copy</button>
     </div>
   );

@@ -13,7 +13,7 @@ const out = resolve(root, "dist");
 if (!existsSync(out)) mkdirSync(out, { recursive: true });
 
 const env = readEnv();
-const site = env.VITE_SITE_URL || "https://velvetcollapse.id";
+const site = env.VITE_SITE_URL || "https://velvet-collapse-magazine.vercel.app";
 
 function readEnv() {
   try {

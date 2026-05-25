@@ -13,7 +13,7 @@ export function NewsletterForm() {
     e.preventDefault();
     if (!email.includes("@")) {
       setStatus("err");
-      setMsg("Email tidak valid.");
+      setMsg("Invalid email.");
       return;
     }
     setStatus("loading");
@@ -29,13 +29,13 @@ export function NewsletterForm() {
         });
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         setStatus("ok");
-        setMsg("Selamat datang. Cek inbox untuk konfirmasi.");
+        setMsg("Welcome. Check your inbox to confirm.");
         setEmail("");
         trackEvent("newsletter_subscribed", { source: "endpoint" });
         return;
       } catch {
         setStatus("err");
-        setMsg("Gagal subscribe. Coba lagi nanti.");
+        setMsg("Failed to subscribe. Please try again later.");
         return;
       }
     }
@@ -50,13 +50,13 @@ export function NewsletterForm() {
         });
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         setStatus("ok");
-        setMsg("Selamat datang. Cek inbox untuk konfirmasi.");
+        setMsg("Welcome. Check your inbox to confirm.");
         setEmail("");
         trackEvent("newsletter_subscribed", { source: "embed" });
         return;
       } catch {
         setStatus("err");
-        setMsg("Gagal subscribe. Coba lagi nanti.");
+        setMsg("Failed to subscribe. Please try again later.");
         return;
       }
     }
@@ -64,7 +64,7 @@ export function NewsletterForm() {
     // 3. Offline fallback — log to localStorage so editors can ingest manually.
     await new Promise((r) => setTimeout(r, 600));
     setStatus("ok");
-    setMsg("Terima kasih! Saat ini list belum di-link ke ESP. Editor akan menambahkan emailmu manual.");
+    setMsg("Thanks! The list isn't connected to an ESP yet. An editor will add your email manually.");
     setEmail("");
     try {
       const log = JSON.parse(localStorage.getItem("poros-newsletter") ?? "[]");
@@ -91,7 +91,7 @@ export function NewsletterForm() {
       </div>
       {status === "ok" && <p className="text-xs text-muted">{msg}</p>}
       {status === "err" && <p className="text-xs text-accent">{msg}</p>}
-      <p className="text-xs text-muted">Newsletter edisi baru + esai pilihan. Gratis.</p>
+      <p className="text-xs text-muted">New editions + selected essays. Free.</p>
     </form>
   );
 }

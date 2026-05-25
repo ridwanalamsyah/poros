@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useAsync } from "../hooks/useAsync";
 import { getSettings } from "../data/api";
 
-const DEFAULT_LABELS = ["Suka", "Penting", "Kena banget"] as const;
+const DEFAULT_LABELS = ["Like", "Dislike"] as const;
 
 type Counts = Record<string, number>;
 type State = { counts: Counts; picked: string | null };
@@ -87,8 +87,8 @@ export function Reactions({ articleId }: { articleId: string }) {
   }
 
   return (
-    <section className="mt-12 pt-8 border-t rule-soft" aria-label="Reaksi pembaca">
-      <p className="kicker text-muted mb-3">REAKSI PEMBACA</p>
+    <section className="mt-12 pt-8 border-t rule-soft" aria-label="Reader reactions">
+      <p className="kicker text-muted mb-3">READER REACTIONS</p>
       <ul className="flex flex-wrap gap-2">
         {labels.map((label) => {
           const count = state.counts[label] ?? 0;
@@ -113,7 +113,7 @@ export function Reactions({ articleId }: { articleId: string }) {
         })}
       </ul>
       <p className="text-xs text-muted mt-3">
-        Reaksi tersimpan di browser kamu. Satu reaksi per artikel.
+        Your reaction is stored in this browser. One reaction per article.
       </p>
     </section>
   );

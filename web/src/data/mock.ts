@@ -685,13 +685,13 @@ export const mockProducts: Product[] = [
 
 export const mockSettings: Settings = {
   siteTitle: "Velvet Collapse Magazine",
-  siteDescription: "Velvet Collapse Magazine — built from the mess. Majalah online dari Bandung.",
-  tipJarSaweria: "https://saweria.co/porosmagazine",
-  tipJarTrakteer: "https://trakteer.id/porosmagazine",
+  siteDescription: "Velvet Collapse — built from the mess. An independent online magazine from Bandung.",
+  tipJarSaweria: "https://saweria.co/velcolmagazine",
+  tipJarTrakteer: "https://trakteer.id/velcolmagazine",
   tipJarPatreon: "",
   cusdisAppId: "",
   newsletterEndpoint: "",
-  reactionLabels: ["Suka", "Penting", "Kena banget"],
+  reactionLabels: ["Like", "Dislike"],
   homepageLayout: {
     sections: [
       { kind: "hero", enabled: true },

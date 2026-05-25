@@ -51,7 +51,7 @@ export function AuthorPopover({ author, className }: Props) {
       {open && (
         <span
           role="dialog"
-          aria-label={`Tentang ${author.name}`}
+          aria-label={`About ${author.name}`}
           className="absolute left-0 top-full mt-2 z-40 w-72 bg-paper border rule-soft shadow-lg p-4 text-left"
           onMouseEnter={() => setOpen(true)}
         >
@@ -60,7 +60,7 @@ export function AuthorPopover({ author, className }: Props) {
               <SmartImage image={author.image} className="w-full h-full" width={120} />
             </span>
             <span className="flex-1 min-w-0 block">
-              <span className="kicker text-muted block">PENULIS</span>
+              <span className="kicker text-muted block">AUTHOR</span>
               <Link
                 to={`/author/${author.slug}`}
                 className="headline-display text-base mt-0.5 inline-block hover-underline"
@@ -78,7 +78,7 @@ export function AuthorPopover({ author, className }: Props) {
             to={`/author/${author.slug}`}
             className="kicker mt-3 inline-block hover-underline"
           >
-            LIHAT SEMUA TULISAN →
+            VIEW ALL POSTS →
           </Link>
         </span>
       )}

@@ -153,10 +153,10 @@ const settings = {
   _type: "settings",
   siteTitle: "Velvet Collapse Magazine",
   siteDescription:
-    "Velvet Collapse Magazine — built from the mess. Majalah online dari Bandung.",
-  tipJarSaweria: "https://saweria.co/porosmagazine",
-  tipJarTrakteer: "https://trakteer.id/porosmagazine",
-  reactionLabels: ["Suka", "Penting", "Kena banget"],
+    "Velvet Collapse — built from the mess. An independent online magazine from Bandung.",
+  tipJarSaweria: "https://saweria.co/velcolmagazine",
+  tipJarTrakteer: "https://trakteer.id/velcolmagazine",
+  reactionLabels: ["Like", "Dislike"],
   homepageLayout: {
     sections: [
       { _key: "hero", kind: "hero", enabled: true },

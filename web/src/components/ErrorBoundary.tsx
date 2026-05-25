@@ -20,19 +20,19 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
     return (
       <div className="max-w-xl mx-auto px-5 pt-20 pb-10 text-center">
         <p className="kicker text-accent">SOMETHING BROKE</p>
-        <h1 className="headline-display text-4xl mt-3">Halaman ini gagal dirender.</h1>
+        <h1 className="headline-display text-4xl mt-3">This page failed to render.</h1>
         <p className="text-muted mt-3">
-          Maaf, ada yang tidak beres. Insiden sudah dilaporkan ke tim. Coba muat ulang halaman atau kembali ke beranda.
+          Sorry, something went wrong. The incident has been reported to the team. Try reloading the page or heading back home.
         </p>
         <div className="flex gap-3 justify-center mt-6">
           <button
             onClick={() => window.location.reload()}
             className="border rule px-4 py-2 kicker hover:bg-ink hover:text-paper"
           >
-            MUAT ULANG
+            RELOAD
           </button>
           <Link to="/" className="bg-ink text-paper px-4 py-2 kicker">
-            BERANDA
+            HOME
           </Link>
         </div>
         {import.meta.env.DEV && (

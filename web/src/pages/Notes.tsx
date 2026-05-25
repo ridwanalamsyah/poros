@@ -9,10 +9,10 @@ export function NotesPage() {
   const { data: notes } = useAsync(() => getNotes(), []);
   return (
     <div className="max-w-3xl mx-auto px-5 md:px-0 pt-6 md:pt-14 pb-10">
-      <SEO title="Notes" description="Catatan singkat dari redaksi Velvet Collapse Magazine — link, quote, observasi." />
+      <SEO title="Notes" description="Short notes from the Velvet Collapse editorial team — links, quotes, observations." />
       <header className="border-b rule-soft pb-6 mb-8">
         <p className="kicker text-accent">NOTES</p>
-        <h1 className="headline-display text-4xl md:text-5xl mt-2">Catatan singkat dari redaksi.</h1>
+        <h1 className="headline-display text-4xl md:text-5xl mt-2">Short notes from the editorial.</h1>
       </header>
       <ul className="divide-y rule-soft">
         {notes?.map((n) => (

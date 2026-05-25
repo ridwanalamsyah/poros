@@ -10,14 +10,6 @@ import { trackEvent } from "../utils/analytics";
 import { captureException } from "../utils/sentry";
 import type { Order } from "../types";
 
-const PAYMENT_METHODS: { label: string; sub: string }[] = [
-  { label: "Transfer Bank", sub: "BCA · Mandiri · BRI · BNI · CIMB" },
-  { label: "E-Wallet", sub: "OVO · DANA · LinkAja · ShopeePay" },
-  { label: "QRIS", sub: "Scan satu kode, semua bank" },
-  { label: "Kartu Kredit", sub: "Visa · Mastercard · JCB" },
-  { label: "Cicilan 0%", sub: "Tenor 3 / 6 / 12 bulan" },
-];
-
 export function CartPage() {
   const { data: products } = useAsync(() => getProducts(), []);
   const { lines, setQty, remove, totalCount, clear } = useCart();
@@ -44,7 +36,7 @@ export function CartPage() {
     e.preventDefault();
     if (!name || !email || !phone || !address) {
       setStatus("err");
-      setMsg("Semua field wajib diisi.");
+      setMsg("All required fields must be filled in.");
       return;
     }
     setStatus("loading");
@@ -94,8 +86,8 @@ export function CartPage() {
       setOrderNumber(orderNum);
       setMsg(
         sanityResult
-          ? `Pesanan dibuat (#${orderNum}). Redaksi akan mengirim link pembayaran ke emailmu dalam beberapa menit.`
-          : "Pesanan diterima. Redaksi akan mengirim link pembayaran ke emailmu dalam beberapa menit.",
+          ? `Order created (#${orderNum}). The editorial team will send a payment link to your email within a few minutes.`
+          : "Order received. The editorial team will send a payment link to your email within a few minutes.",
       );
       clear();
       return;
@@ -133,36 +125,36 @@ export function CartPage() {
       setStatus("idle");
       setStage("done");
       setOrderNumber(orderNum);
-      setMsg(`Pesanan dibuat (#${orderNum}). Cek email untuk instruksi pembayaran.`);
+      setMsg(`Order created (#${orderNum}). Check your email for payment instructions.`);
       clear();
     } catch (err) {
       void captureException(err, { stage: "doku_checkout" });
       setStatus("err");
-      setMsg(err instanceof Error ? err.message : "Checkout gagal. Coba lagi.");
+      setMsg(err instanceof Error ? err.message : "Checkout failed. Please try again.");
     }
   }
 
   return (
     <div className="max-w-3xl mx-auto px-5 md:px-0 pt-6 md:pt-14 pb-10">
-      <SEO title="Cart" description="Review pesanan Velvet Collapse Magazine sebelum checkout." />
+      <SEO title="Cart" description="Review your Velvet Collapse order before checkout." />
       <header className="border-b rule-soft pb-6 mb-8">
         <p className="kicker text-accent">CART</p>
-        <h1 className="headline-display text-4xl md:text-5xl mt-2">Keranjang.</h1>
-        <p className="text-muted mt-2">Review item, atur jumlah, lanjut ke pembayaran aman.</p>
+        <h1 className="headline-display text-4xl md:text-5xl mt-2">Your cart.</h1>
+        <p className="text-muted mt-2">Review items, set quantities, continue to secure checkout.</p>
       </header>
 
       {stage === "done" ? (
         <div className="border rule-soft p-6">
-          <p className="kicker text-accent">PESANAN DITERIMA</p>
-          {orderNumber && <p className="byline mt-2">No. pesanan: <span className="font-mono">{orderNumber}</span></p>}
+          <p className="kicker text-accent">ORDER RECEIVED</p>
+          {orderNumber && <p className="byline mt-2">Order no.: <span className="font-mono">{orderNumber}</span></p>}
           <p className="mt-3">{msg}</p>
-          <Link to="/" className="kicker mt-6 inline-block hover-underline">← KEMBALI KE BERANDA</Link>
+          <Link to="/" className="kicker mt-6 inline-block hover-underline">← BACK TO HOME</Link>
         </div>
       ) : cartItems.length === 0 ? (
         <div className="text-center py-16">
-          <p className="text-muted">Keranjang kosong.</p>
+          <p className="text-muted">Your cart is empty.</p>
           <Link to="/shop" className="kicker inline-block mt-6 border rule px-5 py-3 hover:bg-ink hover:text-paper transition-colors">
-            JELAJAHI SHOP →
+            BROWSE THE SHOP →
           </Link>
         </div>
       ) : stage === "review" ? (
@@ -182,7 +174,7 @@ export function CartPage() {
                     <button onClick={() => setQty(product.slug, line.qty - 1)} className="w-8 h-8 border rule-soft hover:bg-ink/[0.05]">−</button>
                     <span className="text-sm w-6 text-center">{line.qty}</span>
                     <button onClick={() => setQty(product.slug, line.qty + 1)} className="w-8 h-8 border rule-soft hover:bg-ink/[0.05]">+</button>
-                    <button onClick={() => remove(product.slug)} className="ml-4 text-xs underline text-muted">Hapus</button>
+                    <button onClick={() => remove(product.slug)} className="ml-4 text-xs underline text-muted">Remove</button>
                   </div>
                 </div>
                 <p className="byline whitespace-nowrap text-right">{formatIDR(product.price * line.qty)}</p>
@@ -191,20 +183,13 @@ export function CartPage() {
           </ul>
 
           <div className="mt-6 flex items-center justify-between border-t rule pt-4">
-            <p className="kicker text-muted">SUBTOTAL ({totalCount} ITEM)</p>
+            <p className="kicker text-muted">SUBTOTAL ({totalCount} {totalCount === 1 ? "ITEM" : "ITEMS"})</p>
             <p className="headline-display text-3xl">{formatIDR(subtotal)}</p>
           </div>
 
-          <div className="mt-8 grid grid-cols-2 md:grid-cols-5 gap-2 stat">
-            {PAYMENT_METHODS.map((m) => (
-              <span key={m.label} className="border rule-soft px-2 py-1 text-center truncate">{m.label}</span>
-            ))}
-          </div>
-          <p className="text-xs text-muted mt-2 text-center">Pembayaran aman, terenkripsi. Pilih metode di langkah berikutnya.</p>
-
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <Link to="/shop" className="kicker border rule-soft hover:bg-ink/[0.05] px-5 py-3 text-center">
-              ← LANJUT BELANJA
+              ← CONTINUE SHOPPING
             </Link>
             <button onClick={() => setStage("form")} className="bg-ink text-paper px-5 py-3 kicker flex-1">
               CHECKOUT · {formatIDR(subtotal)} →
@@ -213,27 +198,27 @@ export function CartPage() {
         </>
       ) : (
         <>
-          <button onClick={() => setStage("review")} className="kicker text-muted hover-underline mb-4">← KEMBALI KE KERANJANG</button>
+          <button onClick={() => setStage("review")} className="kicker text-muted hover-underline mb-4">← BACK TO CART</button>
           <section className="mb-8 border rule-soft p-4">
-            <p className="kicker text-accent">PENGIRIMAN & PEMBAYARAN</p>
-            <p className="headline-display text-xl mt-1 leading-tight">Sebentar lagi.</p>
+            <p className="kicker text-accent">SHIPPING & PAYMENT</p>
+            <p className="headline-display text-xl mt-1 leading-tight">Almost there.</p>
             <p className="text-sm text-muted mt-2">
-              Setelah klik <em>Lanjut bayar</em>, kamu diarahkan ke halaman pembayaran aman. Pilih bank / e-wallet / QRIS / kartu — selesai dalam 1 menit, konfirmasi pesanan dikirim ke email.
+              After you click <em>Continue to payment</em>, you'll be redirected to the secure checkout page. Pick your method — done in a minute, order confirmation lands in your inbox.
             </p>
           </section>
 
           <form onSubmit={checkout} className="space-y-3">
-            <h2 className="kicker mb-2">PENGIRIMAN</h2>
-            <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="Nama lengkap" value={name} onChange={(e) => setName(e.target.value)} />
+            <h2 className="kicker mb-2">SHIPPING</h2>
+            <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} />
             <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="No. WhatsApp" value={phone} onChange={(e) => setPhone(e.target.value)} />
-            <textarea className="w-full border rule-soft bg-transparent px-3 py-2" rows={3} placeholder="Alamat lengkap" value={address} onChange={(e) => setAddress(e.target.value)} />
+            <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="WhatsApp number" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <textarea className="w-full border rule-soft bg-transparent px-3 py-2" rows={3} placeholder="Full address" value={address} onChange={(e) => setAddress(e.target.value)} />
             <div className="grid grid-cols-2 gap-3">
-              <input className="border rule-soft bg-transparent px-3 py-2" placeholder="Kota" value={city} onChange={(e) => setCity(e.target.value)} />
-              <input className="border rule-soft bg-transparent px-3 py-2" placeholder="Kode pos" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} />
+              <input className="border rule-soft bg-transparent px-3 py-2" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
+              <input className="border rule-soft bg-transparent px-3 py-2" placeholder="Postal code" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} />
             </div>
             <button type="submit" disabled={status === "loading"} className="bg-ink text-paper px-4 py-3 w-full kicker disabled:opacity-50">
-              {status === "loading" ? "MEMPROSES…" : `LANJUT BAYAR ${formatIDR(subtotal)}`}
+              {status === "loading" ? "PROCESSING…" : `CONTINUE TO PAYMENT · ${formatIDR(subtotal)}`}
             </button>
             {status === "err" && <p className="text-xs text-accent">{msg}</p>}
           </form>
