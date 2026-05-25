@@ -7,12 +7,34 @@ const DEFAULT_LABELS = ["Like", "Dislike"] as const;
 type Counts = Record<string, number>;
 type State = { counts: Counts; picked: string | null };
 
-const COUNTS_KEY = "poros-reaction-counts";
-const PICKED_KEY = "poros-reaction-picked";
+const COUNTS_KEY = "vc-reaction-counts";
+const PICKED_KEY = "vc-reaction-picked";
+const LEGACY_COUNTS_KEY = "poros-reaction-counts";
+const LEGACY_PICKED_KEY = "poros-reaction-picked";
+
+function migrateOnce(): void {
+  if (typeof window === "undefined") return;
+  try {
+    for (const [next, legacy] of [
+      [COUNTS_KEY, LEGACY_COUNTS_KEY],
+      [PICKED_KEY, LEGACY_PICKED_KEY],
+    ] as const) {
+      if (window.localStorage.getItem(next) !== null) continue;
+      const old = window.localStorage.getItem(legacy);
+      if (old !== null) {
+        window.localStorage.setItem(next, old);
+        window.localStorage.removeItem(legacy);
+      }
+    }
+  } catch {
+    // ignore
+  }
+}
 
 function readMap(key: string): Record<string, unknown> {
   if (typeof window === "undefined") return {};
   try {
+    migrateOnce();
     const raw = window.localStorage.getItem(key);
     if (!raw) return {};
     const parsed = JSON.parse(raw);

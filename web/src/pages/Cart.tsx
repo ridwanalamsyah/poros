@@ -59,9 +59,12 @@ export function CartPage() {
 
     // Always log locally as a safety net so the editor never loses an order.
     try {
-      const log = JSON.parse(localStorage.getItem("poros-orders") ?? "[]");
+      const KEY = "vc-orders";
+      const legacy = localStorage.getItem("poros-orders");
+      const log = JSON.parse(localStorage.getItem(KEY) ?? legacy ?? "[]");
       log.push(order);
-      localStorage.setItem("poros-orders", JSON.stringify(log));
+      localStorage.setItem(KEY, JSON.stringify(log));
+      if (legacy !== null) localStorage.removeItem("poros-orders");
     } catch {}
 
     // 1. Persist a "pending" order to Sanity (if writable). This means

@@ -6,14 +6,14 @@
  * server-side; never expose it via VITE_*.
  *
  * Deploy:
- *   1. wrangler init poros-buttondown
+ *   1. wrangler init velvet-collapse-buttondown
  *   2. Copy this file into src/index.js
  *   3. wrangler secret put BUTTONDOWN_API_KEY
  *      (Optionally also: wrangler secret put BUTTONDOWN_ALLOWED_ORIGIN)
  *   4. wrangler deploy
  *
  * Then set in web/.env:
- *   VITE_NEWSLETTER_ENDPOINT=https://poros-buttondown.<account>.workers.dev
+ *   VITE_NEWSLETTER_ENDPOINT=https://velvet-collapse-buttondown.<account>.workers.dev
  *
  * The frontend posts { email } and expects 2xx for success.
  */
