@@ -97,6 +97,9 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Lock header to a single visual height; we shrink wordmark via transform (no layout shift / no jump)
+  const wordmarkScale = scrolled ? 0.5 : 1;
+
   const navLinkCls = ({ isActive }: { isActive: boolean }) =>
     `kicker tracking-[0.18em] py-1 transition-opacity ${isActive ? "opacity-100" : "opacity-80 hover:opacity-100"}`;
 
@@ -104,22 +107,20 @@ export function Header() {
 
   return (
     <>
-      {/* Desktop header — Consumed layout */}
+      {/* Desktop header — Consumed layout, height-locked to avoid scroll jump */}
       <header className={`hidden md:block bg-paper sticky top-0 z-30 transition-shadow ${scrolled ? "shadow-sm" : ""}`}>
         <div className="max-w-[1280px] mx-auto px-8">
-          {/* Row 1: wordmark center + utility icons right */}
-          <div className={`relative grid grid-cols-3 items-center ${scrolled ? "py-3" : "py-6"} transition-[padding] duration-200`}>
+          {/* Row 1: wordmark center + utility icons right — fixed height, scaled wordmark on scroll */}
+          <div className="relative grid grid-cols-3 items-center h-[120px]">
             <div /> {/* left spacer */}
-            <Link to="/" className="text-center select-none whitespace-nowrap leading-none">
+            <Link to="/" className="text-center select-none whitespace-nowrap leading-none" style={{ transform: `scale(${wordmarkScale})`, transformOrigin: "center", transition: "transform 0.25s ease-out" }}>
               <span
                 className="font-logo block leading-none"
-                style={{ fontSize: scrolled ? "clamp(2rem, 3vw, 2.6rem)" : "clamp(3.4rem, 6vw, 5.2rem)", letterSpacing: "0.04em" }}
+                style={{ fontSize: "clamp(3.4rem, 6vw, 5.2rem)", letterSpacing: "0.03em" }}
               >
-                POROS
+                Velvet Collapse
               </span>
-              {!scrolled && (
-                <span className="block mt-1 tracking-[0.55em] text-[0.62rem] font-medium">MAGAZINE</span>
-              )}
+              <span className="block mt-1 tracking-[0.55em] text-[0.62rem] font-medium" style={{ opacity: scrolled ? 0 : 1, transition: "opacity 0.2s" }}>MAGAZINE</span>
             </Link>
             <div className="flex items-center justify-end gap-3">
               <Link to="/submit" className="kicker tracking-[0.18em] opacity-80 hover:opacity-100">FOLLOW</Link>
@@ -129,7 +130,7 @@ export function Header() {
               <Link to="/about" aria-label="About" className={utilityIcon}><GlobeIcon /></Link>
               <NavLink to="/saved" aria-label="Saved" className={utilityIcon}><BookmarkIcon /></NavLink>
               <button onClick={() => setSearchOpen(true)} aria-label="Search" className={utilityIcon}><SearchIcon /></button>
-              <Link to="/shop" aria-label="Cart" className={`${utilityIcon} relative`}>
+              <Link to="/cart" aria-label="Cart" className={`${utilityIcon} relative`}>
                 <CartIcon />
                 {totalCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 bg-accent text-paper text-[10px] leading-none w-4 h-4 rounded-full flex items-center justify-center">{totalCount}</span>
@@ -139,8 +140,8 @@ export function Header() {
           </div>
 
         </div>
-        {/* Row 2 wrapper: full-bleed top + bottom rule */}
-        <nav className="border-y-4 rule">
+        {/* Row 2 wrapper: full-bleed top + bottom rule — thick like a broadsheet */}
+        <nav className="border-y-[8px] rule">
           <div className="max-w-[1280px] mx-auto px-8">
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-6 py-3">
               <div />
@@ -162,10 +163,10 @@ export function Header() {
       </header>
 
       {/* Mobile header — Consumed mobile pattern: wordmark on top, icon row, then hamburger row */}
-      <header className="md:hidden bg-paper sticky top-0 z-30 border-b-4 rule">
-        <div className="px-4 pt-3 pb-2 text-center">
+      <header className="md:hidden bg-paper sticky top-0 z-30 border-b-[6px] rule">
+        <div className="px-5 pt-3 pb-2 text-center">
           <Link to="/" className="inline-block leading-none">
-            <span className="font-logo block leading-none" style={{ fontSize: "clamp(2.4rem, 11vw, 3rem)", letterSpacing: "0.04em" }}>POROS</span>
+            <span className="font-logo block leading-none" style={{ fontSize: "clamp(2rem, 9vw, 2.8rem)", letterSpacing: "0.03em" }}>Velvet Collapse</span>
             <span className="block mt-1 tracking-[0.5em] text-[0.55rem] font-medium">MAGAZINE</span>
           </Link>
         </div>
@@ -177,14 +178,14 @@ export function Header() {
           <Link to="/about" aria-label="About" className={utilityIcon}><GlobeIcon size={18} /></Link>
           <NavLink to="/saved" aria-label="Saved" className={utilityIcon}><BookmarkIcon size={18} /></NavLink>
           <button onClick={() => setSearchOpen(true)} aria-label="Search" className={utilityIcon}><SearchIcon size={18} /></button>
-          <Link to="/shop" aria-label="Cart" className={`${utilityIcon} relative`}>
+          <Link to="/cart" aria-label="Cart" className={`${utilityIcon} relative`}>
             <CartIcon size={20} />
             {totalCount > 0 && (
               <span className="absolute -top-0.5 -right-0.5 bg-accent text-paper text-[10px] leading-none w-4 h-4 rounded-full flex items-center justify-center">{totalCount}</span>
             )}
           </Link>
         </div>
-        <div className="border-t-4 rule py-1.5 flex items-center justify-center">
+        <div className="border-t-[6px] rule py-1.5 flex items-center justify-center">
           <button onClick={() => setMenuOpen(true)} aria-label="Menu" className="border rule-soft px-5 py-1.5">
             <MenuIcon />
           </button>
@@ -194,12 +195,12 @@ export function Header() {
       {/* Full-screen drawer */}
       {menuOpen && (
         <div className="fixed inset-0 z-50 bg-paper text-ink overflow-y-auto">
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center px-3 md:px-8 h-16 md:h-[88px] border-b rule-soft">
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center px-3 md:px-8 h-16 md:h-[88px] border-b-[6px] rule">
             <div>
               <button aria-label="Close menu" onClick={() => setMenuOpen(false)} className="p-2 -ml-2"><CloseIcon /></button>
             </div>
             <Link to="/" className="text-center leading-none whitespace-nowrap">
-              <span className="font-logo block leading-none" style={{ fontSize: "clamp(2rem, 5vw, 2.6rem)", letterSpacing: "0.04em" }}>POROS</span>
+              <span className="font-logo block leading-none" style={{ fontSize: "clamp(2rem, 5vw, 2.6rem)", letterSpacing: "0.03em" }}>Velvet Collapse</span>
               <span className="block mt-1 tracking-[0.5em] text-[0.55rem] font-medium">MAGAZINE</span>
             </Link>
             <div />

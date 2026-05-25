@@ -12,11 +12,11 @@ type Props = {
   author?: string;
 };
 
-const SITE = "POROS";
-const DEFAULT_DESC = "POROS — majalah online dari Bandung. Labor · society · culture.";
+const SITE = "Velvet Collapse Magazine";
+const DEFAULT_DESC = "Velvet Collapse Magazine — built from the mess. Majalah online dari Bandung.";
 
 export function SEO({ title, description, image, imageUrl: customImageUrl, type = "website", publishedAt, author }: Props) {
-  const t = title ? `${title} — ${SITE}` : `${SITE} — labor · society · culture`;
+  const t = title ? `${title} — ${SITE}` : `${SITE} — Built from the mess`;
   const d = description ?? DEFAULT_DESC;
   const og = customImageUrl ?? (image ? imageUrl(image, 1200) : undefined) ?? "/og-default.png";
   return (

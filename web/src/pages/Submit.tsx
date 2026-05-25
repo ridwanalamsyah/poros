@@ -48,7 +48,7 @@ export function SubmitPage({ mode = "pitch" }: { mode?: Mode }) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 md:px-0 pt-6 md:pt-14 pb-10">
+    <div className="max-w-2xl mx-auto px-5 md:px-0 pt-6 md:pt-14 pb-10">
       <SEO title={isPitch ? "Submit pitch" : "Letters to editor"} />
       <header className="border-b rule-soft pb-6 mb-8">
         <p className="kicker text-accent">{isPitch ? "SUBMIT PITCH" : "LETTERS TO EDITOR"}</p>

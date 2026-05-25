@@ -56,9 +56,10 @@ export function Footer() {
           className="font-logo leading-none tracking-wide text-paper inline-block"
           style={{ fontSize: "clamp(2.4rem, 5vw, 3.6rem)" }}
         >
-          POROS
+          Velvet Collapse
         </Link>
-        <p className="kicker text-paper/75 mt-1 tracking-[0.4em]">MAGAZINE</p>
+        <p className="kicker text-paper/75 mt-1 tracking-[0.4em]">MAGAZINE — DEPARTMENT</p>
+        <p className="text-paper/55 italic mt-2 text-sm">Built from the mess.</p>
 
         <nav className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 kicker text-paper">
           <Link to="/" className="hover:opacity-70 transition-opacity">HOME</Link>
@@ -79,7 +80,7 @@ export function Footer() {
         </div>
 
         <p className="stat text-paper/55 mt-8 tracking-[0.18em]">
-          POROS · {new Date().getFullYear()} · BANDUNG
+          VELVET COLLAPSE · {new Date().getFullYear()} · BANDUNG
         </p>
       </div>
     </footer>

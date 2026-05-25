@@ -152,7 +152,7 @@ export function ShopPage() {
 
       {checkoutOpen && (
         <div className="fixed inset-0 z-50 bg-paper text-ink overflow-y-auto">
-          <div className="max-w-2xl mx-auto px-4 md:px-0 py-10">
+          <div className="max-w-2xl mx-auto px-5 md:px-0 py-10">
             <div className="flex items-center justify-between mb-6">
               <p className="kicker">CHECKOUT</p>
               <button onClick={() => setCheckoutOpen(false)} className="kicker hover-underline">CLOSE ×</button>

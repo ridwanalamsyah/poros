@@ -4,7 +4,6 @@ import { useAsync } from "../hooks/useAsync";
 import { getArticles, getEditions } from "../data/api";
 import { ArticleCard } from "../components/ArticleCard";
 import { ArticleListSkeleton, HeroSkeleton } from "../components/Skeleton";
-import { TrendingStrip } from "../components/TrendingStrip";
 import { SEO } from "../components/SEO";
 import type { Article } from "../types";
 
@@ -34,7 +33,6 @@ export function Home() {
   }, [feedSource, tab]);
 
   const popular = useMemo<Article[]>(() => [...all].sort((a, b) => (b.views ?? 0) - (a.views ?? 0)).slice(0, 5), [all]);
-  const trending = [...all].sort((a, b) => (b.views ?? 0) - (a.views ?? 0)).slice(0, 6);
   const feed = sorted.slice(0, shown);
   const canLoadMore = sorted.length > shown;
 
@@ -64,13 +62,6 @@ export function Home() {
           </div>
         </section>
       ) : null}
-
-      {/* Trending strip */}
-      {!loading && trending.length > 0 && (
-        <div className="mt-8 md:mt-12">
-          <TrendingStrip articles={trending} />
-        </div>
-      )}
 
       {/* Current edition */}
       {!loading && editions && editions.length > 0 && (
@@ -141,7 +132,7 @@ export function Home() {
 
               <div className="mt-10 border-t rule-soft pt-6">
                 <h3 className="kicker text-accent mb-2">FROM THE NOTEBOOK</h3>
-                <p className="text-sm text-muted">Catatan-catatan pendek dari redaksi POROS — antara dua edisi.</p>
+                <p className="text-sm text-muted">Catatan-catatan pendek dari redaksi Velvet Collapse — antara dua edisi.</p>
                 <Link to="/notes" className="kicker hover-underline inline-block mt-3">READ NOTES →</Link>
               </div>
             </aside>
