@@ -46,11 +46,28 @@ npx sanity build          # outputs studio/dist
 ```
 VITE_SANITY_PROJECT_ID=lyo17dt8
 VITE_SANITY_DATASET=production
-VITE_SANITY_WRITE_TOKEN=...           # optional: enables submit-pitch / letters to save into Studio inbox
+VITE_SANITY_WRITE_TOKEN=...           # enables submit-pitch / letters / orders to save into Studio
 VITE_SITE_URL=https://porosmagazine.id
-VITE_BUTTONDOWN_USERNAME=...          # optional: newsletter subscribe
-VITE_DOKU_CHECKOUT_ENDPOINT=https://your-backend/api/doku/checkout  # optional: real DOKU checkout
+
+# Newsletter — pick one
+VITE_BUTTONDOWN_USERNAME=...          # public Buttondown embed (no API key, simplest)
+VITE_NEWSLETTER_ENDPOINT=...          # custom server endpoint (e.g. a Cloudflare Worker — keeps Buttondown API key server-side)
+
+# Payments
+VITE_DOKU_CHECKOUT_ENDPOINT=...       # POST { customer, items, subtotal, orderId, orderNumber } and expects { paymentUrl, paymentRef }
+
+# Analytics
+VITE_PLAUSIBLE_DOMAIN=porosmagazine.id   # turn on Plausible script
+VITE_PLAUSIBLE_HOST=https://plausible.io # optional override for self-hosted Plausible
+VITE_VERCEL_ANALYTICS=1                  # alternative: turn on Vercel Web Analytics
+
+# Sentry (error tracking)
+VITE_SENTRY_DSN=https://...@oXXXX.ingest.sentry.io/YYYY
+VITE_SENTRY_ENVIRONMENT=production
+VITE_SENTRY_TRACES_SAMPLE_RATE=0.1
 ```
+
+`VITE_SANITY_WRITE_TOKEN` is read by the browser. Use an **Editor**-scoped token, not a Deploy token — and rotate it if it ever ends up in a public commit. Limit dataset privileges to the bare minimum (e.g. only allow writes to `order`, `submission`, `letter`).
 
 ### studio/.env
 
@@ -80,11 +97,11 @@ SANITY_STUDIO_DATASET=production
 
 ## Sanity schemas
 
-Article · Category · Author · Edition · Note · Product · Settings · Submission · Letter
+Article · Category · Author · Edition · Note · Product · Order · Settings · Submission · Letter
 
 Custom rich-text blocks: pullQuote · imageWithCaption · embed (YouTube/Spotify autodetect) · callout (info/warn/accent) · divider
 
-Custom desk: Articles (All / Editor's picks / Recently published / Scheduled / Drafts / Needs cover image / By category / By edition / By author) · Categories · Authors · Editions · Notes · Products · Inbox (Pitches + Letters) · Settings singleton.
+Custom desk: Articles (All / Editor's picks / Recently published / Scheduled / Drafts / Needs cover image / By category / By edition / By author) · Categories · Authors · Editions · Notes · **Shop** (Products + Orders: all / pending / paid / shipped / cancelled) · Inbox (Pitches + Letters) · Settings singleton.
 
 Settings singleton drives:
 
@@ -112,9 +129,40 @@ node ../scripts/seed-sanity.mjs
 
 Documents use deterministic `_id` values (`seed-*`), so re-running the script is idempotent.
 
+## Shop & checkout flow
+
+1. Visitor browses `/shop` (grid) → opens product detail `/shop/:slug` → adds to cart.
+2. `/cart` reviews the order, then collects shipping + contact info.
+3. On submit, a draft `order` document is written to Sanity (`status: "pending"`) using the write token. Editors see it immediately in **Shop → Orders → Pending payment**.
+4. If `VITE_DOKU_CHECKOUT_ENDPOINT` is configured, the frontend POSTs the order to the backend and redirects to the returned `paymentUrl`. The Sanity order is patched with `paymentRef` / `paymentUrl`.
+5. The DOKU webhook on your backend should patch the Sanity order to `status: "paid"` and set `paidAt`. (Webhook implementation lives outside this repo — see `scripts/buttondown-worker.js` for the worker pattern.)
+
+If no DOKU endpoint is set, the order is still saved as `pending` and the editor can send a manual payment link from the Studio.
+
+## Newsletter
+
+Two paths:
+
+- **Embed (default, no secret)**: set `VITE_BUTTONDOWN_USERNAME`. Submits to `https://buttondown.email/api/emails/embed-subscribe/<username>`.
+- **API (server-side, keeps key secret)**: deploy `scripts/buttondown-worker.js` to Cloudflare Workers with `BUTTONDOWN_API_KEY` as a secret, then point `VITE_NEWSLETTER_ENDPOINT` at the worker URL.
+
+Never put a Buttondown API key into a `VITE_*` variable — it would be inlined into the public bundle.
+
+## Analytics & errors
+
+- **Plausible**: set `VITE_PLAUSIBLE_DOMAIN=porosmagazine.id`. Loads `script.js` from `plausible.io` (override with `VITE_PLAUSIBLE_HOST` for self-hosted). Custom events fire on `add_to_cart`, `checkout_started`, `newsletter_subscribed`.
+- **Vercel Web Analytics**: set `VITE_VERCEL_ANALYTICS=1` (only meaningful when hosted on Vercel — it serves `/_vercel/insights/script.js` automatically).
+- **Sentry**: set `VITE_SENTRY_DSN`. `@sentry/react` is dynamically imported, so the bundle stays small when Sentry is disabled. `VITE_SENTRY_TRACES_SAMPLE_RATE` (default `0.1`) controls perf tracing.
+
+## Hosting
+
+- **Web (Vite frontend)** — recommended: Vercel or Netlify, both free tier. Set env vars in the dashboard, point at `web/` as the project root, build command `npm run build`, output `dist`.
+- **Studio (Sanity)** — `cd studio && npx sanity deploy` hosts it at `<projectname>.sanity.studio`. Free as long as you stay within the Sanity quota.
+- **Buttondown Worker (optional)** — see `scripts/buttondown-worker.js`. Deploy with `wrangler deploy`; takes ~5 minutes.
+
 ## DOKU backend
 
-Frontend posts `{customer, items, subtotal}` to `VITE_DOKU_CHECKOUT_ENDPOINT` and expects `{paymentUrl}` back. A minimal Cloudflare Worker / Vercel function example is the next step — needs DOKU sandbox client-id + secret.
+Frontend posts `{ customer, items, subtotal, orderId, orderNumber }` to `VITE_DOKU_CHECKOUT_ENDPOINT` and expects `{ paymentUrl, paymentRef }` back. A minimal Cloudflare Worker / Vercel function example is the next step — needs DOKU sandbox client-id + secret. The backend should also patch the Sanity `order` to `status: "paid"` from the DOKU webhook.
 
 ---
 

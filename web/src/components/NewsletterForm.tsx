@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { trackEvent } from "../utils/analytics";
 
 const BUTTONDOWN_USERNAME = import.meta.env.VITE_BUTTONDOWN_USERNAME as string | undefined;
+const NEWSLETTER_ENDPOINT = import.meta.env.VITE_NEWSLETTER_ENDPOINT as string | undefined;
 
 export function NewsletterForm() {
   const [email, setEmail] = useState("");
@@ -15,33 +17,61 @@ export function NewsletterForm() {
       return;
     }
     setStatus("loading");
-    if (!BUTTONDOWN_USERNAME) {
-      // No integration configured — still acknowledge so visitors get feedback.
-      await new Promise((r) => setTimeout(r, 600));
-      setStatus("ok");
-      setMsg("Terima kasih! Saat ini list belum di-link ke ESP. Editor akan menambahkan emailmu manual.");
-      setEmail("");
+
+    // 1. Custom server endpoint (preferred — keeps API key server-side).
+    //    See scripts/buttondown-worker.js for a Cloudflare Worker template.
+    if (NEWSLETTER_ENDPOINT) {
       try {
-        const log = JSON.parse(localStorage.getItem("poros-newsletter") ?? "[]");
-        log.push({ email, ts: Date.now() });
-        localStorage.setItem("poros-newsletter", JSON.stringify(log));
-      } catch {}
-      return;
+        const r = await fetch(NEWSLETTER_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        setStatus("ok");
+        setMsg("Selamat datang. Cek inbox untuk konfirmasi.");
+        setEmail("");
+        trackEvent("newsletter_subscribed", { source: "endpoint" });
+        return;
+      } catch {
+        setStatus("err");
+        setMsg("Gagal subscribe. Coba lagi nanti.");
+        return;
+      }
     }
+
+    // 2. Public Buttondown embed (no secret required, uses username only).
+    if (BUTTONDOWN_USERNAME) {
+      try {
+        const r = await fetch(`https://buttondown.email/api/emails/embed-subscribe/${BUTTONDOWN_USERNAME}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ email }).toString(),
+        });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        setStatus("ok");
+        setMsg("Selamat datang. Cek inbox untuk konfirmasi.");
+        setEmail("");
+        trackEvent("newsletter_subscribed", { source: "embed" });
+        return;
+      } catch {
+        setStatus("err");
+        setMsg("Gagal subscribe. Coba lagi nanti.");
+        return;
+      }
+    }
+
+    // 3. Offline fallback — log to localStorage so editors can ingest manually.
+    await new Promise((r) => setTimeout(r, 600));
+    setStatus("ok");
+    setMsg("Terima kasih! Saat ini list belum di-link ke ESP. Editor akan menambahkan emailmu manual.");
+    setEmail("");
     try {
-      const r = await fetch(`https://buttondown.email/api/emails/embed-subscribe/${BUTTONDOWN_USERNAME}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ email }).toString(),
-      });
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      setStatus("ok");
-      setMsg("Selamat datang. Cek inbox untuk konfirmasi.");
-      setEmail("");
-    } catch {
-      setStatus("err");
-      setMsg("Gagal subscribe. Coba lagi nanti.");
-    }
+      const log = JSON.parse(localStorage.getItem("poros-newsletter") ?? "[]");
+      log.push({ email, ts: Date.now() });
+      localStorage.setItem("poros-newsletter", JSON.stringify(log));
+    } catch {}
+    trackEvent("newsletter_subscribed", { source: "localStorage" });
   }
 
   return (

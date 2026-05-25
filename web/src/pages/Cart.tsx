@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useAsync } from "../hooks/useAsync";
-import { getProducts } from "../data/api";
+import { createOrder, getProducts, updateOrderPayment } from "../data/api";
 import { SmartImage } from "../components/SmartImage";
 import { useCart } from "../hooks/useCart";
 import { SEO } from "../components/SEO";
 import { formatIDR } from "../utils/text";
+import { trackEvent } from "../utils/analytics";
+import { captureException } from "../utils/sentry";
+import type { Order } from "../types";
 
 const PAYMENT_METHODS: { label: string; sub: string }[] = [
   { label: "Transfer Bank", sub: "BCA · Mandiri · BRI · BNI · CIMB" },
@@ -25,8 +28,10 @@ export function CartPage() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "err">("idle");
   const [msg, setMsg] = useState("");
+  const [orderNumber, setOrderNumber] = useState<string | null>(null);
 
   const productMap = new Map((products ?? []).map((p) => [p.slug, p]));
   const cartItems = lines
@@ -43,48 +48,95 @@ export function CartPage() {
       return;
     }
     setStatus("loading");
-    const endpoint = import.meta.env.VITE_DOKU_CHECKOUT_ENDPOINT as string | undefined;
-    const payload = {
-      customer: { name, email, phone, address, city },
+
+    const order: Order = {
+      status: "pending",
+      customer: { name, email, phone, address, city, postalCode },
       items: cartItems.map(({ line, product }) => ({
         sku: product.slug,
-        name: product.title,
+        title: product.title,
         price: product.price,
         qty: line.qty,
       })),
       subtotal,
+      shipping: 0,
+      total: subtotal,
+      paymentProvider: "doku",
+      placedAt: new Date().toISOString(),
     };
+
+    // Always log locally as a safety net so the editor never loses an order.
+    try {
+      const log = JSON.parse(localStorage.getItem("poros-orders") ?? "[]");
+      log.push(order);
+      localStorage.setItem("poros-orders", JSON.stringify(log));
+    } catch {}
+
+    // 1. Persist a "pending" order to Sanity (if writable). This means
+    //    editors see the order in the Studio even if DOKU never gets called.
+    const sanityResult = await createOrder(order).catch((err) => {
+      void captureException(err, { stage: "createOrder" });
+      return null;
+    });
+    const orderNum = sanityResult?.orderNumber ?? `local-${Date.now().toString(36).slice(-6)}`;
+
+    trackEvent("checkout_started", {
+      orderNumber: orderNum,
+      itemCount: cartItems.length,
+      subtotal,
+    });
+
+    // 2. Forward to DOKU (or compatible) checkout endpoint if configured.
+    const endpoint = import.meta.env.VITE_DOKU_CHECKOUT_ENDPOINT as string | undefined;
     if (!endpoint) {
-      try {
-        const log = JSON.parse(localStorage.getItem("vc-orders") ?? "[]");
-        log.push({ ...payload, ts: Date.now() });
-        localStorage.setItem("vc-orders", JSON.stringify(log));
-      } catch {}
-      await new Promise((r) => setTimeout(r, 600));
       setStatus("idle");
       setStage("done");
-      setMsg("Pesanan diterima. Redaksi akan mengirim link pembayaran ke emailmu dalam beberapa menit.");
+      setOrderNumber(orderNum);
+      setMsg(
+        sanityResult
+          ? `Pesanan dibuat (#${orderNum}). Redaksi akan mengirim link pembayaran ke emailmu dalam beberapa menit.`
+          : "Pesanan diterima. Redaksi akan mengirim link pembayaran ke emailmu dalam beberapa menit.",
+      );
       clear();
       return;
     }
+
     try {
+      const payload = {
+        ...order,
+        orderId: sanityResult?.id,
+        orderNumber: orderNum,
+        customer: order.customer,
+        items: order.items,
+        subtotal,
+      };
       const r = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      const data = (await r.json()) as { paymentUrl?: string; redirect?: string };
+      const data = (await r.json()) as { paymentUrl?: string; redirect?: string; paymentRef?: string };
       const url = data.paymentUrl ?? data.redirect;
+
+      if (sanityResult && (url || data.paymentRef)) {
+        await updateOrderPayment(sanityResult.id, {
+          paymentRef: data.paymentRef,
+          paymentUrl: url,
+        });
+      }
+
       if (url) {
         window.location.href = url;
         return;
       }
       setStatus("idle");
       setStage("done");
-      setMsg("Pesanan dibuat. Cek email untuk instruksi pembayaran.");
+      setOrderNumber(orderNum);
+      setMsg(`Pesanan dibuat (#${orderNum}). Cek email untuk instruksi pembayaran.`);
       clear();
     } catch (err) {
+      void captureException(err, { stage: "doku_checkout" });
       setStatus("err");
       setMsg(err instanceof Error ? err.message : "Checkout gagal. Coba lagi.");
     }
@@ -92,7 +144,7 @@ export function CartPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-5 md:px-0 pt-6 md:pt-14 pb-10">
-      <SEO title="Cart" description="Review pesanan Velvet Collapse Magazine sebelum checkout." />
+      <SEO title="Cart" description="Review pesanan POROS sebelum checkout." />
       <header className="border-b rule-soft pb-6 mb-8">
         <p className="kicker text-accent">CART</p>
         <h1 className="headline-display text-4xl md:text-5xl mt-2">Keranjang.</h1>
@@ -102,6 +154,7 @@ export function CartPage() {
       {stage === "done" ? (
         <div className="border rule-soft p-6">
           <p className="kicker text-accent">PESANAN DITERIMA</p>
+          {orderNumber && <p className="byline mt-2">No. pesanan: <span className="font-mono">{orderNumber}</span></p>}
           <p className="mt-3">{msg}</p>
           <Link to="/" className="kicker mt-6 inline-block hover-underline">← KEMBALI KE BERANDA</Link>
         </div>
@@ -121,7 +174,7 @@ export function CartPage() {
                   <SmartImage image={product.image} className="w-full h-full" width={200} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <Link to="/shop" className="block hover-underline">
+                  <Link to={`/shop/${product.slug}`} className="block hover-underline">
                     <p className="headline text-base">{product.title}</p>
                   </Link>
                   <p className="byline mt-1">{formatIDR(product.price)}</p>
@@ -175,7 +228,10 @@ export function CartPage() {
             <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="No. WhatsApp" value={phone} onChange={(e) => setPhone(e.target.value)} />
             <textarea className="w-full border rule-soft bg-transparent px-3 py-2" rows={3} placeholder="Alamat lengkap" value={address} onChange={(e) => setAddress(e.target.value)} />
-            <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="Kota" value={city} onChange={(e) => setCity(e.target.value)} />
+            <div className="grid grid-cols-2 gap-3">
+              <input className="border rule-soft bg-transparent px-3 py-2" placeholder="Kota" value={city} onChange={(e) => setCity(e.target.value)} />
+              <input className="border rule-soft bg-transparent px-3 py-2" placeholder="Kode pos" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} />
+            </div>
             <button type="submit" disabled={status === "loading"} className="bg-ink text-paper px-4 py-3 w-full kicker disabled:opacity-50">
               {status === "loading" ? "MEMPROSES…" : `LANJUT BAYAR ${formatIDR(subtotal)}`}
             </button>

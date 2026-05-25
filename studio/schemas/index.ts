@@ -4,6 +4,7 @@ import author from "./author";
 import edition from "./edition";
 import note from "./note";
 import product from "./product";
+import order from "./order";
 import settings from "./settings";
 import submission from "./submission";
 import letter from "./letter";
@@ -21,6 +22,7 @@ export const schemaTypes = [
   edition,
   note,
   product,
+  order,
   settings,
   submission,
   letter,
