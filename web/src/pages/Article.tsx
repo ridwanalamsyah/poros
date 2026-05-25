@@ -60,6 +60,13 @@ export function ArticlePage() {
         type="article"
         publishedAt={article.publishedAt}
         author={article.author?.name}
+        authorUrl={article.author?.slug ? `/author/${article.author.slug}` : undefined}
+        url={`/article/${article.slug}`}
+        breadcrumbs={[
+          { name: "Home", url: "/" },
+          ...(article.category ? [{ name: article.category.title, url: `/category/${article.category.slug}` }] : []),
+          { name: article.title, url: `/article/${article.slug}` },
+        ]}
       />
       <ReadingProgress />
 

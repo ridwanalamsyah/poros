@@ -14,9 +14,10 @@ function ScrollToTop() {
 export function Layout() {
   return (
     <div className="min-h-screen flex flex-col">
+      <a href="#main-content" className="skip-link">Lompat ke konten</a>
       <ScrollToTop />
       <Header />
-      <main className="flex-1">
+      <main id="main-content" tabIndex={-1} className="flex-1">
         <Outlet />
       </main>
       <Footer />
