@@ -86,6 +86,22 @@ export default defineType({
                 title: "Link",
                 fields: [{ name: "href", type: "url", title: "URL" }],
               },
+              {
+                name: "footnote",
+                type: "object",
+                title: "Footnote",
+                fields: [
+                  { name: "text", type: "text", title: "Footnote text", rows: 3 },
+                ],
+              },
+              {
+                name: "marginNote",
+                type: "object",
+                title: "Margin note",
+                fields: [
+                  { name: "text", type: "text", title: "Margin note text", rows: 3 },
+                ],
+              },
             ],
           },
         },
