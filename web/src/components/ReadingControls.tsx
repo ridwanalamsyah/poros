@@ -7,20 +7,14 @@ export function ReadingControls({ slug, articleText }: { slug: string; articleTe
 
   const [size, setSize] = useState<string>(() => {
     try {
-      return (
-        localStorage.getItem("vc-text-size") ??
-        localStorage.getItem("poros-text-size") ??
-        "1.08rem"
-      );
+      return localStorage.getItem("vc-text-size") ?? "1.08rem";
     } catch {
       return "1.08rem";
     }
   });
   const [serif, setSerif] = useState<boolean>(() => {
     try {
-      const v =
-        localStorage.getItem("vc-text-family") ??
-        localStorage.getItem("poros-text-family");
+      const v = localStorage.getItem("vc-text-family");
       return v !== "sans";
     } catch {
       return true;
@@ -32,7 +26,6 @@ export function ReadingControls({ slug, articleText }: { slug: string; articleTe
     document.documentElement.style.setProperty("--reading-size", size);
     try {
       localStorage.setItem("vc-text-size", size);
-      localStorage.removeItem("poros-text-size");
     } catch {}
   }, [size]);
 
@@ -40,7 +33,6 @@ export function ReadingControls({ slug, articleText }: { slug: string; articleTe
     document.documentElement.classList.toggle("font-sans-reading", !serif);
     try {
       localStorage.setItem("vc-text-family", serif ? "serif" : "sans");
-      localStorage.removeItem("poros-text-family");
     } catch {}
   }, [serif]);
 

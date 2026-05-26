@@ -133,9 +133,9 @@ export function TipJar({ variant = "footer", placementOverride }: TipJarProps) {
     );
   }
 
-  // placement === "button" (default)
+  // placement === "button" (default) — compact, no decorative border (placed inline near tagline in footer)
   return (
-    <div className="mt-8 pt-6 border-t border-paper/15 relative" ref={popoverRef}>
+    <div className="relative inline-block" ref={popoverRef}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

@@ -28,13 +28,13 @@
     <script>
       (function () {
         try {
-          var t = localStorage.getItem("vc-theme") || localStorage.getItem("poros-theme");
+          var t = localStorage.getItem("vc-theme");
           if (t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
             document.documentElement.classList.add("dark");
           }
-          var s = localStorage.getItem("vc-text-size") || localStorage.getItem("poros-text-size");
+          var s = localStorage.getItem("vc-text-size");
           if (s) document.documentElement.style.setProperty("--reading-size", s);
-          var f = localStorage.getItem("vc-text-family") || localStorage.getItem("poros-text-family");
+          var f = localStorage.getItem("vc-text-family");
           if (f === "sans") document.documentElement.classList.add("font-sans-reading");
         } catch (e) {}
       })();

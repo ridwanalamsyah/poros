@@ -1,24 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 
 const KEY = "vc-bookmarks";
-const LEGACY_KEY = "poros-bookmarks";
 const EVENT = "vc-bookmarks";
-const LEGACY_EVENT = "poros-bookmarks";
-
-function migrateOnce(): void {
-  try {
-    if (localStorage.getItem(KEY) !== null) return;
-    const legacy = localStorage.getItem(LEGACY_KEY);
-    if (legacy !== null) {
-      localStorage.setItem(KEY, legacy);
-      localStorage.removeItem(LEGACY_KEY);
-    }
-  } catch {}
-}
 
 function read(): string[] {
   try {
-    migrateOnce();
     return JSON.parse(localStorage.getItem(KEY) ?? "[]");
   } catch {
     return [];
@@ -28,7 +14,6 @@ function read(): string[] {
 function write(slugs: string[]) {
   localStorage.setItem(KEY, JSON.stringify(slugs));
   window.dispatchEvent(new Event(EVENT));
-  window.dispatchEvent(new Event(LEGACY_EVENT));
 }
 
 export function useBookmarks(): { slugs: string[]; toggle: (slug: string) => void; has: (slug: string) => boolean } {
@@ -38,11 +23,9 @@ export function useBookmarks(): { slugs: string[]; toggle: (slug: string) => voi
     setSlugs(read());
     const onUpdate = () => setSlugs(read());
     window.addEventListener(EVENT, onUpdate);
-    window.addEventListener(LEGACY_EVENT, onUpdate);
     window.addEventListener("storage", onUpdate);
     return () => {
       window.removeEventListener(EVENT, onUpdate);
-      window.removeEventListener(LEGACY_EVENT, onUpdate);
       window.removeEventListener("storage", onUpdate);
     };
   }, []);

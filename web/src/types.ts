@@ -28,7 +28,6 @@ export type Author = {
   slug: string;
   bio?: string;
   image?: SanityImage;
-  twitter?: string;
   instagram?: string;
   website?: string;
 };

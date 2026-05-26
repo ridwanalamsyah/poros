@@ -80,7 +80,8 @@ export function Header() {
   const navigate = useNavigate();
   const { results } = useArticleSearch(query);
   const { data: settings } = useAsync(() => getSettings(), []);
-  const wordmark = settings?.brandWordmark?.trim() || settings?.siteTitle?.trim() || "Velvet Collapse";
+  const rawWordmark = settings?.brandWordmark?.trim() || settings?.siteTitle?.trim() || "Velvet Collapse";
+  const wordmark = rawWordmark.replace(/\s*magazine\s*$/i, "").trim() || rawWordmark;
 
   useEffect(() => {
     setMenuOpen(false);
@@ -101,10 +102,12 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock header to a single visual height; we shrink wordmark via transform (no layout shift / no jump)
-  const wordmarkScale = scrolled ? 0.62 : 1;
-  const wordmarkOpacity = scrolled ? 0.78 : 1;
-  const wordmarkSpacing = scrolled ? "0.06em" : "0.03em";
+  // Lock header to a single visual height; we shrink wordmark slightly via transform on scroll (no layout shift).
+  // Kicker fades out on scroll so the header gets cleaner, but wordmark stays prominent.
+  const wordmarkScale = scrolled ? 0.9 : 1;
+  const wordmarkOpacity = scrolled ? 0.95 : 1;
+  const wordmarkSpacing = scrolled ? "0.04em" : "0.03em";
+  const kickerOpacity = scrolled ? 0 : 1;
 
   const navLinkCls = ({ isActive }: { isActive: boolean }) =>
     `kicker tracking-[0.18em] py-1 transition-opacity ${isActive ? "opacity-100" : "opacity-80 hover:opacity-100"}`;
@@ -134,6 +137,13 @@ export function Header() {
                 style={{ fontSize: "clamp(1.5rem, 2.6vw, 2.3rem)", letterSpacing: wordmarkSpacing }}
               >
                 {wordmark}
+              </span>
+              <span
+                aria-hidden="true"
+                className="block mt-1 tracking-[0.5em] text-[0.5rem] font-medium"
+                style={{ opacity: kickerOpacity, transition: "opacity 0.32s ease-out" }}
+              >
+                MAGAZINE
               </span>
             </Link>
             <div className="flex items-center justify-end gap-3">
@@ -181,6 +191,7 @@ export function Header() {
         <div className="px-5 pt-3 pb-2 text-center">
           <Link to="/" className="inline-block leading-none">
             <span className="font-logo block leading-none" style={{ fontSize: "clamp(1.25rem, 5.5vw, 1.75rem)", letterSpacing: "0.03em" }}>{wordmark}</span>
+            <span aria-hidden="true" className="block mt-1 tracking-[0.5em] text-[0.5rem] font-medium">MAGAZINE</span>
           </Link>
         </div>
         <div className="px-3 pb-2 flex items-center justify-center gap-2 flex-wrap">
@@ -214,6 +225,7 @@ export function Header() {
             </div>
             <Link to="/" className="text-center leading-none whitespace-nowrap">
               <span className="font-logo block leading-none" style={{ fontSize: "clamp(2rem, 5vw, 2.6rem)", letterSpacing: "0.03em" }}>{wordmark}</span>
+              <span aria-hidden="true" className="block mt-1 tracking-[0.5em] text-[0.55rem] font-medium">MAGAZINE</span>
             </Link>
             <div />
           </div>

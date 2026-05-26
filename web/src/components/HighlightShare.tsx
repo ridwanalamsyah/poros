@@ -29,17 +29,14 @@ export function HighlightShare({ containerRef, title, slug }: { containerRef: Re
 
   if (!pos) return null;
 
-  const url = typeof window !== "undefined" ? window.location.href : "";
-  const quote = `"${text}" — ${title}\n${url}`;
+  const quote = `"${text}" — ${title}`;
 
   return (
     <div ref={popRef} className="hl-popover" style={{ top: pos.top, left: pos.left }} role="toolbar">
       <button onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(quote)}`, "_blank")}>WhatsApp</button>
-      <button onClick={() => window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(quote)}`, "_blank")}>Telegram</button>
       {slug && (
         <button onClick={() => navigate(`/share/${slug}?q=${encodeURIComponent(text)}`)}>Instagram</button>
       )}
-      <button onClick={() => navigator.clipboard.writeText(quote)}>Copy</button>
     </div>
   );
 }

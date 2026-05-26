@@ -10,7 +10,7 @@ const articleFields = `
   body,
   coverImage{..., asset->{..., metadata{lqip, dimensions}}},
   "category": category->{_id, title, "slug": slug.current, description, sortOrder},
-  "author": author->{_id, name, "slug": slug.current, bio, image{..., asset->{..., metadata{lqip}}}, twitter, instagram, website},
+  "author": author->{_id, name, "slug": slug.current, bio, image{..., asset->{..., metadata{lqip}}}, instagram, website},
   "authors": authors[]->{_id, name, "slug": slug.current, image{..., asset->{..., metadata{lqip}}}},
   "edition": edition->{_id, title, "slug": slug.current, issueNumber, description},
   tags,
@@ -98,7 +98,7 @@ export function getArticle(slug: string): Promise<Article | null> {
 
 export function getAuthor(slug: string): Promise<Author | null> {
   return fetchOr<Author | null>(
-    `*[_type == "author" && slug.current == $slug][0]{_id, name, "slug": slug.current, bio, image{..., asset->{..., metadata{lqip}}}, twitter, instagram, website}`,
+    `*[_type == "author" && slug.current == $slug][0]{_id, name, "slug": slug.current, bio, image{..., asset->{..., metadata{lqip}}}, instagram, website}`,
     { slug },
     mockAuthors.find((a) => a.slug === slug) ?? null,
   );
