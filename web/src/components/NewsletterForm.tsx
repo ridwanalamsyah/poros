@@ -68,11 +68,9 @@ export function NewsletterForm() {
     setEmail("");
     try {
       const KEY = "vc-newsletter";
-      const legacy = localStorage.getItem("poros-newsletter");
-      const log = JSON.parse(localStorage.getItem(KEY) ?? legacy ?? "[]");
+      const log = JSON.parse(localStorage.getItem(KEY) ?? "[]");
       log.push({ email, ts: Date.now() });
       localStorage.setItem(KEY, JSON.stringify(log));
-      if (legacy !== null) localStorage.removeItem("poros-newsletter");
     } catch {}
     trackEvent("newsletter_subscribed", { source: "localStorage" });
   }

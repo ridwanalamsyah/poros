@@ -15,22 +15,22 @@ import sys
 VC_AUTHORS = [
     ("auth-tirta", "Tirta Anggara", "tirta-anggara",
      "Jurnalis lepas berbasis Bandung. Menulis soal serikat pekerja dan ekonomi platform.",
-     "tirtaanggara", "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400"),
+     "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400"),
     ("auth-rara", "Rara Sugiarti", "rara-sugiarti",
      "Editor Velvet Collapse. Sebelumnya menulis untuk Magdalene dan Project Multatuli.",
-     "rarasugiarti", "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400"),
+     "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400"),
     ("auth-bagas", "Bagas Prasetyo", "bagas-prasetyo",
      "Fotografer dan penulis. Tinggal di Antapani, Bandung Timur.",
-     "bagasprasetyo", "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400"),
+     "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400"),
     ("auth-mira", "Mira Wulansari", "mira-wulansari",
      "Mahasiswa antropologi Unpad yang menulis soal pasar dan ruang kota.",
-     "", "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400"),
+     "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400"),
     ("auth-dirga", "Dirga Saputra", "dirga-saputra",
      "Penulis musik dan kontributor di kanal Bandung Underground Archive.",
-     "dirgasaputra", "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400"),
+     "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400"),
     ("auth-ima", "Ima Hidayanti", "ima-hidayanti",
      "Editor lepas. Menulis kolom budaya populer dan musik bawah tanah.",
-     "imahidayanti", "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400"),
+     "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400"),
 ]
 
 
@@ -136,7 +136,7 @@ def main():
         articles_ts.append(entry)
 
     authors_ts = ",\n  ".join(
-        f'{{ _id: "{a[0]}", name: "{escape_ts(a[1])}", slug: "{a[2]}", bio: "{escape_ts(a[3])}", twitter: "{a[4]}", image: img("{a[5]}", "{escape_ts(a[1])}") }}'
+        f'{{ _id: "{a[0]}", name: "{escape_ts(a[1])}", slug: "{a[2]}", bio: "{escape_ts(a[3])}", image: img("{a[4]}", "{escape_ts(a[1])}") }}'
         for a in VC_AUTHORS
     )
 

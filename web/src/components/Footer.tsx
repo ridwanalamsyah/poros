@@ -27,7 +27,8 @@ export function Footer() {
   const { data: categories } = useCategories();
   const { data: settings } = useAsync(() => getSettings(), []);
 
-  const wordmark = settings?.brandWordmark?.trim() || settings?.siteTitle?.trim() || "Velvet Collapse";
+  const rawWordmark = settings?.brandWordmark?.trim() || settings?.siteTitle?.trim() || "Velvet Collapse";
+  const wordmark = rawWordmark.replace(/\s*magazine\s*$/i, "").trim() || rawWordmark;
   const tagline = settings?.footerTagline?.trim() || "Built from the mess.";
   const year = new Date().getFullYear();
   const copyright =
@@ -55,7 +56,12 @@ export function Footer() {
         >
           {wordmark}
         </Link>
+        <p aria-hidden="true" className="kicker text-paper/75 mt-1 tracking-[0.4em]">MAGAZINE</p>
         <p className="text-paper/55 italic mt-2 text-sm">{tagline}</p>
+
+        <div className="mt-5">
+          <TipJar placementOverride="button" />
+        </div>
 
         <nav className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 kicker text-paper">
           <Link to="/" className="hover:opacity-70 transition-opacity">HOME</Link>
@@ -80,8 +86,6 @@ export function Footer() {
           </a>
           <a href="/rss.xml" aria-label="RSS feed" className="hover:opacity-70 transition-opacity"><RssIcon /></a>
         </div>
-
-        <TipJar placementOverride="footer-center" />
 
         <p className="stat text-paper/55 mt-8 tracking-[0.18em] text-center">
           {copyright} ·{" "}

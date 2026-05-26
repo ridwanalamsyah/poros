@@ -29,11 +29,9 @@ export function SubmitPage({ mode = "pitch" }: { mode?: Mode }) {
     try {
       try {
         const KEY = "vc-submissions";
-        const legacy = localStorage.getItem("poros-submissions");
-        const log = JSON.parse(localStorage.getItem(KEY) ?? legacy ?? "[]");
+        const log = JSON.parse(localStorage.getItem(KEY) ?? "[]");
         log.push(payload);
         localStorage.setItem(KEY, JSON.stringify(log));
-        if (legacy !== null) localStorage.removeItem("poros-submissions");
       } catch {}
       if (sanityEnabled && sanity) {
         const token = import.meta.env.VITE_SANITY_WRITE_TOKEN as string | undefined;

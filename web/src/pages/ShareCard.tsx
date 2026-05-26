@@ -53,6 +53,7 @@ function buildSvg({
   quote,
   imgDataUrl,
   wordmark,
+  pirataFontDataUrl,
 }: {
   template: Template;
   size: Size;
@@ -62,6 +63,7 @@ function buildSvg({
   quote: string;
   imgDataUrl: string | null;
   wordmark: string;
+  pirataFontDataUrl: string | null;
 }): string {
   const { w, h } = size;
   const ink = "#111111";
@@ -72,7 +74,9 @@ function buildSvg({
   const pad = Math.round(w * 0.075);
   const fontSerif = "Fraunces, 'Times New Roman', Georgia, serif";
   const fontSans = "Inter, -apple-system, 'Helvetica Neue', Arial, sans-serif";
-  const fontLogo = "UnifrakturMaguntia, 'Pirata One', Fraunces, serif";
+  // Use "Pirata One" first — it is embedded as base64 dataURL below so it renders in PNG export.
+  // Fallback to UnifrakturMaguntia / Fraunces for browser preview before font loads.
+  const fontLogo = "'Pirata One', UnifrakturMaguntia, Fraunces, serif";
 
   function footer(yBase: number, fillInk = ink, fillMuted = muted, ruleColor = rule) {
     return `
@@ -140,12 +144,41 @@ function buildSvg({
       ${footer(h - pad)}`;
   }
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${body}</svg>`;
+  // Embed Pirata One blackletter as base64 dataURL inside SVG <defs><style> so the wordmark
+  // renders correctly in PNG export (canvas does not load external web fonts via <Image>).
+  const fontFace = pirataFontDataUrl
+    ? `<defs><style type="text/css"><![CDATA[
+        @font-face {
+          font-family: "Pirata One";
+          src: url("${pirataFontDataUrl}") format("truetype");
+          font-weight: 400;
+          font-style: normal;
+        }
+      ]]></style></defs>`
+    : "";
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${fontFace}${body}</svg>`;
 }
 
 async function imageToDataUrl(url: string): Promise<string | null> {
   try {
     const r = await fetch(url, { mode: "cors" });
+    const blob = await r.blob();
+    return await new Promise((resolve) => {
+      const fr = new FileReader();
+      fr.onload = () => resolve(fr.result as string);
+      fr.onerror = () => resolve(null);
+      fr.readAsDataURL(blob);
+    });
+  } catch {
+    return null;
+  }
+}
+
+async function fontToDataUrl(url: string): Promise<string | null> {
+  try {
+    const r = await fetch(url);
+    if (!r.ok) return null;
     const blob = await r.blob();
     return await new Promise((resolve) => {
       const fr = new FileReader();
@@ -191,6 +224,7 @@ export function ShareCardPage() {
   const [quote, setQuote] = useState(initialQuote);
   const [editedTitle, setEditedTitle] = useState<string | null>(null);
   const [imgDataUrl, setImgDataUrl] = useState<string | null>(null);
+  const [pirataFontDataUrl, setPirataFontDataUrl] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   const size = SIZES[sizeIdx];
@@ -206,9 +240,20 @@ export function ShareCardPage() {
     imageToDataUrl(url).then(setImgDataUrl);
   }, [article]);
 
+  // Pre-load Pirata One blackletter as base64 dataURL so the wordmark embeds correctly in PNG export.
+  useEffect(() => {
+    let cancelled = false;
+    fontToDataUrl("/fonts/pirata-one-v23.ttf").then((dataUrl) => {
+      if (!cancelled) setPirataFontDataUrl(dataUrl);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const svg = useMemo(
-    () => buildSvg({ template, size, title, author, category, quote, imgDataUrl, wordmark }),
-    [template, size, title, author, category, quote, imgDataUrl, wordmark],
+    () => buildSvg({ template, size, title, author, category, quote, imgDataUrl, wordmark, pirataFontDataUrl }),
+    [template, size, title, author, category, quote, imgDataUrl, wordmark, pirataFontDataUrl],
   );
 
   async function download() {

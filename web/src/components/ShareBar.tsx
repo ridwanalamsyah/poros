@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Icon({ d, fill = false }: { d: string; fill?: boolean }) {
@@ -17,20 +16,8 @@ function IGIcon() {
 
 export function ShareBar({ url, title, slug }: { url: string; title: string; slug?: string }) {
   const fullUrl = typeof window !== "undefined" ? new URL(url, window.location.origin).toString() : url;
-  const [copied, setCopied] = useState(false);
 
   const wa = `https://wa.me/?text=${encodeURIComponent(`${title} — ${fullUrl}`)}`;
-  const tg = `https://t.me/share/url?url=${encodeURIComponent(fullUrl)}&text=${encodeURIComponent(title)}`;
-
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(fullUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1600);
-    } catch {
-      // ignore
-    }
-  }
 
   const btn = "inline-flex items-center gap-2 border rule-soft px-3 py-1.5 hover:bg-ink/[0.05] text-sm";
 
@@ -41,14 +28,6 @@ export function ShareBar({ url, title, slug }: { url: string; title: string; slu
         <Icon d="M21 12a9 9 0 1 1-3.5-7.1L21 3l-1.2 3.5A9 9 0 0 1 21 12z" />
         WhatsApp
       </a>
-      <a href={tg} target="_blank" rel="noopener noreferrer" className={btn}>
-        <Icon d="M21 4L3 11l5 2 2 6 3-3 5 4 3-16z" />
-        Telegram
-      </a>
-      <button onClick={copy} className={btn}>
-        <Icon d="M9 9h11v11H9zM5 5h11v3M5 5v11h3" />
-        {copied ? "Copied" : "Copy link"}
-      </button>
       {slug && (
         <Link to={`/share/${slug}`} className={`${btn} bg-ink text-paper border-ink hover:opacity-80`}>
           <IGIcon />

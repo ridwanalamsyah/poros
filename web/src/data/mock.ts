@@ -16,12 +16,12 @@ export const mockCategories: Category[] = [
 ];
 
 export const mockAuthors: Author[] = [
-  { _id: "auth-raditya", name: "Raditya Fitra", slug: "raditya-fitra", bio: "Editor Velvet Collapse Magazine. Menulis tentang dunia kerja dan ekonomi platform dari Bandung.", twitter: "radityafitra", image: img("https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400", "Raditya Fitra") },
-  { _id: "auth-ridwan", name: "Ridwan Alamsyah", slug: "ridwan-alamsyah", bio: "Editor Velvet Collapse Magazine. Sebelumnya menulis kolom budaya dan musik bawah tanah.", twitter: "ridwanalamsyah", image: img("https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400", "Ridwan Alamsyah") },
-  { _id: "auth-bagas", name: "Bagas Prasetyo", slug: "bagas-prasetyo", bio: "Fotografer dan penulis. Tinggal di Antapani, Bandung Timur.", twitter: "bagasprasetyo", image: img("https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400", "Bagas Prasetyo") },
-  { _id: "auth-mira", name: "Mira Wulansari", slug: "mira-wulansari", bio: "Mahasiswa antropologi Unpad yang menulis soal pasar dan ruang kota.", twitter: "", image: img("https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400", "Mira Wulansari") },
-  { _id: "auth-dirga", name: "Dirga Saputra", slug: "dirga-saputra", bio: "Penulis musik dan kontributor di kanal Bandung Underground Archive.", twitter: "dirgasaputra", image: img("https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400", "Dirga Saputra") },
-  { _id: "auth-ima", name: "Ima Hidayanti", slug: "ima-hidayanti", bio: "Editor lepas. Menulis kolom budaya populer dan musik bawah tanah.", twitter: "imahidayanti", image: img("https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400", "Ima Hidayanti") }
+  { _id: "auth-raditya", name: "Raditya Fitra", slug: "raditya-fitra", bio: "Editor Velvet Collapse Magazine. Menulis tentang dunia kerja dan ekonomi platform dari Bandung.", image: img("https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400", "Raditya Fitra") },
+  { _id: "auth-ridwan", name: "Ridwan Alamsyah", slug: "ridwan-alamsyah", bio: "Editor Velvet Collapse Magazine. Sebelumnya menulis kolom budaya dan musik bawah tanah.", image: img("https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400", "Ridwan Alamsyah") },
+  { _id: "auth-bagas", name: "Bagas Prasetyo", slug: "bagas-prasetyo", bio: "Fotografer dan penulis. Tinggal di Antapani, Bandung Timur.", image: img("https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400", "Bagas Prasetyo") },
+  { _id: "auth-mira", name: "Mira Wulansari", slug: "mira-wulansari", bio: "Mahasiswa antropologi Unpad yang menulis soal pasar dan ruang kota.", image: img("https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400", "Mira Wulansari") },
+  { _id: "auth-dirga", name: "Dirga Saputra", slug: "dirga-saputra", bio: "Penulis musik dan kontributor di kanal Bandung Underground Archive.", image: img("https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400", "Dirga Saputra") },
+  { _id: "auth-ima", name: "Ima Hidayanti", slug: "ima-hidayanti", bio: "Editor lepas. Menulis kolom budaya populer dan musik bawah tanah.", image: img("https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400", "Ima Hidayanti") }
 ];
 
 export const mockEditions: Edition[] = [

@@ -14,7 +14,6 @@ export default defineType({
       options: { hotspot: true },
       fields: [defineField({ name: "alt", type: "string" })],
     }),
-    defineField({ name: "twitter", title: "Twitter/X username (no @)", type: "string" }),
     defineField({ name: "instagram", title: "Instagram username (no @)", type: "string" }),
     defineField({ name: "website", title: "Personal website", type: "url" }),
   ],
