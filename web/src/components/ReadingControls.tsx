@@ -6,21 +6,42 @@ export function ReadingControls({ slug, articleText }: { slug: string; articleTe
   const saved = has(slug);
 
   const [size, setSize] = useState<string>(() => {
-    try { return localStorage.getItem("poros-text-size") ?? "1.08rem"; } catch { return "1.08rem"; }
+    try {
+      return (
+        localStorage.getItem("vc-text-size") ??
+        localStorage.getItem("poros-text-size") ??
+        "1.08rem"
+      );
+    } catch {
+      return "1.08rem";
+    }
   });
   const [serif, setSerif] = useState<boolean>(() => {
-    try { return localStorage.getItem("poros-text-family") !== "sans"; } catch { return true; }
+    try {
+      const v =
+        localStorage.getItem("vc-text-family") ??
+        localStorage.getItem("poros-text-family");
+      return v !== "sans";
+    } catch {
+      return true;
+    }
   });
   const [speaking, setSpeaking] = useState(false);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--reading-size", size);
-    try { localStorage.setItem("poros-text-size", size); } catch {}
+    try {
+      localStorage.setItem("vc-text-size", size);
+      localStorage.removeItem("poros-text-size");
+    } catch {}
   }, [size]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("font-sans-reading", !serif);
-    try { localStorage.setItem("poros-text-family", serif ? "serif" : "sans"); } catch {}
+    try {
+      localStorage.setItem("vc-text-family", serif ? "serif" : "sans");
+      localStorage.removeItem("poros-text-family");
+    } catch {}
   }, [serif]);
 
   function bumpSize(d: number) {

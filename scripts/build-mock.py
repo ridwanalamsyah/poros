@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Generate web/src/data/mock.ts from scraped Consumed JSON.
 
-Re-attributes content to POROS Bandung-flavored:
+Re-attributes content to Velvet Collapse, Bandung-flavored:
 - Same titles + excerpts (Consumed is Indonesia-based too, mostly music/culture).
-- Authors mapped to POROS bylines.
+- Authors mapped to Velvet Collapse bylines.
 - Categories: most → "culture" / "music" (new), interviews / city tags → "society", labor topics
   if any → "labor".
 - Cover images use local /covers/*.jpg from the scraper.
@@ -12,12 +12,12 @@ import json
 import re
 import sys
 
-POROS_AUTHORS = [
+VC_AUTHORS = [
     ("auth-tirta", "Tirta Anggara", "tirta-anggara",
      "Jurnalis lepas berbasis Bandung. Menulis soal serikat pekerja dan ekonomi platform.",
      "tirtaanggara", "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400"),
     ("auth-rara", "Rara Sugiarti", "rara-sugiarti",
-     "Editor POROS. Sebelumnya menulis untuk Magdalene dan Project Multatuli.",
+     "Editor Velvet Collapse. Sebelumnya menulis untuk Magdalene dan Project Multatuli.",
      "rarasugiarti", "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400"),
     ("auth-bagas", "Bagas Prasetyo", "bagas-prasetyo",
      "Fotografer dan penulis. Tinggal di Antapani, Bandung Timur.",
@@ -35,7 +35,7 @@ POROS_AUTHORS = [
 
 
 def pick_author(idx: int):
-    return POROS_AUTHORS[idx % len(POROS_AUTHORS)]
+    return VC_AUTHORS[idx % len(VC_AUTHORS)]
 
 
 def pick_category(title: str, excerpt: str) -> str:
@@ -95,13 +95,13 @@ def escape_ts(s: str) -> str:
 
 
 def main():
-    with open("/home/ubuntu/poros/scripts/consumed-articles.json") as f:
+    with open("/home/ubuntu/velvet-collapse-magazine/scripts/consumed-articles.json") as f:
         scraped = json.load(f)
 
     articles_ts = []
     for i, a in enumerate(scraped):
         cat = pick_category(a["title"], a["excerpt"])
-        author_idx = i % len(POROS_AUTHORS)
+        author_idx = i % len(VC_AUTHORS)
         tags = pick_tags(a["title"], a["excerpt"])
         edition_ref = "mockEditions[0]" if i % 3 == 0 else ("mockEditions[1]" if i % 3 == 1 else "undefined")
         editors_pick = "true" if i < 6 else "false"
@@ -137,7 +137,7 @@ def main():
 
     authors_ts = ",\n  ".join(
         f'{{ _id: "{a[0]}", name: "{escape_ts(a[1])}", slug: "{a[2]}", bio: "{escape_ts(a[3])}", twitter: "{a[4]}", image: img("{a[5]}", "{escape_ts(a[1])}") }}'
-        for a in POROS_AUTHORS
+        for a in VC_AUTHORS
     )
 
     out = f'''import type {{ Article, Author, Category, Edition, Note, Product, Settings, SanityImage }} from "../types";
@@ -162,7 +162,7 @@ export const mockAuthors: Author[] = [
 ];
 
 export const mockEditions: Edition[] = [
-  {{ _id: "ed-001", title: "Edisi 001 — Kota yang Berhenti Sopan", slug: "001-kota-yang-berhenti-sopan", issueNumber: "001", description: "Edisi perdana POROS. Tentang Bandung yang sedang berdamai dengan dirinya sendiri.", publishedAt: "2026-03-01" }},
+  {{ _id: "ed-001", title: "Edisi 001 — Kota yang Berhenti Sopan", slug: "001-kota-yang-berhenti-sopan", issueNumber: "001", description: "Edisi perdana Velvet Collapse. Tentang Bandung yang sedang berdamai dengan dirinya sendiri.", publishedAt: "2026-03-01" }},
   {{ _id: "ed-002", title: "Edisi 002 — Para Pekerja Tanpa Kantor", slug: "002-pekerja-tanpa-kantor", issueNumber: "002", description: "Pekerja gig, freelancer, kurir di seputar Bandung Raya — siapa yang melindungi mereka.", publishedAt: "2026-04-15" }},
 ];
 
@@ -185,23 +185,23 @@ export const mockNotes: Note[] = [
 ];
 
 export const mockProducts: Product[] = [
-  {{ _id: "p1", title: "POROS — Edisi 001", slug: "edisi-001", description: "Cetakan terbatas. 96 halaman, kertas matte 100gsm.", price: 85000, inStock: true, image: img("/covers/4a9cb24ad4-partying-in-nature-ketika-bersenang-sena.jpeg", "POROS Edisi 001") }},
-  {{ _id: "p2", title: "POROS — Edisi 002", slug: "edisi-002", description: "Edisi tema pekerja platform. 104 halaman.", price: 85000, inStock: true, image: img("/covers/16fe1cae2d-remuk-siap-ledakan-ep-program-unit-hardc.jpeg", "POROS Edisi 002") }},
-  {{ _id: "p3", title: "Tote Bag POROS", slug: "tote-bag", description: "Kanvas 12 oz, sablon manual di Bandung.", price: 95000, inStock: true, image: img("https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800", "POROS tote bag") }},
-  {{ _id: "p4", title: "Bundle Edisi 001 + 002", slug: "bundle-001-002", description: "Hemat Rp 25.000. Termasuk ongkir Bandung Raya.", price: 145000, inStock: true, image: img("/covers/c002238c40-the-only-way-to-end-q1-2026-check-out-so.jpg", "POROS bundle") }},
+  {{ _id: "p1", title: "Velvet Collapse — Edisi 001", slug: "edisi-001", description: "Cetakan terbatas. 96 halaman, kertas matte 100gsm.", price: 85000, inStock: true, image: img("/covers/4a9cb24ad4-partying-in-nature-ketika-bersenang-sena.jpeg", "Velvet Collapse Edisi 001") }},
+  {{ _id: "p2", title: "Velvet Collapse — Edisi 002", slug: "edisi-002", description: "Edisi tema pekerja platform. 104 halaman.", price: 85000, inStock: true, image: img("/covers/16fe1cae2d-remuk-siap-ledakan-ep-program-unit-hardc.jpeg", "Velvet Collapse Edisi 002") }},
+  {{ _id: "p3", title: "Tote Bag Velvet Collapse", slug: "tote-bag", description: "Kanvas 12 oz, sablon manual di Bandung.", price: 95000, inStock: true, image: img("https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800", "Velvet Collapse tote bag") }},
+  {{ _id: "p4", title: "Bundle Edisi 001 + 002", slug: "bundle-001-002", description: "Hemat Rp 25.000. Termasuk ongkir Bandung Raya.", price: 145000, inStock: true, image: img("/covers/c002238c40-the-only-way-to-end-q1-2026-check-out-so.jpg", "Velvet Collapse bundle") }},
 ];
 
 export const mockSettings: Settings = {{
-  siteTitle: "POROS",
-  siteDescription: "POROS — majalah online dari Bandung. Labor · society · culture.",
-  tipJarSaweria: "https://saweria.co/porosmagazine",
-  tipJarTrakteer: "https://trakteer.id/porosmagazine",
+  siteTitle: "Velvet Collapse",
+  siteDescription: "Velvet Collapse — built from the mess. An independent online magazine from Bandung.",
+  tipJarSaweria: "https://saweria.co/velcolmagazine",
+  tipJarTrakteer: "https://trakteer.id/velcolmagazine",
   tipJarPatreon: "",
   cusdisAppId: "",
   newsletterEndpoint: "",
 }};
 '''
-    with open("/home/ubuntu/poros/web/src/data/mock.ts", "w") as f:
+    with open("/home/ubuntu/velvet-collapse-magazine/web/src/data/mock.ts", "w") as f:
         f.write(out)
     print(f"Wrote mock.ts with {len(scraped)} articles", file=sys.stderr)
 

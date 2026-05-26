@@ -28,9 +28,12 @@ export function SubmitPage({ mode = "pitch" }: { mode?: Mode }) {
     };
     try {
       try {
-        const log = JSON.parse(localStorage.getItem("poros-submissions") ?? "[]");
+        const KEY = "vc-submissions";
+        const legacy = localStorage.getItem("poros-submissions");
+        const log = JSON.parse(localStorage.getItem(KEY) ?? legacy ?? "[]");
         log.push(payload);
-        localStorage.setItem("poros-submissions", JSON.stringify(log));
+        localStorage.setItem(KEY, JSON.stringify(log));
+        if (legacy !== null) localStorage.removeItem("poros-submissions");
       } catch {}
       if (sanityEnabled && sanity) {
         const token = import.meta.env.VITE_SANITY_WRITE_TOKEN as string | undefined;

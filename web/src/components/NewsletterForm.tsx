@@ -67,9 +67,12 @@ export function NewsletterForm() {
     setMsg("Thanks! The list isn't connected to an ESP yet. An editor will add your email manually.");
     setEmail("");
     try {
-      const log = JSON.parse(localStorage.getItem("poros-newsletter") ?? "[]");
+      const KEY = "vc-newsletter";
+      const legacy = localStorage.getItem("poros-newsletter");
+      const log = JSON.parse(localStorage.getItem(KEY) ?? legacy ?? "[]");
       log.push({ email, ts: Date.now() });
-      localStorage.setItem("poros-newsletter", JSON.stringify(log));
+      localStorage.setItem(KEY, JSON.stringify(log));
+      if (legacy !== null) localStorage.removeItem("poros-newsletter");
     } catch {}
     trackEvent("newsletter_subscribed", { source: "localStorage" });
   }

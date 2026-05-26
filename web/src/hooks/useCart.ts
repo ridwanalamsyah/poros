@@ -1,11 +1,26 @@
 import { useCallback, useEffect, useState } from "react";
 
-const KEY = "poros-cart";
+const KEY = "vc-cart";
+const LEGACY_KEY = "poros-cart";
+const EVENT = "vc-cart";
+const LEGACY_EVENT = "poros-cart";
+
+function migrateOnce(): void {
+  try {
+    if (localStorage.getItem(KEY) !== null) return;
+    const legacy = localStorage.getItem(LEGACY_KEY);
+    if (legacy !== null) {
+      localStorage.setItem(KEY, legacy);
+      localStorage.removeItem(LEGACY_KEY);
+    }
+  } catch {}
+}
 
 export type CartLine = { slug: string; qty: number };
 
 function read(): CartLine[] {
   try {
+    migrateOnce();
     return JSON.parse(localStorage.getItem(KEY) ?? "[]");
   } catch {
     return [];
@@ -14,7 +29,8 @@ function read(): CartLine[] {
 
 function write(lines: CartLine[]) {
   localStorage.setItem(KEY, JSON.stringify(lines));
-  window.dispatchEvent(new Event("poros-cart"));
+  window.dispatchEvent(new Event(EVENT));
+  window.dispatchEvent(new Event(LEGACY_EVENT));
 }
 
 export function useCart() {
@@ -23,10 +39,12 @@ export function useCart() {
   useEffect(() => {
     setLines(read());
     const onUpdate = () => setLines(read());
-    window.addEventListener("poros-cart", onUpdate);
+    window.addEventListener(EVENT, onUpdate);
+    window.addEventListener(LEGACY_EVENT, onUpdate);
     window.addEventListener("storage", onUpdate);
     return () => {
-      window.removeEventListener("poros-cart", onUpdate);
+      window.removeEventListener(EVENT, onUpdate);
+      window.removeEventListener(LEGACY_EVENT, onUpdate);
       window.removeEventListener("storage", onUpdate);
     };
   }, []);
