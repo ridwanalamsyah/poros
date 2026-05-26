@@ -32,8 +32,8 @@ export function AuthorPage() {
             <h1 className="headline-display text-4xl md:text-5xl mt-2">{author.name}</h1>
             {author.bio && <p className="text-muted mt-4 max-w-2xl">{author.bio}</p>}
             <div className="mt-4 flex gap-4 text-sm">
-              {author.instagram && <a className="hover-underline" target="_blank" rel="noreferrer" href={`https://instagram.com/${author.instagram}`}>Instagram</a>}
-              {author.website && <a className="hover-underline" target="_blank" rel="noreferrer" href={author.website}>Website</a>}
+              {author.instagram && <a className="hover-underline" target="_blank" rel="noopener noreferrer" href={`https://instagram.com/${author.instagram}`}>Instagram</a>}
+              {author.website && <a className="hover-underline" target="_blank" rel="noopener noreferrer" href={author.website}>Website</a>}
             </div>
           </div>
         </header>
