@@ -102,12 +102,11 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock header to a single visual height; we shrink wordmark slightly via transform on scroll (no layout shift).
-  // Kicker fades out on scroll so the header gets cleaner, but wordmark stays prominent.
-  const wordmarkScale = scrolled ? 0.9 : 1;
-  const wordmarkOpacity = scrolled ? 0.95 : 1;
-  const wordmarkSpacing = scrolled ? "0.04em" : "0.03em";
+  // Reference behavior (longform-magazine-app): wordmark stays full size on scroll;
+  // only the MAGAZINE kicker fades+collapses so the header gets cleaner without making
+  // the brand jump or shrink (avoids the prior 'shrinking batman' effect).
   const kickerOpacity = scrolled ? 0 : 1;
+  const kickerMaxHeight = scrolled ? "0px" : "16px";
 
   const navLinkCls = ({ isActive }: { isActive: boolean }) =>
     `kicker tracking-[0.18em] py-1 transition-opacity ${isActive ? "opacity-100" : "opacity-80 hover:opacity-100"}`;
@@ -125,23 +124,21 @@ export function Header() {
             <Link
               to="/"
               className="text-center select-none whitespace-nowrap leading-none"
-              style={{
-                transform: `scale(${wordmarkScale})`,
-                transformOrigin: "center",
-                opacity: wordmarkOpacity,
-                transition: "transform 0.32s ease-out, opacity 0.32s ease-out, letter-spacing 0.32s ease-out",
-              }}
             >
               <span
                 className="font-logo block leading-none"
-                style={{ fontSize: "clamp(1.5rem, 2.6vw, 2.3rem)", letterSpacing: wordmarkSpacing }}
+                style={{ fontSize: "clamp(1.5rem, 2.6vw, 2.3rem)", letterSpacing: "0.03em" }}
               >
                 {wordmark}
               </span>
               <span
                 aria-hidden="true"
-                className="block mt-1 tracking-[0.5em] text-[0.5rem] font-medium"
-                style={{ opacity: kickerOpacity, transition: "opacity 0.32s ease-out" }}
+                className="block mt-1 tracking-[0.5em] text-[0.5rem] font-medium overflow-hidden"
+                style={{
+                  opacity: kickerOpacity,
+                  maxHeight: kickerMaxHeight,
+                  transition: "opacity 0.32s ease-out, max-height 0.32s ease-out",
+                }}
               >
                 MAGAZINE
               </span>

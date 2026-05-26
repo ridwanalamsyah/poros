@@ -104,7 +104,7 @@ export function PortableBody({ blocks }: { blocks: PortableTextBlock[] }) {
           if (value.url.includes("spotify.com")) return <SpotifyEmbed url={value.url} />;
           return (
             <p className="my-4">
-              <a className="underline" href={value.url} target="_blank" rel="noreferrer">
+              <a className="underline" href={value.url} target="_blank" rel="noopener noreferrer">
                 {value.url}
               </a>
             </p>
@@ -116,7 +116,7 @@ export function PortableBody({ blocks }: { blocks: PortableTextBlock[] }) {
           <a
             href={value?.href ?? "#"}
             target={value?.href?.startsWith("http") ? "_blank" : undefined}
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             {children}
           </a>

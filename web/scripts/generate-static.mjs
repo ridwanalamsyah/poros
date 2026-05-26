@@ -128,6 +128,14 @@ const rss = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 writeFileSync(resolve(out, "rss.xml"), rss);
 
+// ---- robots.txt with absolute sitemap URL ----
+const robots = `User-agent: *
+Allow: /
+
+Sitemap: ${site}/sitemap.xml
+`;
+writeFileSync(resolve(out, "robots.txt"), robots);
+
 // ---- per-article OG HTML stubs ----
 // Patches dist/index.html into dist/article/{slug}/index.html with per-article
 // <title> + og:* meta tags so non-JS scrapers (WhatsApp / FB / Twitter card

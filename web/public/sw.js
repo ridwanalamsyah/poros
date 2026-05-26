@@ -1,9 +1,11 @@
 // Velvet Collapse Magazine — minimal service worker
 // Strategy: network-first for navigations + assets, fallback to cache, offline page as last resort.
 
-const CACHE_VERSION = "vc-v1";
+// CACHE_VERSION should bump on every deploy so old assets are evicted.
+// Update this manually when shipping breaking UI/asset changes.
+const CACHE_VERSION = "vc-v2-2026-05-26";
 const OFFLINE_URL = "/offline.html";
-const PRECACHE = [OFFLINE_URL, "/favicon.svg", "/og-default.svg"];
+const PRECACHE = [OFFLINE_URL, "/favicon.svg", "/favicon-32.png", "/favicon-192.png", "/favicon-512.png", "/og-default.png", "/og-default.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

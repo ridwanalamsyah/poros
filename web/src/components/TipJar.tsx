@@ -67,7 +67,7 @@ export function TipJar({ variant = "footer", placementOverride }: TipJarProps) {
               <a
                 href={l.url}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="kicker tracking-[0.18em] border border-ink/60 px-4 py-2 hover:bg-ink hover:text-paper transition-colors"
               >
                 {l.label.toUpperCase()}
@@ -90,7 +90,7 @@ export function TipJar({ variant = "footer", placementOverride }: TipJarProps) {
           <a
             href={l.url}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="kicker tracking-[0.18em] border border-paper/40 px-4 py-2 hover:bg-paper hover:text-ink transition-colors"
           >
             {l.label.toUpperCase()}
@@ -121,7 +121,7 @@ export function TipJar({ variant = "footer", placementOverride }: TipJarProps) {
               <a
                 href={l.url}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="kicker tracking-[0.18em] border border-paper/40 px-3 py-1.5 hover:bg-paper hover:text-ink transition-colors"
               >
                 {l.label.toUpperCase()}
@@ -158,7 +158,7 @@ export function TipJar({ variant = "footer", placementOverride }: TipJarProps) {
                 <a
                   href={l.url}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="kicker tracking-[0.18em] border border-paper/40 px-3 py-1.5 hover:bg-paper hover:text-ink transition-colors"
                 >
                   {l.label.toUpperCase()}
