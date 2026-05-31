@@ -1,6 +1,25 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+/* Re-enable the v3-style "all utilities take precedence over custom CSS"
+   behavior. Tailwind v4 puts utilities in their own cascade layer by default,
+   but many of this project's rules below (.kicker, .prose-mag, etc.) override
+   what utilities should later un-override. Without this, e.g. .article-body p
+   would beat `text-center` in JSX, regressing existing layout. */
+@layer utilities {}
+
+/* Tailwind v4 changed the default border / outline color from gray-200 to
+   currentColor. Pin it back to the v3 default so the existing UI rules render
+   the same. */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 :root {
   --ink-rgb: 13 13 13;
