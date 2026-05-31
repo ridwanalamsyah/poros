@@ -1,0 +1,13 @@
+name = "velvet-collapse-sanity-proxy"
+main = "src/index.ts"
+compatibility_date = "2024-10-01"
+
+# Public (non-secret) vars. Set secrets with `wrangler secret put`:
+#   wrangler secret put SANITY_WRITE_TOKEN
+#   wrangler secret put TURNSTILE_SECRET   # optional
+[vars]
+SANITY_PROJECT_ID = "lyo17dt8"
+SANITY_DATASET = "production"
+SANITY_API_VERSION = "2024-10-01"
+# Comma-separated browser origins allowed to call this worker.
+ALLOWED_ORIGINS = "https://velvet-collapse-magazine.vercel.app"

@@ -1,6 +1,7 @@
 import { sanity, sanityEnabled } from "../sanity";
 import type { Article, Author, Category, Edition, Note, Order, Product, Settings } from "../types";
 import { mockArticles, mockAuthors, mockCategories, mockEditions, mockNotes, mockProducts, mockSettings } from "./mock";
+import { proxyWrite, writeProxyEnabled } from "./sanityWrite";
 
 const articleFields = `
   _id,
@@ -169,10 +170,17 @@ export function getProduct(slug: string): Promise<Product | null> {
 }
 
 export async function createOrder(order: Order): Promise<{ id: string; orderNumber: string } | null> {
+  const placedAt = order.placedAt ?? new Date().toISOString();
+  if (writeProxyEnabled()) {
+    const res = await proxyWrite("createOrder", { ...order, placedAt });
+    if (res?.ok && res.id) {
+      return { id: res.id, orderNumber: res.orderNumber ?? res.id.slice(-8).toUpperCase() };
+    }
+    return null;
+  }
   if (!sanityEnabled || !sanity) return null;
   const token = import.meta.env.VITE_SANITY_WRITE_TOKEN as string | undefined;
   if (!token) return null;
-  const placedAt = order.placedAt ?? new Date().toISOString();
   try {
     const client = sanity.withConfig({ token });
     const doc = await client.create({
@@ -193,6 +201,10 @@ export async function updateOrderPayment(
   orderId: string,
   patch: { paymentRef?: string; paymentUrl?: string; status?: Order["status"] },
 ): Promise<void> {
+  if (writeProxyEnabled()) {
+    await proxyWrite("patchOrderPayment", { orderId, ...patch });
+    return;
+  }
   if (!sanityEnabled || !sanity) return;
   const token = import.meta.env.VITE_SANITY_WRITE_TOKEN as string | undefined;
   if (!token) return;
