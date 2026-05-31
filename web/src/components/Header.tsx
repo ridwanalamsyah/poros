@@ -102,11 +102,13 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Reference behavior (longform-magazine-app): wordmark stays full size on scroll;
-  // only the MAGAZINE kicker fades+collapses so the header gets cleaner without making
-  // the brand jump or shrink (avoids the prior 'shrinking batman' effect).
+  // Wordmark stays full size on scroll; only the MAGAZINE kicker collapses so
+  // the header gets cleaner without making the brand jump or shrink. The kicker
+  // collapses its margin-top as well so the wordmark lands exactly on the row
+  // center (h-[72px]) once the kicker is hidden, instead of sitting slightly above.
   const kickerOpacity = scrolled ? 0 : 1;
   const kickerMaxHeight = scrolled ? "0px" : "16px";
+  const kickerMarginTop = scrolled ? "0px" : "4px";
 
   const navLinkCls = ({ isActive }: { isActive: boolean }) =>
     `kicker tracking-[0.18em] py-1 transition-opacity ${isActive ? "opacity-100" : "opacity-80 hover:opacity-100"}`;
@@ -133,11 +135,12 @@ export function Header() {
               </span>
               <span
                 aria-hidden="true"
-                className="block mt-1 tracking-[0.5em] text-[0.5rem] font-medium overflow-hidden"
+                className="block tracking-[0.5em] text-[0.5rem] font-medium overflow-hidden"
                 style={{
                   opacity: kickerOpacity,
+                  marginTop: kickerMarginTop,
                   maxHeight: kickerMaxHeight,
-                  transition: "opacity 0.32s ease-out, max-height 0.32s ease-out",
+                  transition: "opacity 0.32s ease-out, max-height 0.32s ease-out, margin-top 0.32s ease-out",
                 }}
               >
                 MAGAZINE
