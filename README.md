@@ -4,7 +4,7 @@ Indonesian longform magazine — labor, society, culture. Based in Bandung.
 
 Customer-facing brand: **Velvet Collapse**.
 
-Stack: React + Vite (frontend) + Sanity v3 (CMS) + DOKU (payments).
+Stack: React 19 + Vite (frontend) + Sanity v5 (CMS) + DOKU (payments).
 
 ## Live
 
@@ -16,7 +16,7 @@ Stack: React + Vite (frontend) + Sanity v3 (CMS) + DOKU (payments).
 ```
 velvet-collapse-magazine/
 ├── web/        React + Vite frontend
-└── studio/     Sanity v3 Studio
+└── studio/     Sanity v5 Studio
 ```
 
 ## Local dev
