@@ -54,7 +54,7 @@ async function loadArticles() {
   const blocks = src.match(/\{\s*_id:[^}]*?\}/gs) ?? [];
   const arts = [];
   for (const b of blocks) {
-    if (!b.includes("body:")) continue;
+    if (!b.includes("body:") || !b.includes("excerpt:")) continue;
     const slugM = b.match(/slug:\s*"([^"]+)"/);
     const titleM = b.match(/title:\s*"([^"]+)"/);
     const excM = b.match(/excerpt:\s*"([^"]+)"/);

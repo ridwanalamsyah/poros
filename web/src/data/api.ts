@@ -1,6 +1,6 @@
 import { sanity, sanityEnabled } from "../sanity";
-import type { Article, Author, Category, Edition, Episode, Note, Order, Product, Settings } from "../types";
-import { mockArticles, mockAuthors, mockCategories, mockEditions, mockEpisodes, mockNotes, mockProducts, mockSettings } from "./mock";
+import type { Article, Author, Category, Edition, Episode, LiveBlog, Note, Order, Product, Settings } from "../types";
+import { mockArticles, mockAuthors, mockCategories, mockEditions, mockEpisodes, mockLiveBlogs, mockNotes, mockProducts, mockSettings } from "./mock";
 
 const articleFields = `
   _id,
@@ -133,6 +133,34 @@ export function getNotes(): Promise<Note[]> {
     `*[_type == "note"]|order(publishedAt desc){_id, body, "author": author->{_id, name, "slug": slug.current, image{..., asset->{..., metadata{lqip}}}}, publishedAt}`,
     undefined,
     mockNotes,
+  );
+}
+
+const liveBlogAuthorRef = `{_id, name, "slug": slug.current, image{..., asset->{..., metadata{lqip}}}}`;
+const liveBlogFields = `
+  _id,
+  title,
+  "slug": slug.current,
+  summary,
+  status,
+  coverImage{..., asset->{..., metadata{lqip}}},
+  startedAt,
+  entries[]{_key, timestamp, heading, body, "author": author->${liveBlogAuthorRef}}
+`;
+
+export function getLiveBlogs(): Promise<LiveBlog[]> {
+  return fetchOr<LiveBlog[]>(
+    `*[_type == "liveblog" && defined(slug.current)]|order(startedAt desc){${liveBlogFields}}`,
+    undefined,
+    mockLiveBlogs,
+  );
+}
+
+export function getLiveBlog(slug: string): Promise<LiveBlog | null> {
+  return fetchOr<LiveBlog | null>(
+    `*[_type == "liveblog" && slug.current == $slug][0]{${liveBlogFields}}`,
+    { slug },
+    mockLiveBlogs.find((b) => b.slug === slug) ?? null,
   );
 }
 
