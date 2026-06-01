@@ -1,4 +1,4 @@
-import type { Article, Author, Category, Edition, Note, Product, Settings, SanityImage } from "../types";
+import type { Article, Author, Category, Edition, Note, Product, Settings, SanityImage, VelvetEvent } from "../types";
 
 const img = (url: string, alt = ""): SanityImage =>
   ({
@@ -674,6 +674,45 @@ export const mockNotes: Note[] = [
   { _id: "n1", body: "Sedang menyiapkan reportase tentang penutupan SDN di Antapani. Kalau ada warga yang anaknya kena dampak, DM kami.", author: mockAuthors[1], publishedAt: "2026-05-10" },
   { _id: "n2", body: "Membaca ulang Pramoedya. Setiap kali balik, selalu menemukan kalimat yang sebelumnya seperti tidak ada.", author: mockAuthors[0], publishedAt: "2026-05-08" },
   { _id: "n3", body: "Edisi 003 sudah masuk tahap editing. Tema: ruang-ruang yang menghilang di Bandung Utara.", author: mockAuthors[1], publishedAt: "2026-05-05" },
+];
+
+export const mockEvents: VelvetEvent[] = [
+  {
+    _id: "ev-001",
+    title: "Peluncuran Edisi 003 + Diskusi: Ruang yang Menghilang",
+    slug: "peluncuran-edisi-003",
+    description: "Peluncuran edisi cetak terbaru, diskusi panel soal gentrifikasi Bandung Utara, dan sesi tanda tangan.",
+    startAt: "2026-06-21T19:00:00+07:00",
+    endAt: "2026-06-21T22:00:00+07:00",
+    venue: "Spasial",
+    city: "Bandung",
+    ticketUrl: "https://example.com/tickets/edisi-003",
+    free: true,
+    coverImage: img("/covers/4a9cb24ad4-partying-in-nature-ketika-bersenang-sena.jpeg", "Peluncuran Edisi 003"),
+  },
+  {
+    _id: "ev-002",
+    title: "Velvet Collapse Live: Malam Musik Bawah Tanah",
+    slug: "malam-musik-bawah-tanah",
+    description: "Pertunjukan kolaborasi dengan band-band scene Bandung. Rilisan terbatas dijual di tempat.",
+    startAt: "2026-07-12T20:00:00+07:00",
+    venue: "Rossi Musik",
+    city: "Bandung",
+    ticketUrl: "https://example.com/tickets/malam-musik",
+    free: false,
+    coverImage: img("/covers/16fe1cae2d-remuk-siap-ledakan-ep-program-unit-hardc.jpeg", "Malam Musik Bawah Tanah"),
+  },
+  {
+    _id: "ev-003",
+    title: "Lokakarya Menulis: Reportase dari Jalan",
+    slug: "lokakarya-menulis-reportase",
+    description: "Lokakarya setengah hari soal teknik reportase lapangan bersama redaksi.",
+    startAt: "2026-04-05T13:00:00+07:00",
+    endAt: "2026-04-05T17:00:00+07:00",
+    venue: "Kineruku",
+    city: "Bandung",
+    free: false,
+  },
 ];
 
 export const mockProducts: Product[] = [

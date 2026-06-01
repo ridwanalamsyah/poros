@@ -74,6 +74,20 @@ export type Note = {
   publishedAt?: string;
 };
 
+export type VelvetEvent = {
+  _id: string;
+  title: string;
+  slug: string;
+  description?: string;
+  startAt: string;
+  endAt?: string;
+  venue?: string;
+  city?: string;
+  ticketUrl?: string;
+  free?: boolean;
+  coverImage?: SanityImage;
+};
+
 export type ProductSpec = {
   _key?: string;
   label?: string;

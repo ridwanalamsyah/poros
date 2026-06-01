@@ -8,6 +8,7 @@ import order from "./order";
 import settings from "./settings";
 import submission from "./submission";
 import letter from "./letter";
+import event from "./event";
 
 import pullQuote from "./blocks/pullQuote";
 import imageWithCaption from "./blocks/imageWithCaption";
@@ -26,6 +27,7 @@ export const schemaTypes = [
   settings,
   submission,
   letter,
+  event,
   pullQuote,
   imageWithCaption,
   embed,
