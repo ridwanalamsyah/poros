@@ -10,7 +10,9 @@ export default defineType({
     defineField({ name: "bio", type: "text", rows: 3 }),
     defineField({
       name: "image",
+      title: "Profile photo",
       type: "image",
+      description: "Min 800×800. Geser hotspot ke wajah supaya tidak terpotong di avatar.",
       options: { hotspot: true },
       fields: [defineField({ name: "alt", type: "string" })],
     }),

@@ -1,9 +1,18 @@
 import type { Article, Author, Category, Edition, Episode, LiveBlog, Note, Product, Settings, SanityImage, VelvetEvent } from "../types";
 
-const img = (url: string, alt = ""): SanityImage =>
+// Default hotspot biased slightly above center — most editorial photos place
+// the subject in the upper-middle, so {x:0.5, y:0.4} keeps faces/heads in frame
+// when CSS object-cover crops for landscape/square ratios. Override per image
+// when the focal point is clearly elsewhere.
+const img = (
+  url: string,
+  alt = "",
+  hotspot: { x: number; y: number } = { x: 0.5, y: 0.4 },
+): SanityImage =>
   ({
     _type: "image",
     alt,
+    hotspot,
     _placeholderUrl: url,
     asset: { _ref: url, _type: "reference", metadata: { lqip: "" } },
   }) as unknown as SanityImage;
