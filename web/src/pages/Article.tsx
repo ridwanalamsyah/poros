@@ -13,6 +13,7 @@ import { Comments } from "../components/Comments";
 import { Reactions } from "../components/Reactions";
 import { AuthorPopover } from "../components/AuthorPopover";
 import { RelatedArticles } from "../components/RelatedArticles";
+import { EditionReader } from "../components/EditionReader";
 import { blocksToPlainText, formatDate, readingMinutes } from "../utils/text";
 
 export function ArticlePage() {
@@ -120,6 +121,8 @@ export function ArticlePage() {
         </div>
 
         <Reactions articleId={article._id} />
+
+        <EditionReader article={article} />
 
         {article.author && (
           <div className="mt-12 pt-8 border-t rule-soft flex items-start gap-4">
