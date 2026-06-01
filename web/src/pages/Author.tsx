@@ -3,6 +3,7 @@ import { useAsync } from "../hooks/useAsync";
 import { getArticlesByAuthor, getAuthor } from "../data/api";
 import { SmartImage } from "../components/SmartImage";
 import { ArticleCard } from "../components/ArticleCard";
+import { PitchCTA } from "../components/PitchCTA";
 import { SEO } from "../components/SEO";
 
 export function AuthorPage() {
@@ -28,10 +29,11 @@ export function AuthorPage() {
             <SmartImage image={author.image} className="w-full h-full" width={400} />
           </div>
           <div className="flex-1">
-            <p className="kicker text-accent">AUTHOR</p>
+            <p className="kicker text-accent">CONTRIBUTOR</p>
             <h1 className="headline-display text-4xl md:text-5xl mt-2">{author.name}</h1>
             {author.bio && <p className="text-muted mt-4 max-w-2xl">{author.bio}</p>}
-            <div className="mt-4 flex gap-4 text-sm">
+            <div className="mt-4 flex items-center gap-4 text-sm flex-wrap">
+              {!loading && articles && <span className="stat opacity-70">{articles.length} {articles.length === 1 ? "STORY" : "STORIES"}</span>}
               {author.instagram && <a className="hover-underline" target="_blank" rel="noopener noreferrer" href={`https://instagram.com/${author.instagram}`}>Instagram</a>}
               {author.website && <a className="hover-underline" target="_blank" rel="noopener noreferrer" href={author.website}>Website</a>}
             </div>
@@ -40,6 +42,7 @@ export function AuthorPage() {
       )}
       <div className="md:hidden">{articles?.map((a) => <ArticleCard key={a._id} article={a} variant="row" />)}</div>
       <div className="hidden md:grid md:grid-cols-3 gap-10">{articles?.map((a) => <ArticleCard key={a._id} article={a} variant="default" />)}</div>
+      <PitchCTA className="mt-12" />
     </div>
   );
 }
