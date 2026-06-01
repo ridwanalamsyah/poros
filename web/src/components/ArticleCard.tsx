@@ -48,18 +48,20 @@ export function ArticleCard({ article, variant = "default" }: { article: Article
   if (variant === "hero") {
     const minutes = article.readingMinutes ?? readingMinutes(article.body ? blocksToPlainText(article.body) : article.excerpt ?? "");
     return (
-      <Link to={link} className="group block">
-        <div className="aspect-[16/10] sm:aspect-[16/9] mb-4 md:mb-5 overflow-hidden">
+      <Link to={link} className="group block lg:grid lg:grid-cols-12 lg:gap-8 lg:items-center">
+        <div className="aspect-[16/10] sm:aspect-[16/9] mb-4 md:mb-5 lg:mb-0 lg:col-span-7 overflow-hidden">
           <SmartImage image={article.coverImage} fallbackUrl={cover} className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-[1.03]" width={1600} loading="eager" />
         </div>
-        <div className="flex items-center gap-3 mb-2">
-          {article.category && <Link to={`/category/${article.category.slug}`} className="kicker text-accent hover:underline">{article.category.title}</Link>}
-          {article.editorsPick && <span className="kicker text-muted">· EDITOR&apos;S PICK</span>}
+        <div className="lg:col-span-5">
+          <div className="flex items-center gap-3 mb-2">
+            {article.category && <Link to={`/category/${article.category.slug}`} className="kicker text-accent hover:underline">{article.category.title}</Link>}
+            {article.editorsPick && <span className="kicker text-muted">· EDITOR&apos;S PICK</span>}
+          </div>
+          <h2 className="headline-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-[0.9] mb-3 group-hover:opacity-80">{article.title}</h2>
+          {article.excerpt && <p className="deck max-w-2xl mb-3">{article.excerpt}</p>}
+          <div className="mt-2"><ConsumedMeta article={article} /></div>
+          <div className="mt-1 stat opacity-60">{minutes} MIN READ</div>
         </div>
-        <h2 className="headline-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-3 group-hover:opacity-80">{article.title}</h2>
-        {article.excerpt && <p className="text-muted text-base sm:text-lg max-w-2xl mb-3">{article.excerpt}</p>}
-        <div className="mt-2"><ConsumedMeta article={article} /></div>
-        <div className="mt-1 stat opacity-60">{minutes} MIN READ</div>
       </Link>
     );
   }
@@ -67,7 +69,7 @@ export function ArticleCard({ article, variant = "default" }: { article: Article
   if (variant === "feature") {
     return (
       <Link to={link} className="group block">
-        <div className="aspect-[4/3] mb-3 overflow-hidden">
+        <div className="thumb-bw aspect-[4/3] mb-3 overflow-hidden">
           <SmartImage image={article.coverImage} fallbackUrl={cover} className="w-full h-full transition-transform duration-700 group-hover:scale-[1.04]" width={700} />
         </div>
         {article.category && <span className="kicker text-accent">{article.category.title}</span>}
@@ -89,7 +91,7 @@ export function ArticleCard({ article, variant = "default" }: { article: Article
           {article.excerpt && <p className="text-sm text-muted mt-2 line-clamp-2">{article.excerpt}</p>}
           <div className="mt-3"><ConsumedMeta article={article} /></div>
         </div>
-        <div className="w-24 h-24 sm:w-36 sm:h-36 md:w-44 md:h-44 shrink-0 overflow-hidden">
+        <div className="thumb-bw w-24 h-24 sm:w-36 sm:h-36 md:w-44 md:h-44 shrink-0 overflow-hidden">
           <SmartImage image={article.coverImage} fallbackUrl={cover} className="w-full h-full transition-transform duration-700 group-hover:scale-[1.04]" width={500} />
         </div>
       </Link>
@@ -99,7 +101,7 @@ export function ArticleCard({ article, variant = "default" }: { article: Article
   if (variant === "compact") {
     return (
       <Link to={link} className="group block">
-        <div className="aspect-[4/3] mb-3 overflow-hidden">
+        <div className="thumb-bw aspect-[4/3] mb-3 overflow-hidden">
           <SmartImage image={article.coverImage} fallbackUrl={cover} className="w-full h-full transition-transform duration-700 group-hover:scale-[1.04]" width={600} />
         </div>
         {article.category && <span className="kicker text-muted">{article.category.title}</span>}
@@ -112,7 +114,7 @@ export function ArticleCard({ article, variant = "default" }: { article: Article
   // default
   return (
     <Link to={link} className="group block">
-      <div className="aspect-[16/10] mb-3 overflow-hidden">
+      <div className="thumb-bw aspect-[16/10] mb-3 overflow-hidden">
         <SmartImage image={article.coverImage} fallbackUrl={cover} className="w-full h-full transition-transform duration-700 group-hover:scale-[1.04]" width={800} />
       </div>
       {article.category && <span className="kicker text-accent">{article.category.title}</span>}
