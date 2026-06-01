@@ -1,4 +1,4 @@
-import type { Article, Author, Category, Edition, Note, Product, Settings, SanityImage } from "../types";
+import type { Article, Author, Category, Edition, Episode, Note, Product, Settings, SanityImage } from "../types";
 
 const img = (url: string, alt = ""): SanityImage =>
   ({
@@ -674,6 +674,33 @@ export const mockNotes: Note[] = [
   { _id: "n1", body: "Sedang menyiapkan reportase tentang penutupan SDN di Antapani. Kalau ada warga yang anaknya kena dampak, DM kami.", author: mockAuthors[1], publishedAt: "2026-05-10" },
   { _id: "n2", body: "Membaca ulang Pramoedya. Setiap kali balik, selalu menemukan kalimat yang sebelumnya seperti tidak ada.", author: mockAuthors[0], publishedAt: "2026-05-08" },
   { _id: "n3", body: "Edisi 003 sudah masuk tahap editing. Tema: ruang-ruang yang menghilang di Bandung Utara.", author: mockAuthors[1], publishedAt: "2026-05-05" },
+];
+
+export const mockEpisodes: Episode[] = [
+  {
+    _id: "ep-002",
+    title: "Kerja Tanpa Kantor: Kurir, Algoritma, dan Upah yang Menyusut",
+    slug: "002-kerja-tanpa-kantor",
+    episodeNumber: 2,
+    description: "Obrolan panjang soal ekonomi gig di Bandung Raya — bagaimana algoritma menetapkan tarif, dan siapa yang menanggung risikonya.",
+    audioUrl: "https://download.samplelib.com/mp3/sample-15s.mp3",
+    duration: "00:15",
+    guests: [mockAuthors[0], mockAuthors[3]],
+    coverImage: img("/covers/16fe1cae2d-remuk-siap-ledakan-ep-program-unit-hardc.jpeg", "Episode 002"),
+    publishedAt: "2026-04-20",
+  },
+  {
+    _id: "ep-001",
+    title: "Kota yang Berhenti Sopan: Bandung dan Dirinya Sendiri",
+    slug: "001-kota-yang-berhenti-sopan",
+    episodeNumber: 1,
+    description: "Episode perdana. Tentang ruang publik yang menyusut, gentrifikasi pelan-pelan, dan nostalgia yang dijual.",
+    audioUrl: "https://download.samplelib.com/mp3/sample-9s.mp3",
+    duration: "00:09",
+    guests: [mockAuthors[1]],
+    coverImage: img("/covers/4a9cb24ad4-partying-in-nature-ketika-bersenang-sena.jpeg", "Episode 001"),
+    publishedAt: "2026-03-05",
+  },
 ];
 
 export const mockProducts: Product[] = [
