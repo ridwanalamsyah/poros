@@ -38,6 +38,7 @@ export type Edition = {
   slug: string;
   issueNumber?: string;
   description?: string;
+  accentColor?: string;
   coverImage?: SanityImage;
   publishedAt?: string;
 };
@@ -86,6 +87,19 @@ export type VelvetEvent = {
   ticketUrl?: string;
   free?: boolean;
   coverImage?: SanityImage;
+};
+
+export type Episode = {
+  _id: string;
+  title: string;
+  slug: string;
+  episodeNumber?: number;
+  description?: string;
+  audioUrl: string;
+  duration?: string;
+  coverImage?: SanityImage;
+  guests?: Author[];
+  publishedAt?: string;
 };
 
 export type ProductSpec = {

@@ -129,6 +129,7 @@ function HeroSection({ hero }: SectionProps) {
   return (
     <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 pt-4 md:pt-8">
       <ArticleCard article={hero} variant="hero" />
+      <div className="halftone-divider mt-8 md:mt-12" aria-hidden="true" />
     </section>
   );
 }
@@ -141,7 +142,7 @@ function EditorsSection({ section, articles }: SectionProps) {
   if (picks.length === 0) return null;
   return (
     <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 pt-10 md:pt-14">
-      <div className="border-b rule-soft pb-2 mb-6">
+      <div className="section-rule">
         <h3 className="kicker text-accent">{sectionTitle(section)}</h3>
       </div>
       <div className="grid md:grid-cols-3 gap-8 md:gap-10">
@@ -183,7 +184,7 @@ function NotesSection({ section, notes }: SectionProps) {
   if (list.length === 0) return null;
   return (
     <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 pt-10 md:pt-14">
-      <div className="border-b rule-soft pb-2 mb-6 flex items-end justify-between">
+      <div className="section-rule flex items-end justify-between">
         <h3 className="kicker text-accent">{sectionTitle(section)}</h3>
         <Link to="/notes" className="kicker hover-underline text-muted">
           ALL NOTES →
@@ -212,7 +213,7 @@ function PopularSection({ section, allArticles }: SectionProps) {
   if (popular.length === 0) return null;
   return (
     <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 pt-10 md:pt-14">
-      <div className="border-b rule-soft pb-2 mb-6">
+      <div className="section-rule">
         <h3 className="kicker text-accent">{sectionTitle(section)}</h3>
       </div>
       <ol className="grid md:grid-cols-2 gap-x-10 gap-y-5">
@@ -349,7 +350,7 @@ function ShopSection({ section, products }: SectionProps) {
   if (list.length === 0) return null;
   return (
     <section className="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-12 pt-10 md:pt-14">
-      <div className="border-b rule-soft pb-2 mb-6 flex items-end justify-between">
+      <div className="section-rule flex items-end justify-between">
         <h3 className="kicker text-accent">{sectionTitle(section)}</h3>
         <Link to="/shop" className="kicker hover-underline text-muted">
           ALL PRODUCTS →

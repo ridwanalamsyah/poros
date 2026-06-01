@@ -1,4 +1,4 @@
-import type { Article, Author, Category, Edition, Note, Product, Settings, SanityImage, VelvetEvent } from "../types";
+import type { Article, Author, Category, Edition, Episode, Note, Product, Settings, SanityImage, VelvetEvent } from "../types";
 
 const img = (url: string, alt = ""): SanityImage =>
   ({
@@ -26,7 +26,7 @@ export const mockAuthors: Author[] = [
 
 export const mockEditions: Edition[] = [
   { _id: "ed-001", title: "Edisi 001 — Kota yang Berhenti Sopan", slug: "001-kota-yang-berhenti-sopan", issueNumber: "001", description: "Edisi perdana Velvet Collapse Magazine. Tentang Bandung yang sedang berdamai dengan dirinya sendiri.", publishedAt: "2026-03-01" },
-  { _id: "ed-002", title: "Edisi 002 — Para Pekerja Tanpa Kantor", slug: "002-pekerja-tanpa-kantor", issueNumber: "002", description: "Pekerja gig, freelancer, kurir di seputar Bandung Raya — siapa yang melindungi mereka.", publishedAt: "2026-04-15" },
+  { _id: "ed-002", title: "Edisi 002 — Para Pekerja Tanpa Kantor", slug: "002-pekerja-tanpa-kantor", issueNumber: "002", description: "Pekerja gig, freelancer, kurir di seputar Bandung Raya — siapa yang melindungi mereka.", accentColor: "#1F6FEB", publishedAt: "2026-04-15" },
 ];
 
 const longBody = (paragraphs: string[]): { _type: "block"; _key: string; style?: string; children: { _type: "span"; text: string }[] }[] =>
@@ -712,6 +712,33 @@ export const mockEvents: VelvetEvent[] = [
     venue: "Kineruku",
     city: "Bandung",
     free: false,
+  },
+];
+
+export const mockEpisodes: Episode[] = [
+  {
+    _id: "ep-002",
+    title: "Kerja Tanpa Kantor: Kurir, Algoritma, dan Upah yang Menyusut",
+    slug: "002-kerja-tanpa-kantor",
+    episodeNumber: 2,
+    description: "Obrolan panjang soal ekonomi gig di Bandung Raya — bagaimana algoritma menetapkan tarif, dan siapa yang menanggung risikonya.",
+    audioUrl: "https://download.samplelib.com/mp3/sample-15s.mp3",
+    duration: "00:15",
+    guests: [mockAuthors[0], mockAuthors[3]],
+    coverImage: img("/covers/16fe1cae2d-remuk-siap-ledakan-ep-program-unit-hardc.jpeg", "Episode 002"),
+    publishedAt: "2026-04-20",
+  },
+  {
+    _id: "ep-001",
+    title: "Kota yang Berhenti Sopan: Bandung dan Dirinya Sendiri",
+    slug: "001-kota-yang-berhenti-sopan",
+    episodeNumber: 1,
+    description: "Episode perdana. Tentang ruang publik yang menyusut, gentrifikasi pelan-pelan, dan nostalgia yang dijual.",
+    audioUrl: "https://download.samplelib.com/mp3/sample-9s.mp3",
+    duration: "00:09",
+    guests: [mockAuthors[1]],
+    coverImage: img("/covers/4a9cb24ad4-partying-in-nature-ketika-bersenang-sena.jpeg", "Episode 001"),
+    publishedAt: "2026-03-05",
   },
 ];
 

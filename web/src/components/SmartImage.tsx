@@ -1,21 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import type { SanityImage } from "../types";
-import { imageUrl, lqipFor } from "../sanity";
+import { focalPointStyle, imageUrl, lqipFor } from "../sanity";
 
 type Props = {
   image?: SanityImage;
   alt?: string;
   className?: string;
   width?: number;
+  height?: number;
   sizes?: string;
   loading?: "lazy" | "eager";
   fit?: "cover" | "contain";
   fallbackUrl?: string;
 };
 
-export function SmartImage({ image, alt, className = "", width = 1200, loading = "lazy", fit = "cover", fallbackUrl }: Props) {
-  const src = imageUrl(image, width) ?? fallbackUrl;
+export function SmartImage({ image, alt, className = "", width = 1200, height, loading = "lazy", fit = "cover", fallbackUrl }: Props) {
+  const src = imageUrl(image, width, height) ?? fallbackUrl;
   const lqip = lqipFor(image);
+  const focal = fit === "cover" ? focalPointStyle(image) : undefined;
   const ref = useRef<HTMLImageElement | null>(null);
   const [loaded, setLoaded] = useState(false);
 
@@ -42,6 +44,7 @@ export function SmartImage({ image, alt, className = "", width = 1200, loading =
         loading={loading}
         decoding="async"
         onLoad={() => setLoaded(true)}
+        style={focal}
         className={`block w-full h-full ${fit === "cover" ? "object-cover" : "object-contain"} ${loaded ? "image-loaded" : "image-blur"}`}
       />
     </div>
