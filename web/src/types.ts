@@ -38,6 +38,7 @@ export type Edition = {
   slug: string;
   issueNumber?: string;
   description?: string;
+  accentColor?: string;
   coverImage?: SanityImage;
   publishedAt?: string;
 };
