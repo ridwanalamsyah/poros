@@ -26,7 +26,7 @@ export const mockAuthors: Author[] = [
 
 export const mockEditions: Edition[] = [
   { _id: "ed-001", title: "Edisi 001 — Kota yang Berhenti Sopan", slug: "001-kota-yang-berhenti-sopan", issueNumber: "001", description: "Edisi perdana Velvet Collapse Magazine. Tentang Bandung yang sedang berdamai dengan dirinya sendiri.", publishedAt: "2026-03-01" },
-  { _id: "ed-002", title: "Edisi 002 — Para Pekerja Tanpa Kantor", slug: "002-pekerja-tanpa-kantor", issueNumber: "002", description: "Pekerja gig, freelancer, kurir di seputar Bandung Raya — siapa yang melindungi mereka.", publishedAt: "2026-04-15" },
+  { _id: "ed-002", title: "Edisi 002 — Para Pekerja Tanpa Kantor", slug: "002-pekerja-tanpa-kantor", issueNumber: "002", description: "Pekerja gig, freelancer, kurir di seputar Bandung Raya — siapa yang melindungi mereka.", accentColor: "#1F6FEB", publishedAt: "2026-04-15" },
 ];
 
 const longBody = (paragraphs: string[]): { _type: "block"; _key: string; style?: string; children: { _type: "span"; text: string }[] }[] =>

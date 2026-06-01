@@ -114,7 +114,7 @@ export function getAuthors(): Promise<Author[]> {
 
 export function getEditions(): Promise<Edition[]> {
   return fetchOr<Edition[]>(
-    `*[_type == "edition"]|order(publishedAt desc){_id, title, "slug": slug.current, issueNumber, description, coverImage{..., asset->{..., metadata{lqip}}}, publishedAt}`,
+    `*[_type == "edition"]|order(publishedAt desc){_id, title, "slug": slug.current, issueNumber, description, accentColor, coverImage{..., asset->{..., metadata{lqip}}}, publishedAt}`,
     undefined,
     mockEditions,
   );
@@ -122,7 +122,7 @@ export function getEditions(): Promise<Edition[]> {
 
 export function getEdition(slug: string): Promise<Edition | null> {
   return fetchOr<Edition | null>(
-    `*[_type == "edition" && slug.current == $slug][0]{_id, title, "slug": slug.current, issueNumber, description, coverImage{..., asset->{..., metadata{lqip}}}, publishedAt}`,
+    `*[_type == "edition" && slug.current == $slug][0]{_id, title, "slug": slug.current, issueNumber, description, accentColor, coverImage{..., asset->{..., metadata{lqip}}}, publishedAt}`,
     { slug },
     mockEditions.find((e) => e.slug === slug) ?? null,
   );
