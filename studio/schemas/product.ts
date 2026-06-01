@@ -31,6 +31,7 @@ export default defineType({
       name: "image",
       title: "Primary image",
       type: "image",
+      description: "Min 1600×1600. Geser hotspot ke subjek utama supaya tidak terpotong di thumbnail.",
       options: { hotspot: true },
       fields: [defineField({ name: "alt", type: "string" })],
     }),
@@ -45,7 +46,7 @@ export default defineType({
           fields: [defineField({ name: "alt", type: "string" })],
         }),
       ],
-      description: "Additional product photos shown as a gallery on the detail page.",
+      description: "Additional product photos shown as a gallery on the detail page. Geser hotspot tiap foto ke subjek utama.",
     }),
     defineField({
       name: "specs",

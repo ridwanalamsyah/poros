@@ -18,6 +18,7 @@ export default defineType({
     defineField({
       name: "coverImage",
       type: "image",
+      description: "Min 2400×1600. Geser hotspot ke subjek utama supaya tidak terpotong di thumbnail.",
       options: { hotspot: true },
       fields: [defineField({ name: "alt", type: "string" })],
     }),
