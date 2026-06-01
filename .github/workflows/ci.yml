@@ -72,3 +72,27 @@ jobs:
           SANITY_STUDIO_PROJECT_ID: lyo17dt8
           SANITY_STUDIO_DATASET: production
         run: npm run build
+
+  e2e:
+    name: Web — e2e (Playwright)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E smoke tests
+        run: npm run test:e2e
