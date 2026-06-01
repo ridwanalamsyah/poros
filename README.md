@@ -48,7 +48,9 @@ npx sanity build          # outputs studio/dist
 ```
 VITE_SANITY_PROJECT_ID=lyo17dt8
 VITE_SANITY_DATASET=production
-VITE_SANITY_WRITE_TOKEN=...           # enables submit-pitch / letters / orders to save into Studio
+VITE_SANITY_WRITE_TOKEN=...           # LEGACY/fallback only — exposed in the browser bundle. Prefer the proxy below and remove this once the proxy is live.
+VITE_SANITY_PROXY_URL=...             # Cloudflare Worker (workers/sanity-proxy) — keeps the write token server-side. When set, writes route here and VITE_SANITY_WRITE_TOKEN is ignored.
+VITE_TURNSTILE_SITE_KEY=...           # optional — renders a Turnstile widget on the pitch/letter forms
 VITE_SITE_URL=https://velvet-collapse-magazine.vercel.app
 
 # Newsletter — pick one

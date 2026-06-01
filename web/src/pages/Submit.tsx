@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { SEO } from "../components/SEO";
+import { Turnstile } from "../components/Turnstile";
 import { sanity, sanityEnabled } from "../sanity";
+import { proxyWrite, writeProxyEnabled } from "../data/sanityWrite";
+import { turnstileEnabled } from "../utils/turnstile";
 
 type Mode = "pitch" | "letter";
 
@@ -11,12 +14,15 @@ export function SubmitPage({ mode = "pitch" }: { mode?: Mode }) {
   const [body, setBody] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "err">("idle");
   const [msg, setMsg] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const isPitch = mode === "pitch";
+  const onToken = useCallback((t: string) => setTurnstileToken(t), []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!name || !email || !body) { setStatus("err"); setMsg("All required fields must be filled in."); return; }
+    if (turnstileEnabled() && !turnstileToken) { setStatus("err"); setMsg("Please complete the verification."); return; }
     setStatus("loading");
     const payload = {
       _type: isPitch ? "submission" : "letter",
@@ -33,7 +39,9 @@ export function SubmitPage({ mode = "pitch" }: { mode?: Mode }) {
         log.push(payload);
         localStorage.setItem(KEY, JSON.stringify(log));
       } catch {}
-      if (sanityEnabled && sanity) {
+      if (writeProxyEnabled()) {
+        await proxyWrite(isPitch ? "createSubmission" : "createLetter", { name, email, title, body, submittedAt: payload.submittedAt }, turnstileToken);
+      } else if (sanityEnabled && sanity) {
         const token = import.meta.env.VITE_SANITY_WRITE_TOKEN as string | undefined;
         if (token) {
           await sanity.withConfig({ token }).create(payload);
@@ -73,6 +81,7 @@ export function SubmitPage({ mode = "pitch" }: { mode?: Mode }) {
           <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           {isPitch && <input className="w-full border rule-soft bg-transparent px-3 py-2" placeholder="Pitch title (working)" value={title} onChange={(e) => setTitle(e.target.value)} />}
           <textarea className="w-full border rule-soft bg-transparent px-3 py-2" rows={10} placeholder={isPitch ? "Pitch — who is the subject, what is the conflict, why now, and what evidence have you collected." : "Write your letter here."} value={body} onChange={(e) => setBody(e.target.value)} />
+          <Turnstile onToken={onToken} />
           <button type="submit" disabled={status === "loading"} className="bg-ink text-paper px-4 py-3 kicker disabled:opacity-50">
             {status === "loading" ? "SENDING…" : isPitch ? "SEND PITCH" : "SEND LETTER"}
           </button>
