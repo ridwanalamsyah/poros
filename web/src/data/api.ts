@@ -1,6 +1,6 @@
 import { sanity, sanityEnabled } from "../sanity";
-import type { Article, Author, Category, Edition, Note, Order, Product, Settings } from "../types";
-import { mockArticles, mockAuthors, mockCategories, mockEditions, mockNotes, mockProducts, mockSettings } from "./mock";
+import type { Article, Author, Category, Edition, Episode, Note, Order, Product, Settings } from "../types";
+import { mockArticles, mockAuthors, mockCategories, mockEditions, mockEpisodes, mockNotes, mockProducts, mockSettings } from "./mock";
 
 const articleFields = `
   _id,
@@ -133,6 +133,35 @@ export function getNotes(): Promise<Note[]> {
     `*[_type == "note"]|order(publishedAt desc){_id, body, "author": author->{_id, name, "slug": slug.current, image{..., asset->{..., metadata{lqip}}}}, publishedAt}`,
     undefined,
     mockNotes,
+  );
+}
+
+const episodeFields = `
+  _id,
+  title,
+  "slug": slug.current,
+  episodeNumber,
+  description,
+  audioUrl,
+  duration,
+  coverImage{..., asset->{..., metadata{lqip}}},
+  "guests": guests[]->{_id, name, "slug": slug.current, image{..., asset->{..., metadata{lqip}}}},
+  publishedAt
+`;
+
+export function getEpisodes(): Promise<Episode[]> {
+  return fetchOr<Episode[]>(
+    `*[_type == "episode" && defined(slug.current)]|order(publishedAt desc){${episodeFields}}`,
+    undefined,
+    mockEpisodes,
+  );
+}
+
+export function getEpisode(slug: string): Promise<Episode | null> {
+  return fetchOr<Episode | null>(
+    `*[_type == "episode" && slug.current == $slug][0]{${episodeFields}}`,
+    { slug },
+    mockEpisodes.find((e) => e.slug === slug) ?? null,
   );
 }
 

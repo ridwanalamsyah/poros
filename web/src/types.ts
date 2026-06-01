@@ -75,6 +75,19 @@ export type Note = {
   publishedAt?: string;
 };
 
+export type Episode = {
+  _id: string;
+  title: string;
+  slug: string;
+  episodeNumber?: number;
+  description?: string;
+  audioUrl: string;
+  duration?: string;
+  coverImage?: SanityImage;
+  guests?: Author[];
+  publishedAt?: string;
+};
+
 export type ProductSpec = {
   _key?: string;
   label?: string;

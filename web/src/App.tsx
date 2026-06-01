@@ -10,6 +10,8 @@ const TagPage = lazy(() => import("./pages/Tag").then((m) => ({ default: m.TagPa
 const EditionsPage = lazy(() => import("./pages/Editions").then((m) => ({ default: m.EditionsPage })));
 const EditionPage = lazy(() => import("./pages/Editions").then((m) => ({ default: m.EditionPage })));
 const NotesPage = lazy(() => import("./pages/Notes").then((m) => ({ default: m.NotesPage })));
+const PodcastPage = lazy(() => import("./pages/Podcast").then((m) => ({ default: m.PodcastPage })));
+const EpisodePage = lazy(() => import("./pages/Podcast").then((m) => ({ default: m.EpisodePage })));
 const ShopPage = lazy(() => import("./pages/Shop").then((m) => ({ default: m.ShopPage })));
 const ProductPage = lazy(() => import("./pages/Product").then((m) => ({ default: m.ProductPage })));
 const CartPage = lazy(() => import("./pages/Cart").then((m) => ({ default: m.CartPage })));
@@ -46,6 +48,8 @@ export default function App() {
         <Route path="/editions" element={<Lazy><EditionsPage /></Lazy>} />
         <Route path="/edition/:slug" element={<Lazy><EditionPage /></Lazy>} />
         <Route path="/notes" element={<Lazy><NotesPage /></Lazy>} />
+        <Route path="/podcast" element={<Lazy><PodcastPage /></Lazy>} />
+        <Route path="/podcast/:slug" element={<Lazy><EpisodePage /></Lazy>} />
         <Route path="/shop" element={<Lazy><ShopPage /></Lazy>} />
         <Route path="/shop/:slug" element={<Lazy><ProductPage /></Lazy>} />
         <Route path="/cart" element={<Lazy><CartPage /></Lazy>} />
