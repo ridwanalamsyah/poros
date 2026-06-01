@@ -55,6 +55,7 @@ export default defineType({
       name: "coverImage",
       title: "Cover image",
       type: "image",
+      description: "Min 2400×1600. Geser hotspot ke wajah/subjek utama supaya tidak terpotong di thumbnail.",
       options: { hotspot: true },
       fields: [
         defineField({ name: "alt", title: "Alt text", type: "string", validation: (r) => r.required().error("Alt text wajib diisi.") }),

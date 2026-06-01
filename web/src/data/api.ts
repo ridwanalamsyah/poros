@@ -1,6 +1,6 @@
 import { sanity, sanityEnabled } from "../sanity";
-import type { Article, Author, Category, Edition, LiveBlog, Note, Order, Product, Settings } from "../types";
-import { mockArticles, mockAuthors, mockCategories, mockEditions, mockLiveBlogs, mockNotes, mockProducts, mockSettings } from "./mock";
+import type { Article, Author, Category, Edition, Episode, LiveBlog, Note, Order, Product, Settings } from "../types";
+import { mockArticles, mockAuthors, mockCategories, mockEditions, mockEpisodes, mockLiveBlogs, mockNotes, mockProducts, mockSettings } from "./mock";
 
 const articleFields = `
   _id,
@@ -114,7 +114,7 @@ export function getAuthors(): Promise<Author[]> {
 
 export function getEditions(): Promise<Edition[]> {
   return fetchOr<Edition[]>(
-    `*[_type == "edition"]|order(publishedAt desc){_id, title, "slug": slug.current, issueNumber, description, coverImage{..., asset->{..., metadata{lqip}}}, publishedAt}`,
+    `*[_type == "edition"]|order(publishedAt desc){_id, title, "slug": slug.current, issueNumber, description, accentColor, coverImage{..., asset->{..., metadata{lqip}}}, publishedAt}`,
     undefined,
     mockEditions,
   );
@@ -122,7 +122,7 @@ export function getEditions(): Promise<Edition[]> {
 
 export function getEdition(slug: string): Promise<Edition | null> {
   return fetchOr<Edition | null>(
-    `*[_type == "edition" && slug.current == $slug][0]{_id, title, "slug": slug.current, issueNumber, description, coverImage{..., asset->{..., metadata{lqip}}}, publishedAt}`,
+    `*[_type == "edition" && slug.current == $slug][0]{_id, title, "slug": slug.current, issueNumber, description, accentColor, coverImage{..., asset->{..., metadata{lqip}}}, publishedAt}`,
     { slug },
     mockEditions.find((e) => e.slug === slug) ?? null,
   );
@@ -136,7 +136,7 @@ export function getNotes(): Promise<Note[]> {
   );
 }
 
-const authorRef = `{_id, name, "slug": slug.current, image{..., asset->{..., metadata{lqip}}}}`;
+const liveBlogAuthorRef = `{_id, name, "slug": slug.current, image{..., asset->{..., metadata{lqip}}}}`;
 const liveBlogFields = `
   _id,
   title,
@@ -145,7 +145,7 @@ const liveBlogFields = `
   status,
   coverImage{..., asset->{..., metadata{lqip}}},
   startedAt,
-  entries[]{_key, timestamp, heading, body, "author": author->${authorRef}}
+  entries[]{_key, timestamp, heading, body, "author": author->${liveBlogAuthorRef}}
 `;
 
 export function getLiveBlogs(): Promise<LiveBlog[]> {
@@ -161,6 +161,35 @@ export function getLiveBlog(slug: string): Promise<LiveBlog | null> {
     `*[_type == "liveblog" && slug.current == $slug][0]{${liveBlogFields}}`,
     { slug },
     mockLiveBlogs.find((b) => b.slug === slug) ?? null,
+  );
+}
+
+const episodeFields = `
+  _id,
+  title,
+  "slug": slug.current,
+  episodeNumber,
+  description,
+  audioUrl,
+  duration,
+  coverImage{..., asset->{..., metadata{lqip}}},
+  "guests": guests[]->{_id, name, "slug": slug.current, image{..., asset->{..., metadata{lqip}}}},
+  publishedAt
+`;
+
+export function getEpisodes(): Promise<Episode[]> {
+  return fetchOr<Episode[]>(
+    `*[_type == "episode" && defined(slug.current)]|order(publishedAt desc){${episodeFields}}`,
+    undefined,
+    mockEpisodes,
+  );
+}
+
+export function getEpisode(slug: string): Promise<Episode | null> {
+  return fetchOr<Episode | null>(
+    `*[_type == "episode" && slug.current == $slug][0]{${episodeFields}}`,
+    { slug },
+    mockEpisodes.find((e) => e.slug === slug) ?? null,
   );
 }
 

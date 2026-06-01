@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 export default defineType({
   name: "liveblog",
@@ -28,7 +28,7 @@ export default defineType({
       description: "Newest entries are shown first on the page.",
       type: "array",
       of: [
-        defineType({
+        defineArrayMember({
           name: "liveEntry",
           title: "Entry",
           type: "object",

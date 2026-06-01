@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useAsync } from "../hooks/useAsync";
 import { getAuthors } from "../data/api";
 import { SmartImage } from "../components/SmartImage";
+import { PitchCTA } from "../components/PitchCTA";
 import { SEO } from "../components/SEO";
 
 export function AboutPage() {
@@ -54,6 +55,8 @@ export function AboutPage() {
           </div>
         </section>
       )}
+
+      <PitchCTA className="mt-12" />
     </div>
   );
 }
