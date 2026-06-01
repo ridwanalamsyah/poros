@@ -175,6 +175,7 @@ export function Header() {
                   <NavLink key={c._id} to={`/category/${c.slug}`} className={navLinkCls}>{c.title.toUpperCase()}</NavLink>
                 ))}
                 <NavLink to="/editions" className={navLinkCls}>EDITIONS</NavLink>
+                <NavLink to="/live" className={navLinkCls}>LIVE</NavLink>
                 <NavLink to="/notes" className={navLinkCls}>NOTES</NavLink>
                 <NavLink to="/about" className={navLinkCls}>ABOUT</NavLink>
               </div>
@@ -240,6 +241,7 @@ export function Header() {
                 </NavLink>
               ))}
               <NavLink to="/editions" onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? "" : "opacity-70 hover:opacity-100"}>Editions</NavLink>
+              <NavLink to="/live" onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? "" : "opacity-70 hover:opacity-100"}>Live</NavLink>
               <NavLink to="/notes" onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? "" : "opacity-70 hover:opacity-100"}>Notes</NavLink>
               <NavLink to="/shop" onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? "" : "opacity-70 hover:opacity-100"}>Shop</NavLink>
               <NavLink to="/about" onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? "" : "opacity-70 hover:opacity-100"}>About</NavLink>

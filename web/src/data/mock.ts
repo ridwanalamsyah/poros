@@ -1,4 +1,4 @@
-import type { Article, Author, Category, Edition, Note, Product, Settings, SanityImage } from "../types";
+import type { Article, Author, Category, Edition, LiveBlog, Note, Product, Settings, SanityImage } from "../types";
 
 const img = (url: string, alt = ""): SanityImage =>
   ({
@@ -674,6 +674,23 @@ export const mockNotes: Note[] = [
   { _id: "n1", body: "Sedang menyiapkan reportase tentang penutupan SDN di Antapani. Kalau ada warga yang anaknya kena dampak, DM kami.", author: mockAuthors[1], publishedAt: "2026-05-10" },
   { _id: "n2", body: "Membaca ulang Pramoedya. Setiap kali balik, selalu menemukan kalimat yang sebelumnya seperti tidak ada.", author: mockAuthors[0], publishedAt: "2026-05-08" },
   { _id: "n3", body: "Edisi 003 sudah masuk tahap editing. Tema: ruang-ruang yang menghilang di Bandung Utara.", author: mockAuthors[1], publishedAt: "2026-05-05" },
+];
+
+export const mockLiveBlogs: LiveBlog[] = [
+  {
+    _id: "lb-001",
+    title: "May Day 2026: Aksi Buruh di Bandung",
+    slug: "may-day-2026-bandung",
+    summary: "Liputan langsung aksi peringatan Hari Buruh di sekitar Gedung Sate dan Alun-alun Bandung.",
+    status: "live",
+    coverImage: img("/covers/16fe1cae2d-remuk-siap-ledakan-ep-program-unit-hardc.jpeg", "May Day 2026"),
+    startedAt: "2026-05-01T07:00:00+07:00",
+    entries: [
+      { _key: "e3", timestamp: "2026-05-01T11:20:00+07:00", heading: "Orasi di depan Gedung Sate", body: "Massa memenuhi jalur depan Gedung Sate. Perwakilan serikat membacakan tujuh tuntutan, dimulai dari pencabutan pasal-pasal kontroversial soal pengupahan.", author: mockAuthors[1] },
+      { _key: "e2", timestamp: "2026-05-01T09:05:00+07:00", heading: "Long march dari Alun-alun", body: "Barisan mulai bergerak dari Alun-alun menuju Gedung Sate. Polisi mengalihkan lalu lintas di sepanjang Jalan Diponegoro.", author: mockAuthors[3] },
+      { _key: "e1", timestamp: "2026-05-01T07:30:00+07:00", heading: "Massa mulai berkumpul", body: "Kelompok pertama tiba di titik kumpul Alun-alun Bandung. Cuaca cerah, estimasi awal beberapa ratus orang.", author: mockAuthors[1] },
+    ],
+  },
 ];
 
 export const mockProducts: Product[] = [

@@ -74,6 +74,25 @@ export type Note = {
   publishedAt?: string;
 };
 
+export type LiveEntry = {
+  _key?: string;
+  timestamp: string;
+  heading?: string;
+  body: string;
+  author?: Author;
+};
+
+export type LiveBlog = {
+  _id: string;
+  title: string;
+  slug: string;
+  summary?: string;
+  status?: "live" | "ended";
+  coverImage?: SanityImage;
+  startedAt?: string;
+  entries?: LiveEntry[];
+};
+
 export type ProductSpec = {
   _key?: string;
   label?: string;
