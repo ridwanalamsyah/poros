@@ -176,6 +176,7 @@ export function Header() {
                 ))}
                 <NavLink to="/editions" className={navLinkCls}>EDITIONS</NavLink>
                 <NavLink to="/live" className={navLinkCls}>LIVE</NavLink>
+                <NavLink to="/events" className={navLinkCls}>EVENTS</NavLink>
                 <NavLink to="/podcast" className={navLinkCls}>PODCAST</NavLink>
                 <NavLink to="/notes" className={navLinkCls}>NOTES</NavLink>
                 <NavLink to="/about" className={navLinkCls}>ABOUT</NavLink>
@@ -243,6 +244,7 @@ export function Header() {
               ))}
               <NavLink to="/editions" onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? "" : "opacity-70 hover:opacity-100"}>Editions</NavLink>
               <NavLink to="/live" onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? "" : "opacity-70 hover:opacity-100"}>Live</NavLink>
+              <NavLink to="/events" onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? "" : "opacity-70 hover:opacity-100"}>Events</NavLink>
               <NavLink to="/podcast" onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? "" : "opacity-70 hover:opacity-100"}>Podcast</NavLink>
               <NavLink to="/notes" onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? "" : "opacity-70 hover:opacity-100"}>Notes</NavLink>
               <NavLink to="/shop" onClick={() => setMenuOpen(false)} className={({ isActive }) => isActive ? "" : "opacity-70 hover:opacity-100"}>Shop</NavLink>

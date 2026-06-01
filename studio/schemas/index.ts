@@ -9,6 +9,7 @@ import settings from "./settings";
 import submission from "./submission";
 import letter from "./letter";
 import liveblog from "./liveblog";
+import event from "./event";
 import episode from "./episode";
 
 import pullQuote from "./blocks/pullQuote";
@@ -29,6 +30,7 @@ export const schemaTypes = [
   submission,
   letter,
   liveblog,
+  event,
   episode,
   pullQuote,
   imageWithCaption,

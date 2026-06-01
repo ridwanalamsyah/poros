@@ -94,6 +94,20 @@ export type LiveBlog = {
   entries?: LiveEntry[];
 };
 
+export type VelvetEvent = {
+  _id: string;
+  title: string;
+  slug: string;
+  description?: string;
+  startAt: string;
+  endAt?: string;
+  venue?: string;
+  city?: string;
+  ticketUrl?: string;
+  free?: boolean;
+  coverImage?: SanityImage;
+};
+
 export type Episode = {
   _id: string;
   title: string;

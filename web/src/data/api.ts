@@ -1,6 +1,6 @@
 import { sanity, sanityEnabled } from "../sanity";
-import type { Article, Author, Category, Edition, Episode, LiveBlog, Note, Order, Product, Settings } from "../types";
-import { mockArticles, mockAuthors, mockCategories, mockEditions, mockEpisodes, mockLiveBlogs, mockNotes, mockProducts, mockSettings } from "./mock";
+import type { Article, Author, Category, Edition, Episode, LiveBlog, Note, Order, Product, Settings, VelvetEvent } from "../types";
+import { mockArticles, mockAuthors, mockCategories, mockEditions, mockEpisodes, mockEvents, mockLiveBlogs, mockNotes, mockProducts, mockSettings } from "./mock";
 
 const articleFields = `
   _id,
@@ -161,6 +161,36 @@ export function getLiveBlog(slug: string): Promise<LiveBlog | null> {
     `*[_type == "liveblog" && slug.current == $slug][0]{${liveBlogFields}}`,
     { slug },
     mockLiveBlogs.find((b) => b.slug === slug) ?? null,
+  );
+}
+
+const eventFields = `
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  startAt,
+  endAt,
+  venue,
+  city,
+  ticketUrl,
+  free,
+  coverImage{..., asset->{..., metadata{lqip}}}
+`;
+
+export function getEvents(): Promise<VelvetEvent[]> {
+  return fetchOr<VelvetEvent[]>(
+    `*[_type == "event" && defined(slug.current)]|order(startAt asc){${eventFields}}`,
+    undefined,
+    mockEvents,
+  );
+}
+
+export function getEvent(slug: string): Promise<VelvetEvent | null> {
+  return fetchOr<VelvetEvent | null>(
+    `*[_type == "event" && slug.current == $slug][0]{${eventFields}}`,
+    { slug },
+    mockEvents.find((e) => e.slug === slug) ?? null,
   );
 }
 
