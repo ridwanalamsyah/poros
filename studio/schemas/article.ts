@@ -116,6 +116,17 @@ export default defineType({
     defineField({ name: "publishedAt", title: "Published at", type: "datetime", initialValue: () => new Date().toISOString() }),
     defineField({ name: "editorsPick", title: "Editor's pick", type: "boolean", initialValue: false }),
     defineField({ name: "views", title: "Views (manual)", type: "number" }),
+    defineField({
+      name: "reactionCounts",
+      title: "Reaction counts (system)",
+      type: "object",
+      description: "Managed automatically by the /api/react endpoint when readers click Like/Dislike on the site. Not meant to be edited by hand.",
+      readOnly: true,
+      fields: [
+        { name: "Like", type: "number" },
+        { name: "Dislike", type: "number" },
+      ],
+    }),
   ],
   preview: {
     select: { title: "title", media: "coverImage", subtitle: "category.title" },
