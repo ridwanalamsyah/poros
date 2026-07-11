@@ -9,7 +9,7 @@ import { SEO } from "../components/SEO";
 import { formatDate, formatIDR } from "../utils/text";
 import type { Article, HomepageSection, HomepageSectionKind, Note, Edition, Product } from "../types";
 
-type Tab = "latest" | "commented";
+type Tab = "latest" | "popular";
 const PAGE_SIZE = 6;
 
 const DEFAULT_LAYOUT: HomepageSection[] = [
@@ -28,10 +28,6 @@ const DEFAULT_TITLES: Record<HomepageSectionKind, string> = {
   feed: "ALL ARTICLES",
   shop: "FROM THE SHOP",
 };
-
-function commentsOf(a: Article) {
-  return Math.max(0, Math.round((a.views ?? 0) / 110));
-}
 
 function sectionTitle(s: HomepageSection): string {
   return s.title?.trim() ? s.title.trim() : DEFAULT_TITLES[s.kind];
@@ -243,8 +239,8 @@ function FeedSection({ section, articles, allArticles, loading }: SectionProps) 
   const [shown, setShown] = useState(PAGE_SIZE);
 
   const sorted = useMemo<Article[]>(() => {
-    if (tab === "commented") {
-      return [...articles].sort((a, b) => commentsOf(b) - commentsOf(a));
+    if (tab === "popular") {
+      return [...articles].sort((a, b) => (b.views ?? 0) - (a.views ?? 0));
     }
     return [...articles].sort(
       (a, b) => +new Date(b.publishedAt ?? 0) - +new Date(a.publishedAt ?? 0),
@@ -273,7 +269,7 @@ function FeedSection({ section, articles, allArticles, loading }: SectionProps) 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         <div className="md:col-span-2">
           <div className="border-b rule pb-3 flex items-end gap-6">
-            {(["latest", "commented"] as Tab[]).map((t) => (
+            {(["latest", "popular"] as Tab[]).map((t) => (
               <button
                 key={t}
                 onClick={() => {
@@ -282,7 +278,7 @@ function FeedSection({ section, articles, allArticles, loading }: SectionProps) 
                 }}
                 className={`kicker tracking-[0.18em] pb-1 transition-opacity ${tab === t ? "opacity-100 border-b-2 border-ink -mb-[13px]" : "opacity-50 hover:opacity-80"}`}
               >
-                {t === "latest" ? section.title?.trim() || "LATEST" : "COMMENTED"}
+                {t === "latest" ? section.title?.trim() || "LATEST" : "MOST READ"}
               </button>
             ))}
           </div>
