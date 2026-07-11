@@ -16,7 +16,8 @@ const articleFields = `
   tags,
   publishedAt,
   editorsPick,
-  views
+  views,
+  reactionCounts
 `;
 
 async function fetchOr<T>(q: string, params: Record<string, unknown> | undefined, fallback: T): Promise<T> {
