@@ -1,24 +1,30 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
-/* Re-enable the v3-style "all utilities take precedence over custom CSS"
-   behavior. Tailwind v4 puts utilities in their own cascade layer by default,
-   but many of this project's rules below (.kicker, .prose-mag, etc.) override
-   what utilities should later un-override. Without this, e.g. .article-body p
-   would beat `text-center` in JSX, regressing existing layout. */
-@layer utilities {}
+/* Everything below (until the closing brace at the very end of this file)
+   lives inside the `base` cascade layer. Tailwind v4 puts its own utility
+   classes in a `utilities` layer, and CSS cascade layers ignore specificity
+   between layers — ANY unlayered rule beats ANY layered rule, no matter how
+   weak. The previous `@layer utilities {}` (left empty) did NOT achieve the
+   intended "utilities win" behavior: it left all the custom CSS below as
+   unlayered, so it always won over Tailwind utilities regardless of
+   specificity. Concretely, the unlayered `* { margin: 0; padding: 0; }`
+   further down was overriding every `p-*` / `m-*` / spacing utility class
+   used across the app — that's what was causing the broken, unstyled-looking
+   production layout. Wrapping everything in `@layer base` restores v3-style
+   behavior: utility classes applied in JSX always win over this file's plain
+   CSS. */
+@layer base {
 
 /* Tailwind v4 changed the default border / outline color from gray-200 to
    currentColor. Pin it back to the v3 default so the existing UI rules render
    the same. */
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
-  }
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+  border-color: var(--color-gray-200, currentColor);
 }
 
 :root {
@@ -469,3 +475,5 @@ button { font: inherit; }
     transform: none !important;
   }
 }
+
+} /* end @layer base */
