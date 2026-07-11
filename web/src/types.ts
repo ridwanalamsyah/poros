@@ -66,6 +66,7 @@ export type Article = {
   editorsPick?: boolean;
   views?: number;
   readingMinutes?: number;
+  reactionCounts?: Record<string, number>;
 };
 
 export type Note = {
