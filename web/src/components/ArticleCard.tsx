@@ -3,18 +3,13 @@ import type { Article } from "../types";
 import { SmartImage } from "./SmartImage";
 import { blocksToPlainText, fallbackCover, readingMinutes, relativeTime } from "../utils/text";
 
-function fakeComments(views?: number) {
-  if (!views) return 0;
-  return Math.max(0, Math.round(views / 110));
-}
-
 function fmt(n: number) {
   if (n >= 1000) return (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, "") + "k";
   return String(n);
 }
 
 function ConsumedMeta({ article }: { article: Article }) {
-  const comments = fakeComments(article.views);
+  const minutes = article.readingMinutes ?? readingMinutes(article.body ? blocksToPlainText(article.body) : article.excerpt ?? "");
   const author = article.author?.name ?? article.authors?.[0]?.name;
   return (
     <div className="text-[0.78rem] leading-snug text-muted flex flex-col gap-0.5">
@@ -35,7 +30,7 @@ function ConsumedMeta({ article }: { article: Article }) {
         </span>
       )}
       <span>
-        {fmt(article.views ?? 0)} Views <span className="opacity-40">/</span> {comments} Comments
+        {article.views ? <>{fmt(article.views)} Views <span className="opacity-40">/</span> </> : null}{minutes} min read
       </span>
     </div>
   );
@@ -46,7 +41,6 @@ export function ArticleCard({ article, variant = "default" }: { article: Article
   const cover = fallbackCover(article.category?.slug, article.slug);
 
   if (variant === "hero") {
-    const minutes = article.readingMinutes ?? readingMinutes(article.body ? blocksToPlainText(article.body) : article.excerpt ?? "");
     return (
       <Link to={link} className="group block lg:grid lg:grid-cols-12 lg:gap-8 lg:items-center">
         <div className="aspect-[16/10] sm:aspect-[16/9] mb-4 md:mb-5 lg:mb-0 lg:col-span-7 overflow-hidden">
@@ -57,12 +51,12 @@ export function ArticleCard({ article, variant = "default" }: { article: Article
             {article.category && <Link to={`/category/${article.category.slug}`} className="kicker text-accent hover:underline">{article.category.title}</Link>}
             {article.editorsPick && <span className="kicker text-muted">· EDITOR&apos;S PICK</span>}
           </div>
-          <h2 className="headline-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-[0.9] mb-3 group-hover:opacity-80">{article.title}</h2>
+          <h2 className="headline-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[0.96] mb-3 group-hover:opacity-80">{article.title}</h2>
           {article.excerpt && <p className="deck max-w-2xl mb-3">{article.excerpt}</p>}
           <div className="mt-2"><ConsumedMeta article={article} /></div>
-          <div className="mt-1 stat opacity-60">{minutes} MIN READ</div>
         </div>
       </Link>
+
     );
   }
 
