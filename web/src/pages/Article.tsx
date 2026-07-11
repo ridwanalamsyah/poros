@@ -120,7 +120,7 @@ export function ArticlePage() {
           <ShareBar url={`/article/${article.slug}`} title={article.title} slug={article.slug} />
         </div>
 
-        <Reactions articleId={article._id} />
+        <Reactions articleId={article._id} initialCounts={article.reactionCounts} />
 
         <EditionReader article={article} />
 
