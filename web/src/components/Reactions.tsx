@@ -4,55 +4,33 @@ import { getSettings } from "../data/api";
 
 const DEFAULT_LABELS = ["Like", "Dislike"] as const;
 
-type Counts = Record<string, number>;
-type State = { counts: Counts; picked: string | null };
-
-const COUNTS_KEY = "vc-reaction-counts";
 const PICKED_KEY = "vc-reaction-picked";
 
-function readMap(key: string): Record<string, unknown> {
+function readPickedMap(): Record<string, string> {
   if (typeof window === "undefined") return {};
   try {
-    const raw = window.localStorage.getItem(key);
+    const raw = window.localStorage.getItem(PICKED_KEY);
     if (!raw) return {};
     const parsed = JSON.parse(raw);
-    return typeof parsed === "object" && parsed !== null ? (parsed as Record<string, unknown>) : {};
+    return typeof parsed === "object" && parsed !== null ? (parsed as Record<string, string>) : {};
   } catch {
     return {};
   }
 }
 
-function writeMap(key: string, value: Record<string, unknown>) {
+function writePicked(articleId: string, label: string | null) {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.setItem(key, JSON.stringify(value));
+    const map = readPickedMap();
+    if (label) map[articleId] = label;
+    else delete map[articleId];
+    window.localStorage.setItem(PICKED_KEY, JSON.stringify(map));
   } catch {
     // ignore quota / private mode
   }
 }
 
-function loadState(articleId: string): State {
-  const countsMap = readMap(COUNTS_KEY);
-  const pickedMap = readMap(PICKED_KEY);
-  const counts = (countsMap[articleId] as Counts | undefined) ?? {};
-  const picked = (pickedMap[articleId] as string | undefined) ?? null;
-  return { counts, picked };
-}
-
-function persist(articleId: string, next: State) {
-  const countsMap = readMap(COUNTS_KEY);
-  const pickedMap = readMap(PICKED_KEY);
-  countsMap[articleId] = next.counts;
-  if (next.picked) {
-    pickedMap[articleId] = next.picked;
-  } else {
-    delete pickedMap[articleId];
-  }
-  writeMap(COUNTS_KEY, countsMap);
-  writeMap(PICKED_KEY, pickedMap);
-}
-
-export function Reactions({ articleId }: { articleId: string }) {
+export function Reactions({ articleId, initialCounts }: { articleId: string; initialCounts?: Record<string, number> }) {
   const { data: settings } = useAsync(() => getSettings(), []);
   const labels = useMemo<string[]>(() => {
     const fromSettings = settings?.reactionLabels?.filter((s) => s && s.trim().length > 0);
@@ -60,30 +38,53 @@ export function Reactions({ articleId }: { articleId: string }) {
     return [...DEFAULT_LABELS];
   }, [settings]);
 
-  const [state, setState] = useState<State>({ counts: {}, picked: null });
+  const [counts, setCounts] = useState<Record<string, number>>(initialCounts ?? {});
+  const [picked, setPicked] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    setState(loadState(articleId));
+    setCounts(initialCounts ?? {});
+  }, [articleId, initialCounts]);
+
+  useEffect(() => {
+    setPicked(readPickedMap()[articleId] ?? null);
   }, [articleId]);
 
-  function toggle(label: string) {
-    setState((prev) => {
-      const counts: Counts = { ...prev.counts };
-      let picked: string | null = prev.picked;
-      if (prev.picked === label) {
-        counts[label] = Math.max(0, (counts[label] ?? 1) - 1);
-        picked = null;
-      } else {
-        if (prev.picked) {
-          counts[prev.picked] = Math.max(0, (counts[prev.picked] ?? 1) - 1);
-        }
-        counts[label] = (counts[label] ?? 0) + 1;
-        picked = label;
-      }
-      const next: State = { counts, picked };
-      persist(articleId, next);
-      return next;
-    });
+  async function toggle(label: string) {
+    if (pending) return;
+    const next = picked === label ? null : label;
+    const previous = picked;
+
+    // Optimistic UI update — feels instant, gets corrected if the request fails.
+    const optimisticCounts = { ...counts };
+    if (previous) optimisticCounts[previous] = Math.max(0, (optimisticCounts[previous] ?? 0) - 1);
+    if (next) optimisticCounts[next] = (optimisticCounts[next] ?? 0) + 1;
+
+    setCounts(optimisticCounts);
+    setPicked(next);
+    writePicked(articleId, next);
+    setPending(true);
+    setError(false);
+
+    try {
+      const res = await fetch("/api/react", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ articleId, next, previous }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      if (data?.counts) setCounts(data.counts);
+    } catch {
+      // Roll back on failure so the count never lies about what's saved.
+      setCounts(counts);
+      setPicked(previous);
+      writePicked(articleId, previous);
+      setError(true);
+    } finally {
+      setPending(false);
+    }
   }
 
   return (
@@ -91,15 +92,16 @@ export function Reactions({ articleId }: { articleId: string }) {
       <p className="kicker text-muted mb-3">READER REACTIONS</p>
       <ul className="flex flex-wrap gap-2">
         {labels.map((label) => {
-          const count = state.counts[label] ?? 0;
-          const active = state.picked === label;
+          const count = counts[label] ?? 0;
+          const active = picked === label;
           return (
             <li key={label}>
               <button
                 type="button"
                 onClick={() => toggle(label)}
+                disabled={pending}
                 aria-pressed={active}
-                className={`kicker tracking-[0.16em] border px-4 py-2 transition-colors ${
+                className={`kicker tracking-[0.16em] border px-4 py-2 transition-colors disabled:opacity-60 ${
                   active
                     ? "bg-ink text-paper border-ink"
                     : "border-ink/40 hover:bg-ink hover:text-paper"
@@ -113,7 +115,7 @@ export function Reactions({ articleId }: { articleId: string }) {
         })}
       </ul>
       <p className="text-xs text-muted mt-3">
-        Your reaction is stored in this browser. One reaction per article.
+        {error ? "Reaksi gagal tersimpan, coba lagi." : "Reaksi tersimpan untuk semua pembaca."}
       </p>
     </section>
   );
