@@ -91,7 +91,7 @@ export function ArticlePage() {
 
         {article.coverImage && (
           <figure className="mb-8">
-            <SmartImage image={article.coverImage} className="w-full aspect-[16/9]" width={1600} loading="eager" />
+            <SmartImage image={article.coverImage} className="w-full h-[42vh] sm:h-[52vh] md:h-[65vh] bg-ink/[0.03]" fit="contain" width={1600} loading="eager" />
             {article.coverImage.caption && <figcaption className="byline italic mt-2">{article.coverImage.caption}</figcaption>}
           </figure>
         )}
