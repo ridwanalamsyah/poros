@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { useCategories } from "../hooks/useCategories";
 import { useAsync } from "../hooks/useAsync";
 import { getSettings } from "../data/api";
 import { TipJar } from "./TipJar";
@@ -24,16 +23,11 @@ function RssIcon() {
 }
 
 export function Footer() {
-  const { data: categories } = useCategories();
   const { data: settings } = useAsync(() => getSettings(), []);
 
   const rawWordmark = settings?.brandWordmark?.trim() || settings?.siteTitle?.trim() || "Velvet Collapse";
   const wordmark = rawWordmark.replace(/\s*magazine\s*$/i, "").trim() || rawWordmark;
   const tagline = settings?.footerTagline?.trim() || "Built from the mess.";
-  const year = new Date().getFullYear();
-  const copyright =
-    settings?.copyrightLine?.trim() ||
-    `${wordmark.toUpperCase()} · ${year} · BANDUNG`;
 
   return (
     <footer className="relative bg-ink text-paper overflow-hidden mt-16 md:mt-24">
@@ -63,18 +57,7 @@ export function Footer() {
           <TipJar placementOverride="button" />
         </div>
 
-        <nav className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 kicker text-paper">
-          <Link to="/" className="hover:opacity-70 transition-opacity">HOME</Link>
-          {categories?.map((c) => (
-            <Link key={c._id} to={`/category/${c.slug}`} className="hover:opacity-70 transition-opacity">{c.title}</Link>
-          ))}
-          <Link to="/editions" className="hover:opacity-70 transition-opacity">EDITIONS</Link>
-          <Link to="/notes" className="hover:opacity-70 transition-opacity">NOTES</Link>
-          <Link to="/shop" className="hover:opacity-70 transition-opacity">SHOP</Link>
-          <Link to="/about" className="hover:opacity-70 transition-opacity">ABOUT</Link>
-        </nav>
-
-        <div className="mt-5 flex items-center justify-center gap-5 text-paper">
+        <div className="mt-6 flex items-center justify-center gap-5 text-paper">
           <a
             href="https://instagram.com/velcolmagazine"
             target="_blank"
@@ -86,13 +69,6 @@ export function Footer() {
           </a>
           <a href="/rss.xml" aria-label="RSS feed" className="hover:opacity-70 transition-opacity"><RssIcon /></a>
         </div>
-
-        <p className="stat text-paper/55 mt-8 tracking-[0.18em] text-center">
-          {copyright} ·{" "}
-          <Link to="/colophon" className="hover:opacity-80">
-            COLOPHON
-          </Link>
-        </p>
       </div>
     </footer>
   );
