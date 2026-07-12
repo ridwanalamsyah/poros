@@ -226,6 +226,7 @@ export function ShareCardPage() {
   const [imgDataUrl, setImgDataUrl] = useState<string | null>(null);
   const [pirataFontDataUrl, setPirataFontDataUrl] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [shareError, setShareError] = useState<string | null>(null);
 
   const size = SIZES[sizeIdx];
   const title = editedTitle ?? article?.title ?? "Velvet Collapse";
@@ -273,17 +274,32 @@ export function ShareCardPage() {
 
   async function shareIGStory() {
     setBusy(true);
+    setShareError(null);
     try {
       const png = await svgToPng(svg, size.w, size.h);
-      if (!png) return;
+      if (!png) {
+        setShareError("Gagal bikin gambar kartu-nya. Coba download manual, lalu upload sendiri ke Instagram.");
+        return;
+      }
       const file = new File([png], `velvet-collapse-${article?.slug ?? "share"}.png`, { type: "image/png" });
       const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean; share?: (d: ShareData) => Promise<void> };
       if (nav.canShare && nav.canShare({ files: [file] }) && nav.share) {
         await nav.share({ files: [file], title, text: title });
       } else {
+        // No native file-share support on this browser (common on desktop) —
+        // fall back to a plain download with clear instructions instead of
+        // silently doing nothing.
         await download();
-        alert("Image downloaded. Open Instagram → Story → upload, or on mobile your share sheet will offer Instagram directly.");
+        setShareError("Browser ini belum support share langsung. Gambar udah ke-download — upload manual ke Instagram Story ya.");
       }
+    } catch (err) {
+      const isAbort = err instanceof DOMException && err.name === "AbortError";
+      if (isAbort) {
+        // User closed the native share sheet without picking anything — not
+        // an error, don't show a message.
+        return;
+      }
+      setShareError("Share gagal. Coba lagi, atau download manual di bawah.");
     } finally {
       setBusy(false);
     }
@@ -386,6 +402,11 @@ export function ShareCardPage() {
           </section>
 
           <section className="space-y-2 pt-2 border-t rule-soft">
+            {shareError && (
+              <p className="text-xs text-accent bg-accent/10 border border-accent/30 px-3 py-2" role="alert">
+                {shareError}
+              </p>
+            )}
             <button
               onClick={shareIGStory}
               disabled={busy}
