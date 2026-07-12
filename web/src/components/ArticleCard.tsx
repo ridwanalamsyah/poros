@@ -43,7 +43,7 @@ export function ArticleCard({ article, variant = "default" }: { article: Article
   if (variant === "hero") {
     return (
       <Link to={link} className="group block lg:grid lg:grid-cols-12 lg:gap-8 lg:items-center">
-        <div className="aspect-[16/10] sm:aspect-[16/9] mb-4 md:mb-5 lg:mb-0 lg:col-span-7 overflow-hidden">
+        <div className="aspect-[16/10] sm:aspect-[16/9] max-h-[48vh] sm:max-h-[52vh] lg:max-h-[60vh] mb-4 md:mb-5 lg:mb-0 lg:col-span-7 overflow-hidden">
           <SmartImage image={article.coverImage} fallbackUrl={cover} className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-[1.03]" width={1600} loading="eager" />
         </div>
         <div className="lg:col-span-5">
