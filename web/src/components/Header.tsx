@@ -175,10 +175,6 @@ export function Header() {
                   <NavLink key={c._id} to={`/category/${c.slug}`} className={navLinkCls}>{c.title.toUpperCase()}</NavLink>
                 ))}
                 <NavLink to="/editions" className={navLinkCls}>EDITIONS</NavLink>
-                <NavLink to="/live" className={navLinkCls}>LIVE</NavLink>
-                <NavLink to="/events" className={navLinkCls}>EVENTS</NavLink>
-                <NavLink to="/podcast" className={navLinkCls}>PODCAST</NavLink>
-                <NavLink to="/notes" className={navLinkCls}>NOTES</NavLink>
                 <NavLink to="/about" className={navLinkCls}>ABOUT</NavLink>
               </div>
               <div className="flex justify-end">
@@ -189,33 +185,24 @@ export function Header() {
         </nav>
       </header>
 
-      {/* Mobile header — Consumed mobile pattern: wordmark on top, icon row, then hamburger row */}
+      {/* Mobile header — compact 2-row: wordmark, then hamburger + search + cart */}
       <header className="md:hidden bg-paper sticky top-0 z-30 border-b rule">
-        <div className="px-5 pt-3 pb-2 text-center">
-          <Link to="/" className="inline-block leading-none">
-            <span className="font-logo block leading-none" style={{ fontSize: "clamp(1.25rem, 5.5vw, 1.75rem)", letterSpacing: "0.03em" }}>{wordmark}</span>
-            <span aria-hidden="true" className="block mt-1 tracking-[0.5em] text-[0.5rem] font-medium">MAGAZINE</span>
-          </Link>
-        </div>
-        <div className="px-3 pb-2 flex items-center justify-center gap-2 flex-wrap">
-          <a href="https://instagram.com/velcolmagazine" target="_blank" rel="noopener noreferrer" className="kicker tracking-[0.18em] opacity-80 px-1.5">FOLLOW</a>
-          <button onClick={toggleTheme} aria-label="Toggle theme" className={utilityIcon}>
-            {theme === "dark" ? <SunIcon size={18} /> : <MoonIcon size={18} />}
-          </button>
-          <Link to="/about" aria-label="About" className={utilityIcon}><GlobeIcon size={18} /></Link>
-          <NavLink to="/saved" aria-label="Saved" className={utilityIcon}><BookmarkIcon size={18} /></NavLink>
-          <button onClick={() => setSearchOpen(true)} aria-label="Search" className={utilityIcon}><SearchIcon size={18} /></button>
-          <Link to="/cart" aria-label="Cart" className={`${utilityIcon} relative`}>
-            <CartIcon size={20} />
-            {totalCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 bg-accent text-paper text-[10px] leading-none w-4 h-4 rounded-full flex items-center justify-center">{totalCount}</span>
-            )}
-          </Link>
-        </div>
-        <div className="border-t rule py-1.5 flex items-center justify-center">
-          <button onClick={() => setMenuOpen(true)} aria-label="Menu" className="border rule-soft px-5 py-1.5">
+        <div className="px-4 h-14 flex items-center justify-between gap-3">
+          <button onClick={() => setMenuOpen(true)} aria-label="Menu" className={utilityIcon}>
             <MenuIcon />
           </button>
+          <Link to="/" className="inline-block leading-none">
+            <span className="font-logo block leading-none" style={{ fontSize: "clamp(1.15rem, 5vw, 1.5rem)", letterSpacing: "0.03em" }}>{wordmark}</span>
+          </Link>
+          <div className="flex items-center gap-1">
+            <button onClick={() => setSearchOpen(true)} aria-label="Search" className={utilityIcon}><SearchIcon size={18} /></button>
+            <Link to="/cart" aria-label="Cart" className={`${utilityIcon} relative`}>
+              <CartIcon size={19} />
+              {totalCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-accent text-paper text-[10px] leading-none w-4 h-4 rounded-full flex items-center justify-center">{totalCount}</span>
+              )}
+            </Link>
+          </div>
         </div>
       </header>
 
