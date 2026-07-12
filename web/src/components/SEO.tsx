@@ -43,7 +43,7 @@ export function SEO({
 }: Props) {
   const t = title ? `${title} — ${SITE}` : `${SITE} — Built from the mess`;
   const d = description ?? DEFAULT_DESC;
-  const og = customImageUrl ?? (image ? imageUrl(image, 1200) : undefined) ?? "/og-default.png";
+  const og = customImageUrl ?? (image ? imageUrl(image, 1200) : undefined) ?? absUrl("/og-default.png");
   const canonical = absUrl(url) ?? (typeof window !== "undefined" ? window.location.href : undefined);
 
   const organizationLd = {
