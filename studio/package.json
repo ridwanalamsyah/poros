@@ -10,10 +10,10 @@
     "lint": "echo 'no lint configured'"
   },
   "dependencies": {
-    "@sanity/vision": "^5.26.0",
+    "@sanity/vision": "^6.4.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "sanity": "^5.26.0",
+    "sanity": "^6.4.0",
     "styled-components": "^6.1.15"
   },
   "engines": {
