@@ -11,17 +11,17 @@
   },
   "dependencies": {
     "@sanity/vision": "^5.26.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "sanity": "^5.26.0",
-    "styled-components": "^6.1.15"
+    "styled-components": "^6.4.4"
   },
   "engines": {
     "node": ">=20.19.1 <22 || >=22.12"
   },
   "devDependencies": {
-    "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0",
-    "typescript": "^5.9.0"
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "typescript": "^7.0.2"
   }
 }
